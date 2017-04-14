@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Fri Apr  7 18:45:34 2017 Nicolas Polomack
+## Last update Fri Apr 14 14:06:22 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -63,7 +63,7 @@ CYAN	=	\033[36;1m
 
 RES	=	\033[0m
 
-NAME	=	mysh
+NAME	=	42sh
 
 all:	$(NAME)
 
@@ -74,11 +74,11 @@ $(NAME):$(OBJ)
 	@echo -en "$(CYAN)Compiling libmy...$(RES)"
 	@$(MAKE1)
 	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
-	@echo -en "$(CYAN)Linking Minishell2...$(RES)"
+	@echo -en "$(CYAN)Linking 42sh...$(RES)"
 	@gcc -o $(NAME) $(OBJ) $(CFLAGS)
-	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
+	@echo -e "\t\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
 	@echo
-	@echo -e "$(GREEN)---- MINISHELL2 READY ----$(RES)"
+	@echo -e "$(GREEN)---- 42sh READY ----$(RES)"
 	@echo
 
 clean:
