@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Thu Apr  6 09:56:56 2017 Nicolas Polomack
+** Last update Tue Apr 18 14:49:38 2017 Benjamin
 */
 
 #include <stdlib.h>
@@ -104,7 +104,7 @@ int		main(int ac, char **av, char **ae)
       {
 	if (shell.exit_str)
 	  my_printf("\e[1m\e[31m(%s)\e[0m ", shell.exit_str);
-	my_putstr("\e[1m\e[31mMinishell2\e[21m\e[0m ");
+	my_putstr("\e[1m\e[31mZoo42\e[21m\e[0m ");
 	if (shell.current != NULL)
 	  my_putstr(shell.current);
 	my_putstr("$> ");
