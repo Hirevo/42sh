@@ -5,12 +5,10 @@
 ## Login   <nicolas@epitech.net>
 ##
 ## Started on  Tue Nov  1 12:04:24 2016 Nicolas POLOMACK
-## Last update Wed Mar 22 23:21:49 2017 Nicolas Polomack
+## Last update Fri Mar 31 00:54:58 2017 Nicolas Polomack
 ##
 
-SRC	=	is_a_num.c	\
-		my_memset.c	\
-		my_putstr.c	\
+SRC	=	my_putstr.c	\
 		my_putchar.c	\
 		my_put_nbr.c	\
 		my_strcmp.c	\
@@ -18,7 +16,6 @@ SRC	=	is_a_num.c	\
 		my_strlen.c	\
 		my_strcpy.c	\
 		my_strcat.c	\
-		my_strcatdup.c	\
 		my_strncat.c	\
 		my_strncpy.c	\
 		my_strncmp.c	\
@@ -42,11 +39,9 @@ SRC	=	is_a_num.c	\
 		my_strupcase.c	\
 		my_swap.c	\
 		my_strdup.c	\
-		my_strndup.c	\
 		my_printf.c	\
 		parsing.c	\
 		my_strdup.c	\
-		nb_args.c	\
 		convert_base.c	\
 		my_int_to_char.c
 
@@ -54,13 +49,12 @@ OBJ	=	$(SRC:.c=.o)
 
 NAME	=	libmy.a
 
-CFLAGS	=	-I../../include
+CFLAGS	=	-I../../include -O3 -pipe
 
 all:	$(NAME)
 
 $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
-	@cp my.h ../../include
 
 clean:
 ##	@echo "------ CLEAN LIBMY.A ------"

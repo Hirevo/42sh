@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Tue Oct 11 10:30:59 2016 Nicolas POLOMACK
-** Last update Mon Feb 20 23:27:07 2017 
+** Last update Wed Jan  4 12:04:48 2017 Nicolas Polomack
 */
 
 char	*my_strcat(char *dest, char *src)
@@ -15,14 +15,14 @@ char	*my_strcat(char *dest, char *src)
 
   i = 0;
   count = 0;
-  while (dest[count])
+  while (dest[count] != 0)
     count += 1;
-  while (src[i])
+  while (src[i] != 0)
     {
       dest[count] = src[i];
       i += 1;
       count += 1;
     }
-  dest[count] = '\0';
+  dest[count] = 0;
   return (dest);
 }
