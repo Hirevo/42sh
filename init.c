@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Tue Apr 18 19:03:10 2017 Nicolas Polomack
+** Last update Sat Apr 22 17:38:30 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -40,6 +40,9 @@ void	init(t_shell *shell)
       shell->w.clear = tigetstr("clear");
       shell->w.forw = tigetstr("cuf1");
       shell->w.backw = tigetstr("cub1");
+      shell->w.left = "\033[D";
+      shell->w.right = "\033[C";
+      shell->line = NULL;
     }
 }
 

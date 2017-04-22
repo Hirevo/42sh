@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 21:26:42 2017 Nicolas Polomack
-** Last update Tue Apr 18 19:05:49 2017 Nicolas Polomack
+** Last update Sat Apr 22 17:51:55 2017 Nicolas Polomack
 */
 
 #include <sys/ioctl.h>
@@ -30,7 +30,7 @@ int		main(int ac, char **av)
       shell.w.cur = 0;
       init_prompt(&shell);
       prompt_line(&shell);
-      if (shell.tty)
+      if (shell.line)
 	write(1, "\n", 1);
       if (!shell.line || !strcmp(shell.line, "exit"))
 	break;
@@ -38,7 +38,10 @@ int		main(int ac, char **av)
       free(shell.line);
     }
   if (shell.tty)
-    if (ioctl(0, TCSETA, &shell.w.oterm) == -1)
-      handle_error("ioctl");
+    {
+      write(1, "exit\n", 5);
+      if (ioctl(0, TCSETA, &shell.w.oterm) == -1)
+	handle_error("ioctl");
+    }
   return (0);
 }

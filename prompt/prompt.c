@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:05:01 2017 Nicolas Polomack
-** Last update Tue Apr 18 19:11:10 2017 Nicolas Polomack
+** Last update Sat Apr 22 17:52:21 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -26,8 +26,6 @@ void	prompt_line(t_shell *shell)
           return ;
       if (c == 10 && !shell->line)
         shell->line = strdup("");
-      if (c == 0 || c == 4)
-        write(1, "\n", 1);
       if (c == 10 || c == 0 || c == 4 ||
           (c == -2 && !shell->tty))
         break;
@@ -35,7 +33,8 @@ void	prompt_line(t_shell *shell)
         clear_term(shell);
       else if (c == 127)
         remove_char(shell);
-      else if (c == 27)
+      else if (c == shell->w.forw[0] ||
+	       c == shell->w.backw[0])
         move_cursor(shell, c);
       else
         add_char(shell, c);

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 14:21:08 2017 Nicolas Polomack
-** Last update Tue Apr 18 19:14:59 2017 Nicolas Polomack
+** Last update Sat Apr 22 17:44:16 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -23,6 +23,8 @@ typedef struct	s_window
   char		*clear;
   char		*forw;
   char		*backw;
+  char		*left;
+  char		*right;
   int		cur;
 }		t_window;
 
@@ -47,13 +49,13 @@ char	get_input();
 void	handle_error(char *);
 
 /*
-** char.c
+** prompt/char.c
 */
 void	insert_char(char **, char, int);
 void	delete_char(char **, int);
 
 /*
-** actions.c
+** prompt/actions.c
 */
 void	remove_char(t_shell *);
 void	add_char(t_shell *, char);
@@ -62,7 +64,14 @@ void	clear_term(t_shell *);
 void	pos_cursor(t_shell *);
 
 /*
-** prompt.c
+** prompt/cursor.c
+*/
+void	buffer_seq(t_shell *, char **, int *, char);
+void	move_forw(t_shell *);
+void	move_backw(t_shell *);
+
+/*
+** prompt/prompt.c
 */
 void	prompt_line(t_shell *);
 

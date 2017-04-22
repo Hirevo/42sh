@@ -5,9 +5,10 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Tue Apr 18 19:04:35 2017 Nicolas Polomack
+** Last update Sat Apr 22 17:42:41 2017 Nicolas Polomack
 */
 
+#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include "shell.h"
@@ -58,22 +59,19 @@ void	pos_cursor(t_shell *shell)
 
 void	move_cursor(t_shell *shell, char c)
 {
-  if (get_input() != '[')
-    return ;
-  c = get_input();
-  if (c == 'A' || c == 'B')
-    return ;
-  else if (c == 'C' && shell->line &&
-           shell->w.cur < strlen(shell->line))
-    {
-      shell->w.cur += 1;
-      write(1, shell->w.forw, strlen(shell->w.forw));
-    }
-  else if (c == 'D' && shell->w.cur)
-    {
-      shell->w.cur -= 1;
-      write(1, shell->w.backw, strlen(shell->w.backw));
-    }
+  char	*str;
+  int	dir;
+
+  buffer_seq(shell, &str, &dir, c);
+  if (dir == 1)
+    move_backw(shell);
+  else if (dir == 2)
+    move_forw(shell);
+  else
+    while (str[++dir])
+      insert_char(&shell->line, str[dir],
+		  shell->line ? strlen(shell->line) : 0);
+  free(str);
 }
 
 void	clear_term(t_shell *shell)

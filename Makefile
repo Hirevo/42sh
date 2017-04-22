@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Tue Apr 18 19:18:58 2017 Nicolas Polomack
+## Last update Sat Apr 22 17:11:20 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -16,6 +16,7 @@ SRC	=	main.c			\
 		prompt/misc.c		\
 		prompt/prompt.c		\
 		prompt/actions.c	\
+		prompt/cursor.c		\
 		get_next_line.c
 
 OBJ	=	$(SRC:.c=.o)
