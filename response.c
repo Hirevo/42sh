@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Tue Apr 25 11:26:20 2017 Arthur Knoepflin
+** Last update Tue Apr 25 23:56:12 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -58,6 +58,8 @@ static int	parse_arg(t_socket client, char **arg, char ***ae)
     send_env(client, *ae);
   else if (!my_strcmp(arg[1], "add_env") && nb_args(arg) >= 5)
     add_env_http(client, arg, ae);
+  else if (!my_strcmp(arg[1], "update_env") && nb_args(arg) >= 5)
+    update_env_http(client, arg, ae);
   else if (!my_strcmp(arg[1], "del_env") && nb_args(arg) == 4)
     del_env_http(client, arg, ae);
   else

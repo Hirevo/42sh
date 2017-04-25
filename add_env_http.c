@@ -5,9 +5,10 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon Apr 24 23:36:51 2017 Arthur Knoepflin
-** Last update Tue Apr 25 11:30:45 2017 Arthur Knoepflin
+** Last update Wed Apr 26 00:53:37 2017 Arthur Knoepflin
 */
 
+#include <stdlib.h>
 #include "server.h"
 #include "my.h"
 
@@ -37,4 +38,25 @@ void	del_env_http(t_socket client, char **arg, char ***ae)
   *ae = del_to_chardouble(arg[3], *ae);
   write_client(client, BASE_RESP);
   write_client(client, "del_env_ok");
+}
+
+void	update_env_http(t_socket client, char **arg, char ***ae)
+{
+  int	idx;
+  char	*decode;
+  char	*new;
+
+  new = my_strcat(arg[3], "=");
+  if (nb_args(arg) == 6)
+    {
+      if ((decode = malloc(sizeof(char) *
+			   (my_strlen(arg[5]) + 1))) == NULL)
+	return ;
+      urldecode(arg[5], decode);
+      new = my_strcat(new, decode);
+    }
+  if ((idx = indexof(*ae, arg[3])) != -1)
+    (*ae)[idx] = new;
+  write_client(client, BASE_RESP);
+  write_client(client, "update_env_ok");
 }

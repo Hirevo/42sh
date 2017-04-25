@@ -5,17 +5,19 @@
 ## Login   <arthur.knoepflin@epitech.eu>
 ## 
 ## Started on  Sat Apr 22 14:22:00 2017 Arthur Knoepflin
-## Last update Mon Apr 24 23:44:47 2017 Arthur Knoepflin
+## Last update Wed Apr 26 00:25:36 2017 Arthur Knoepflin
 ##
 
 SRC	=	add_env_http.c		\
 		char_double.c		\
 		client.c		\
 		com_serv.c		\
+		decode.c		\
 		get_env.c		\
 		get_file_http.c		\
 		get_next_line.c		\
 		init_connection.c	\
+		indexof.c		\
 		int_toc.c		\
 		main.c			\
 		my_split.c		\

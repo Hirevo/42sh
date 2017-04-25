@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Tue Apr 25 11:34:31 2017 Arthur Knoepflin
+** Last update Wed Apr 26 00:48:56 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -60,6 +60,7 @@ Access-Control-Allow-Origin: *\r\n"
 
 void	add_env_http(t_socket, char **, char ***);
 void	del_env_http(t_socket, char **, char ***);
+void	update_env_http(t_socket, char **, char ***);
 
 /*
 ** char_double.c
@@ -84,10 +85,22 @@ int	read_client(t_socket, char *);
 void	write_client(t_socket, char *);
 
 /*
+** decode.c
+*/
+
+int	urldecode(char *, char *);
+
+/*
 ** init_connection.c
 */
 
 int	init_connection(t_socket *);
+
+/*
+** indexof.c
+*/
+
+int	indexof(char **, char *);
 
 /*
 ** get_file_http.c

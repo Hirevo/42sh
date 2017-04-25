@@ -47,16 +47,31 @@
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="#env" class="mdl-layout__tab is-active" onclick="request(readEnv, 'get_env', 2);">Environnement</a>
-          <a href="#features" class="mdl-layout__tab">Features</a>
-          <a href="#features" class="mdl-layout__tab">Details</a>
-          <a href="#features" class="mdl-layout__tab">Technology</a>
-          <a href="#features" class="mdl-layout__tab">FAQ</a>
+          <a href="#features" class="mdl-layout__tab">Prompt</a>
+          <a href="#features" class="mdl-layout__tab">Information</a>
+          <a href="#features" class="mdl-layout__tab">Interpreteur</a>
           <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="close"  onclick="request(readQuit, 'quit', 1);">
             <i class="material-icons" role="presentation">close</i>
             <span class="visuallyhidden">Quitter</span>
           </button>
         </div>
       </header>
+      <div id="bg-white">
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp" id="updateEnvWin">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div class="mdl-card__supporting-text">
+                <form>
+                  <h4>Modifier une variable</h4>
+                  <input type="text" readonly placeholder="Nom" id="nameUpdateEnv"/><span class="sep-equal">=</span>
+                  <input type="text" placeholder="Valeur" id="valUpdateEnv"/>
+                </form>
+              </div>
+              <div class="mdl-card__actions">
+                <a href="#" class="mdl-button" id="updateEnv">Modifier</a>
+              </div>
+            </div>
+          </section>
+      </div>
       <main class="mdl-layout__content">
         <div class="mdl-layout__tab-panel is-active" id="env">
           <section class="section--center mdl-grid mdl-grid--no-spacing">

@@ -18,7 +18,6 @@ function getXMLHttpRequest() {
 		alert("Votre navigateur ne supporte pas l'objet XMLHTTPRequest...");
 		return null;
 	}
-
 	return xhr;
 }
 
@@ -53,17 +52,30 @@ function readQuit(data) {
 }
 
 function readData(data) {
-  if (data == 'quit') {
-    var newWin = window.open("", "_self");
-    newWin.document.write("Merci de fermer l'onglet");
-    newWin.close();
-  } else {
-	   document.getElementById("add").innerHTML = data;
-  }
+	console.log(data);
+}
+
+$(window).keydown(function(event) {
+	if (event.keyCode == 27) {
+		$("#bg-white").css('display', 'none');
+	}
+});
+
+function updateEnv() {
+	var nom = this.id.substr(6);
+	var env = $(this).parent()[0].innerText;
+	env = env.substr(0, env.length - 1);
+	var p_env = env.split('=', 2);
+
+	$("#bg-white").css('display', 'block');
+	$("#nameUpdateEnv").keydown(false);
+	$("#nameUpdateEnv").val(p_env[0]);
+	$("#valUpdateEnv").val(p_env[1]);
 }
 
 function delEnv() {
 	var xhr = getXMLHttpRequest();
+	var name = this.id.substr(6);
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
 				if (xhr.responseText == "del_env_ok") {
@@ -72,7 +84,7 @@ function delEnv() {
 			}
 		};
 	if (port) {
-		xhr.open("GET", "http://localhost:" + port + "/exec?arg=del_env&nom=" + encodeURIComponent(this.id), true);
+		xhr.open("GET", "http://localhost:" + port + "/exec?arg=del_env&nom=" + encodeURIComponent(name), true);
 		xhr.send(null);
 	} else {
 		alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
@@ -99,16 +111,24 @@ function readEnv(data) {
     for (var i = 0; i < json.length; i++) {
 			var p = document.createElement("p");
 			var br = document.createElement("br");
+			var update = document.createElement("span");
+			update.className = "fa fa-pencil update-env"
+			update.id = "update" + get_name_env(json[i]);
+
 			var del = document.createElement("span");
 			del.className = "fa fa-trash-o del-env";
-			del.id = get_name_env(json[i]);
+			del.id = "delete" + get_name_env(json[i]);
+
       var node = document.createElement("span");
-      node.innerHTML = json[i] + " ";
+      node.innerHTML = json[i];
+
+			node.appendChild(update);
 			node.appendChild(del);
 			node.appendChild(br);
 			p.appendChild(node);
       doc.appendChild(p);
 			$(del).click(delEnv);
+			$(update).click(updateEnv);
     }
   } else {
       var p = document.createElement("p");
@@ -143,7 +163,31 @@ $(document).ready(function() {
 		} else {
 			alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
 		}
-		return (false);
+		return false;
+	});
+
+	$("#updateEnv").click(function() {
+		var nom = $("#nameUpdateEnv").val();
+		var val = $("#valUpdateEnv").val();
+
+		var xhr = getXMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+					if (xhr.responseText == "update_env_ok") {
+						$("#nameUpdateEnv").val("");
+						$("#valUpdateEnv").val("");
+						$("#bg-white").css('display', 'none');
+						request(readEnv, 'get_env', 2);
+					}
+				}
+			};
+		if (port) {
+			xhr.open("GET", "http://localhost:" + port + "/exec?arg=update_env&nom=" + encodeURIComponent(nom) + "&val=" + encodeURIComponent(val), true);
+			xhr.send(null);
+		} else {
+			alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
+		}
+		return false;
 	});
 });
 
