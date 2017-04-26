@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon Apr 24 23:36:51 2017 Arthur Knoepflin
-** Last update Wed Apr 26 00:53:37 2017 Arthur Knoepflin
+** Last update Wed Apr 26 23:23:47 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -17,6 +17,11 @@ void	add_env_http(t_socket client, char **arg, char ***ae)
   char	*str;
 
   str = NULL;
+  if (indexof(*ae, arg[3]) != -1)
+    {
+      write_client(client, ERROR_RESP);
+      return ;
+    }
   if (nb_args(arg) == 6)
     {
       str = my_strcat("", arg[3]);

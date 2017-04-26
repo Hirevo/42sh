@@ -317,3 +317,29 @@ input:focus::-webkit-input-placeholder {
   left: 50%;
   transform: translate(-50%,-50%);
 }
+
+#terminalCore {
+  resize: none;
+  display: block;
+  width: 99%;
+  height: 19em !important;
+  border: none;
+  background: #2b2b2b;
+  border-radius: 5px 5px 0 0;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+#terminalInput {
+  resize: none;
+  background: #2b2b2b;
+  border: none;
+  width: 99%;
+  border-radius: 0 0 5px 5px;
+  color: white;
+  font-size: 1.5em;
+  line-height: 0.8;
+}
+
+#terminalInput:focus, #terminalCore:focus {
+  outline: none;
+}

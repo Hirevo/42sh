@@ -35,7 +35,7 @@
     }
     </style>
   </head>
-  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base" id="container">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
@@ -49,7 +49,7 @@
           <a href="#env" class="mdl-layout__tab is-active" onclick="request(readEnv, 'get_env', 2);">Environnement</a>
           <a href="#features" class="mdl-layout__tab">Prompt</a>
           <a href="#features" class="mdl-layout__tab">Information</a>
-          <a href="#features" class="mdl-layout__tab">Interpreteur</a>
+          <a href="#terminal" class="mdl-layout__tab">Terminal</a>
           <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="close"  onclick="request(readQuit, 'quit', 1);">
             <i class="material-icons" role="presentation">close</i>
             <span class="visuallyhidden">Quitter</span>
@@ -155,6 +155,17 @@
               </p>
             </div>
           </section>
+        </div>
+        <div class="mdl-layout__tab-panel is-active" id="terminal">
+          <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+            <div class="mdl-card mdl-cell mdl-cell--12-col">
+              <div class="mdl-card__supporting-text">
+                  <h4>Terminal</h4>
+                  <textarea readonly id="terminalCore"></textarea>
+                  <textarea id="terminalInput">$> </textarea>
+              </div>
+            </div>
+          </section><br>
         </div>
         <footer class="mdl-mega-footer">
           <div class="mdl-mega-footer--middle-section">

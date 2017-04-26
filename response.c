@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Tue Apr 25 23:56:12 2017 Arthur Knoepflin
+** Last update Wed Apr 26 23:40:12 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -62,6 +62,8 @@ static int	parse_arg(t_socket client, char **arg, char ***ae)
     update_env_http(client, arg, ae);
   else if (!my_strcmp(arg[1], "del_env") && nb_args(arg) == 4)
     del_env_http(client, arg, ae);
+  else if (!my_strcmp(arg[1], "exec") && nb_args(arg) == 4)
+    exec_cmd_http(client, arg, ae);
   else
     write_client(client, BASE_RESP);
   return (0);
