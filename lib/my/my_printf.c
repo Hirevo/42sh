@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Sat Mar 25 22:51:51 2017 Arthur Knoepflin
-** Last update Sat Mar 25 22:51:52 2017 Arthur Knoepflin
+** Last update Thu Apr 27 18:20:34 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -19,7 +19,8 @@ void	my_octal_putstr(char *str, int *c, t_flags *flags)
   int	count;
 
   count = -1;
-  while (str[++count] != 0 && (flags->precision > 0 || flags->precision == -1))
+  while (str[++count] != 0 &&
+	 (flags->precision > 0 || flags->precision == -1))
     {
       if (str[count] >= 32 && str[count] < 127)
 	my_putchar_printf(str[count], c);

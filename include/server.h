@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Wed Apr 26 23:42:56 2017 Arthur Knoepflin
+** Last update Thu Apr 27 17:33:49 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -25,7 +25,7 @@ typedef struct	sockaddr	t_sockaddr;
 
 # define	MIMETYPE	"mimetype"
 # define	CRLF		"\r\n"
-# define	MAX_CLIENTS	4096
+# define	MAX_CLIENTS	100
 # define	CHROME		"google-chrome"
 # define	FIREFOX		"firefox"
 # define	MAGIC		"exec"

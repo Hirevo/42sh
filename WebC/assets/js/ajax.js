@@ -138,47 +138,6 @@ function readEnv(data) {
 }
 
 $(document).ready(function() {
-	$("#terminalCore").click(function() {
-		$("#terminalInput").focus();
-		document.getElementById("terminalInput").selectionStart = 3;
-	});
-	$("#terminalInput").click(function() {
-		if (this.selectionStart <= 3) {
-			this.selectionStart = 3;
-		}
-	});
-	$("#terminalInput").keydown(function(e) {
-		if (e.keyCode == 38) {
-			this.selectionStart = 3;
-			this.selectionEnd = 3;
-			return (false);
-		}
-		if (this.selectionStart <= 3 && (e.keyCode == 8 || e.keyCode == 37  || e.keyCode == 39)) {
-			return (false);
-		}
-		if (this.selectionStart < 3) {
-			return (false);
-		}
-		if (e.keyCode == 13) {
-			var cmd = $("#terminalInput").val().substr(3);
-			var xhr = getXMLHttpRequest();
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
-						if (xhr.responseText == "exec_ok") {
-							$(this).val("$> ");
-						}
-					}
-				};
-			if (port) {
-				xhr.open("GET", "http://localhost:" + port + "/exec?arg=exec&cmd=" + encodeURIComponent(cmd), true);
-				xhr.send(null);
-			} else {
-				alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
-			}
-			return (false);
-		}
-	});
-
 	$("#nameAddEnv").keydown(function(e) {
 		var kc = e.key;
 		if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_".indexOf(e.key) == -1 &&
@@ -237,6 +196,13 @@ $(document).ready(function() {
 			alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
 		}
 		return false;
+	});
+
+	$(".nav-link").click(function() {
+		$("#terminal").css("display", "none");
+	});
+	$("#terminalLink").click(function() {
+		$("#terminal").css("display", "block");
 	});
 });
 
