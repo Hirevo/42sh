@@ -1,27 +1,51 @@
 ##
-## Makefile for Makefile in /home/nicolas/bin/Makefile
+## Makefile for Makefile in /home/nicolas/graphical/bootstrap_wireframe/
 ##
 ## Made by Nicolas Polomack
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Sat Apr 22 17:11:20 2017 Nicolas Polomack
+## Last update Thu Apr 27 15:33:00 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
 
-SRC	=	main.c			\
-		init.c			\
-		prompt/char.c		\
-		prompt/misc.c		\
-		prompt/prompt.c		\
-		prompt/actions.c	\
-		prompt/cursor.c		\
+SRC	=	alias/alias.c		\
+		alias/alias2.c		\
+		alias/alias3.c		\
+		parse/bufferize.c	\
+		builtins.c		\
+		cd.c			\
+		env/env.c		\
+		env/env2.c		\
+		exec/exec.c		\
+		exec/exec2.c		\
+		exec/pipe.c		\
+		exec/close.c		\
+		exec/setup.c		\
+		free.c			\
+		history.c		\
+		history2.c		\
+		home.c			\
+		misc.c			\
+		parse/parse.c		\
+		parse/error.c		\
+		path/path.c		\
+		path/path2.c		\
+		print.c			\
+		my_sh.c			\
+		exit.c			\
+		parse/line.c		\
+		redirects.c		\
+		buffer.c		\
+		char.c			\
+		is/is.c			\
+		is/is2.c		\
 		get_next_line.c
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -lmy
+CFLAGS	=	-Iinclude -Llib/my -lmy -g
 
 REDDARK	=	\033[31;2m
 
@@ -39,11 +63,7 @@ CYAN	=	\033[36;1m
 
 RES	=	\033[0m
 
-NAME	=	42sh
-
-PROJ	=	42sh
-
-UPPER	=	$(shell echo $(PROJ) | tr a-z A-Z)
+NAME	=	mysh
 
 all:	$(NAME)
 
@@ -54,11 +74,11 @@ $(NAME):$(OBJ)
 	@echo -en "$(CYAN)Compiling libmy...$(RES)"
 	@$(MAKE1)
 	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
-	@echo -en "$(CYAN)Linking $(PROJ)...$(RES)"
-	@gcc -o $(NAME) $(OBJ) $(CFLAGS) -lncurses
-	@echo -e "\t\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
+	@echo -en "$(CYAN)Linking Minishell2...$(RES)"
+	@gcc -o $(NAME) $(OBJ) $(CFLAGS)
+	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
 	@echo
-	@echo -e "$(GREEN)---- $(UPPER) READY ----$(RES)"
+	@echo -e "$(GREEN)---- MINISHELL2 READY ----$(RES)"
 	@echo
 
 clean:
