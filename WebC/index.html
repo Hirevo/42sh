@@ -47,7 +47,7 @@
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="#env" class="mdl-layout__tab is-active nav-link" id="envLink" onclick="request(readEnv, 'get_env', 2);">Environnement</a>
-          <a href="#features" class="mdl-layout__tab nav-link" id="featuresLink">Prompt</a>
+          <a href="#prompt" class="mdl-layout__tab nav-link" id="featuresLink">Prompt</a>
           <a href="#features" class="mdl-layout__tab nav-link" id="featuresLink">Information</a>
           <a href="#terminal" class="mdl-layout__tab nav-link" id="terminalLink">Terminal</a>
           <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="close"  onclick="request(readQuit, 'quit', 1);">
@@ -98,6 +98,22 @@
                   </div>
                 </div>
               </section><br>
+            </div>
+          </section>
+        </div>
+        <div class="mdl-layout__tab-panel" id="prompt">
+          <section class="section--center mdl-grid mdl-grid--no-spacing">
+            <div class="mdl-cell mdl-cell--12-col">
+              <h4>Prompt</h4>
+              Choisisser un prompt parmi ceux disponibles
+
+              <h5>Liste</h5>
+              <div id="promptAddList">
+              </div><br>
+              Ou composer le votre
+
+              <h5>Composition</h5>
+              <div></div>
             </div>
           </section>
         </div>
@@ -169,55 +185,13 @@
         </div>
       </main>
       <footer class="mdl-mega-footer">
-        <div class="mdl-mega-footer--middle-section">
-          <div class="mdl-mega-footer--drop-down-section">
-            <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-            <h1 class="mdl-mega-footer--heading">Features</h1>
-            <ul class="mdl-mega-footer--link-list">
-              <li><a href="#">About</a></li>
-              <li><a href="#">Terms</a></li>
-              <li><a href="#">Partners</a></li>
-              <li><a href="#">Updates</a></li>
-            </ul>
-          </div>
-          <div class="mdl-mega-footer--drop-down-section">
-            <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-            <h1 class="mdl-mega-footer--heading">Details</h1>
-            <ul class="mdl-mega-footer--link-list">
-              <li><a href="#">Spec</a></li>
-              <li><a href="#">Tools</a></li>
-              <li><a href="#">Resources</a></li>
-            </ul>
-          </div>
-          <div class="mdl-mega-footer--drop-down-section">
-            <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-            <h1 class="mdl-mega-footer--heading">Technology</h1>
-            <ul class="mdl-mega-footer--link-list">
-              <li><a href="#">How it works</a></li>
-              <li><a href="#">Patterns</a></li>
-              <li><a href="#">Usage</a></li>
-              <li><a href="#">Products</a></li>
-              <li><a href="#">Contracts</a></li>
-            </ul>
-          </div>
-          <div class="mdl-mega-footer--drop-down-section">
-            <input class="mdl-mega-footer--heading-checkbox" type="checkbox" checked>
-            <h1 class="mdl-mega-footer--heading">FAQ</h1>
-            <ul class="mdl-mega-footer--link-list">
-              <li><a href="#">Questions</a></li>
-              <li><a href="#">Answers</a></li>
-              <li><a href="#">Contact us</a></li>
-            </ul>
-          </div>
-        </div>
         <div class="mdl-mega-footer--bottom-section">
-          <div class="mdl-logo">
-            More Information
+          <div class="mdl-logo" title="Epitech Student">
+            <span class="fa fa-code"></span> with <span class="fa fa-heart-o"></span> by <span class="fa fa-graduation-cap"></span>
           </div>
           <ul class="mdl-mega-footer--link-list">
-            <li><a href="https://developers.google.com/web/starter-kit/">Web Starter Kit</a></li>
-            <li><a href="#">Help</a></li>
-            <li><a href="#">Privacy and Terms</a></li>
+            <li><a href="/help">Aide</a></li>
+            <li><a href="/privacy">Confidentialité</a></li>
           </ul>
         </div>
       </footer>
@@ -226,5 +200,6 @@
     <script src="assets/js/jquery-3.2.1.min.js"></script>
     <script src="assets/js/ajax.js"></script>
     <script src="assets/js/terminal.js"></script>
+    <script src="assets/js/prompt.js"></script>
   </body>
 </html>

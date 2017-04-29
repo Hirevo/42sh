@@ -13,7 +13,7 @@ html, body {
   display: none;
 }
 .mdl-demo .mdl-layout.is-small-screen .mdl-layout__tab-bar .mdl-button {
-  display: none;
+  transform: translateY(-57%);
 }
 .mdl-demo .mdl-layout:not(.is-small-screen) .mdl-layout__tab-bar,
 .mdl-demo .mdl-layout:not(.is-small-screen) .mdl-layout__tab-bar-container {
@@ -357,4 +357,76 @@ input:focus::-webkit-input-placeholder {
 
 #terminalInput:focus, #terminalCore:focus {
   outline: none;
+}
+
+.prompt-list {
+  height: 11em;
+}
+
+.prompt-list .selected {
+  border: green 2px solid !important;
+  background-color: #eaffe4;
+}
+
+.prompt-list .name {
+  display: inline-block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.prompt-list .left {
+  transition: 0.5s;
+  float: left;
+  padding-left: 3px;
+  padding: 2em 1.3em 2em 1.3em;
+  border: grey 2px solid;
+  width: 45%;
+  border-radius: 5px;
+}
+
+.prompt-list .right {
+  transition: 0.5s;
+  float: right;
+  padding-right: 3px;
+  padding: 2em 1.3em;
+  border: grey 2px solid;
+  width: 45%;
+  border-radius: 5px;
+}
+
+.prompt-list .right:not(.selected):hover, .prompt-list .left:not(.selected):hover {
+  background-color: #e6e6e6;
+}
+
+.green {
+  color: rgb(51, 204, 0);
+}
+
+.blue {
+  color: rgb(0, 140, 216);
+}
+
+.red {
+  color: rgb(255, 99, 71);
+}
+
+.white {
+  color: rgb(160, 160, 160);
+}
+
+.purple {
+  color: rgb(51, 0, 153);
+}
+
+.black {
+  color: rgb(40, 40, 40);
+}
+
+.yellow {
+  color: rgb(255, 255, 0);
+}
+
+.underline {
+  text-decoration: underline;
 }

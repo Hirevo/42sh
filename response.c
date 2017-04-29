@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Wed Apr 26 23:40:12 2017 Arthur Knoepflin
+** Last update Sat Apr 29 23:28:43 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -46,7 +46,7 @@ static char	*get_arg(char *head)
   return (NULL);
 }
 
-static int	parse_arg(t_socket client, char **arg, char ***ae)
+static int	parse_arg(t_socket client, char **arg, t_config *config)
 {
   if (!my_strcmp(arg[1], "quit"))
     {
@@ -55,21 +55,25 @@ static int	parse_arg(t_socket client, char **arg, char ***ae)
       return (1);
     }
   else if (!my_strcmp(arg[1], "get_env"))
-    send_env(client, *ae);
+    send_env(client, config->env);
   else if (!my_strcmp(arg[1], "add_env") && nb_args(arg) >= 5)
-    add_env_http(client, arg, ae);
+    add_env_http(client, arg, &(config->env));
   else if (!my_strcmp(arg[1], "update_env") && nb_args(arg) >= 5)
-    update_env_http(client, arg, ae);
+    update_env_http(client, arg, &(config->env));
   else if (!my_strcmp(arg[1], "del_env") && nb_args(arg) == 4)
-    del_env_http(client, arg, ae);
+    del_env_http(client, arg, &(config->env));
   else if (!my_strcmp(arg[1], "exec") && nb_args(arg) == 4)
-    exec_cmd_http(client, arg, ae);
+    exec_cmd_http(client, arg, &(config->env));
+  else if (!my_strcmp(arg[1], "get_prompt_sel"))
+    send_prompt_sel(client, config->prompt);
+  else if (!my_strcmp(arg[1], "update_prompt_sel") && nb_args(arg) == 4)
+    update_prompt_sel(client, config, arg);
   else
     write_client(client, BASE_RESP);
   return (0);
 }
 
-int	response(t_socket client, char *buf, char ***ae)
+int	response(t_socket client, char *buf, t_config *config)
 {
   char	*file;
   char	*r_arg;
@@ -81,7 +85,7 @@ int	response(t_socket client, char *buf, char ***ae)
     {
       if ((r_arg = get_arg(buf)) && (arg = my_split_mulchar(r_arg, "&=")))
 	  if (!my_strcmp(arg[0], "arg"))
-	    return (parse_arg(client, arg, ae));
+	    return (parse_arg(client, arg, config));
     }
   else
     send_file_http(client, my_strcat(PATH_DOC, get_file_http(buf)));

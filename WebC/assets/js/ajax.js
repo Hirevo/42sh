@@ -132,7 +132,7 @@ function readEnv(data) {
     }
   } else {
       var p = document.createElement("p");
-      p.innerHTML = "Il n'y a pas de variable d'environement";
+      p.innerHTML = "Il n'y a pas de variable d'environnement";
       doc.appendChild(p);
   }
 }

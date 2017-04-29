@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Thu Apr 27 17:33:49 2017 Arthur Knoepflin
+** Last update Sat Apr 29 23:30:56 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -23,9 +23,15 @@ typedef		int		t_socket;
 typedef	struct	sockaddr_in	t_sockaddr_in;
 typedef struct	sockaddr	t_sockaddr;
 
+typedef struct	s_config
+{
+  char		**env;
+  int		prompt;
+}		t_config;
+
 # define	MIMETYPE	"mimetype"
 # define	CRLF		"\r\n"
-# define	MAX_CLIENTS	100
+# define	MAX_CLIENTS	4096
 # define	CHROME		"google-chrome"
 # define	FIREFOX		"firefox"
 # define	MAGIC		"exec"
@@ -75,7 +81,7 @@ char	**del_to_chardouble(char *, char **);
 
 void	remove_client(t_socket *, int, int *);
 int	new_client(t_socket *, int *, fd_set *, t_socket);
-int	client_talk(t_socket *, int *, fd_set *, char ***);
+int	client_talk(t_socket *, int *, fd_set *, t_config *);
 
 /*
 ** com_serv.c
@@ -109,10 +115,34 @@ int	init_connection(t_socket *);
 int	indexof(char **, char *);
 
 /*
+** int_toc.c
+*/
+
+char	*int_toc(int);
+
+/*
+** get_env.c
+*/
+
+char	*get_env(char **, char *);
+
+/*
 ** get_file_http.c
 */
 
 char	*get_file_http(char *);
+
+/*
+** my_split.c
+*/
+
+char	**my_split(char *, char *);
+
+/*
+** my_split_char.c
+*/
+
+char	**my_split_char(char *, char);
 
 /*
 ** my_split_mulchar.c
@@ -121,10 +151,30 @@ char	*get_file_http(char *);
 char	**my_split_mulchar(char *, char *);
 
 /*
+** navigator.c
+*/
+
+char	*find_navigator(char **);
+int	launch_nav(char *, int, char **);
+
+/*
+** prompt.c
+*/
+
+void	send_prompt_sel(t_socket, int);
+void	update_prompt_sel(t_socket, t_config *, char **);
+
+/*
 ** response.c
 */
 
-int	response(t_socket, char *, char ***);
+int	response(t_socket, char *, t_config *);
+
+/*
+** send_env.c
+*/
+
+int	send_env(t_socket, char **);
 
 /*
 ** send_file_http.c
@@ -137,15 +187,5 @@ void	send_file_http(t_socket, char *);
 */
 
 void	send_mime(t_socket, char *);
-
-static void end_connection(int sock);
-static void clear_clients(t_socket *clients, int actual);
-char	**my_split(char *, char *);
-char	*int_toc(int);
-char	**my_split_char(char *, char);
-char	*find_navigator(char **);
-int	launch_nav(char *, int, char **);
-char	*get_env(char **, char *);
-int	send_env(t_socket, char **);
 
 #endif /* !SERVER_H_ */

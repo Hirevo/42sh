@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sun Apr 23 12:05:25 2017 Arthur Knoepflin
-** Last update Tue Apr 25 00:04:13 2017 Arthur Knoepflin
+** Last update Sat Apr 29 21:30:44 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
@@ -66,7 +66,7 @@ static void	client_disconnect(t_socket *clients, int *actual, int i)
 int	client_talk(t_socket *clients,
 		    int *actual,
 		    fd_set *rdfs,
-		    char ***ae)
+		    t_config *config)
 {
   int	i;
   int	ret;
@@ -83,7 +83,7 @@ int	client_talk(t_socket *clients,
 	    client_disconnect(clients, actual, i);
 	  else
 	    {
-	      ret = response(clients[i], buffer, ae);
+	      ret = response(clients[i], buffer, config);
 	      client_disconnect(clients, actual, i);
 	      if (ret == 1)
 		return (1);

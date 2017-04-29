@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 21:16:01 2016 Arthur Knoepflin
-** Last update Tue Apr 25 00:04:36 2017 Arthur Knoepflin
+** Last update Sat Apr 29 21:28:54 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
@@ -50,7 +50,7 @@ static void	clear_clients(t_socket *clients, int actual)
     }
 }
 
-static int	core(t_socket sock, char **ae, int actual)
+static int	core(t_socket sock, t_config *config, int actual)
 {
   int		i;
   int		stop;
@@ -66,29 +66,37 @@ static int	core(t_socket sock, char **ae, int actual)
       else if (FD_ISSET(sock, &rdfs))
 	new_client(clients, &actual, &rdfs, sock);
       else
-	stop = client_talk(clients, &actual, &rdfs, &ae);
+	stop = client_talk(clients, &actual, &rdfs, config);
     }
   my_putstr("Fermeture du serveur\n");
   clear_clients(clients, actual);
   closesocket(sock);
 }
 
-int		main(int ac, char **av, char **ae)
+int		config_http(t_config *config)
 {
   int		port;
-  t_socket	sock;
+  t_socket	serv;
   char		*p_nav;
 
-  if ((p_nav = find_navigator(ae)) == NULL)
+  if ((p_nav = find_navigator(config->env)) == NULL)
     {
       my_puterror("Aucun navigateur trouvé\n");
-      return (84);
+      return (1);
     }
   srand(getpid() * time(NULL));
-  if ((port = init_connection(&sock)) == -1)
-    return (84);
+  if ((port = init_connection(&serv)) == -1)
+    return (1);
   my_putstr("Initialisation terminé\n");
-  launch_nav(p_nav, port, ae);
-  core(sock, ae, 0);
+  launch_nav(p_nav, port, config->env);
+  core(serv, config, 0);
   return (0);
+}
+
+int		main(int ac, char **av, char **ae)
+{
+  t_config	config;
+
+  config.env = ae;
+  config_http(&config);
 }
