@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Sat Apr 29 23:30:56 2017 Arthur Knoepflin
+** Last update Tue May  2 22:12:48 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -23,6 +23,17 @@ typedef		int		t_socket;
 typedef	struct	sockaddr_in	t_sockaddr_in;
 typedef struct	sockaddr	t_sockaddr;
 
+typedef struct	s_info_pc
+{
+  char		*plateforme;
+  char		*version;
+  char		*hostname;
+  char		*os;
+  int		mem_total;
+  int		mem_available;
+  char		*proco;
+}		t_info_pc;
+
 typedef struct	s_config
 {
   char		**env;
@@ -31,7 +42,7 @@ typedef struct	s_config
 
 # define	MIMETYPE	"mimetype"
 # define	CRLF		"\r\n"
-# define	MAX_CLIENTS	4096
+# define	MAX_CLIENTS	100
 # define	CHROME		"google-chrome"
 # define	FIREFOX		"firefox"
 # define	MAGIC		"exec"
@@ -127,6 +138,12 @@ char	*int_toc(int);
 char	*get_env(char **, char *);
 
 /*
+** get_info.c
+*/
+
+t_info_pc	*get_info();
+
+/*
 ** get_file_http.c
 */
 
@@ -175,6 +192,12 @@ int	response(t_socket, char *, t_config *);
 */
 
 int	send_env(t_socket, char **);
+
+/*
+** send_info.c
+*/
+
+void	send_info(t_socket);
 
 /*
 ** send_file_http.c

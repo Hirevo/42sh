@@ -44,11 +44,9 @@ function request(callback, arg, mode) {
 }
 
 function readQuit(data) {
-  if (data == 'quit') {
-    var newWin = window.open("", "_self");
-    newWin.document.write("Merci de fermer l'onglet");
-    newWin.close();
-  }
+  var newWin = window.open("", "_self");
+  newWin.document.write("Merci de fermer l'onglet");
+  newWin.close();
 }
 
 function readData(data) {
@@ -191,6 +189,52 @@ $(document).ready(function() {
 			};
 		if (port) {
 			xhr.open("GET", "http://localhost:" + port + "/exec?arg=update_env&nom=" + encodeURIComponent(nom) + "&val=" + encodeURIComponent(val), true);
+			xhr.send(null);
+		} else {
+			alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
+		}
+		return false;
+	});
+
+	$("#informationLink").click(function() {
+		var nom = $("#nameUpdateEnv").val();
+		var val = $("#valUpdateEnv").val();
+
+		var xhr = getXMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+					var jsonResp = JSON.parse(xhr.responseText);
+					console.log(jsonResp);
+					var ram = Math.round((100 - ((jsonResp["memory_available"] / jsonResp["memory_total"]) * 100)));
+					var add = "";
+					add += "<p>OS : " + jsonResp["os"] + "</p>";
+					add += "<p>Nom de la machine : " + jsonResp["hostname"] + "</p>";
+					add += "<p>Platforme : " + jsonResp["platform"] + "</p>";
+					add += "<p>Version de l'OS : " + jsonResp["version"] + "</p>";
+					add += "<p>Processeur : " + jsonResp["process"] + "</p>";
+					add += "<p>Usage ram : " + ram + "%</p>";
+					google.charts.load("current", {packages:["corechart"]});
+      		google.charts.setOnLoadCallback(drawChart);
+					function drawChart() {
+        		var data = google.visualization.arrayToDataTable([
+          	['Ram', 'Pourcentage'],
+          	['Utilisé', jsonResp['memory_total'] - jsonResp['memory_available']],
+          	['Libre', jsonResp['memory_available']]
+        	]);
+
+        	var options = {
+          	pieHole: 0.4,
+        	};
+					$("#addConfig").html(add);
+					var elem = document.createElement("div");
+					$("#addConfig").append(elem);
+					var chart = new google.visualization.PieChart(elem);
+					chart.draw(data, options);
+				}
+			}
+			};
+		if (port) {
+			xhr.open("GET", "http://localhost:" + port + "/exec?arg=get_info", true);
 			xhr.send(null);
 		} else {
 			alert("Aucun port n'a été spécifier\nImpossible de comuniquer");

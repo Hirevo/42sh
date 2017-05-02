@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Tue Oct 25 22:43:58 2016 Arthur Knoepflin
-** Last update Mon Apr 24 20:20:01 2017 Arthur Knoepflin
+** Last update Tue May  2 16:27:17 2017 Arthur Knoepflin
 */
 #include <stdlib.h>
 #include "my.h"
@@ -27,7 +27,7 @@ int	size_int(int nb)
 
 char	*toc_alloc(int nb)
 {
-  char  *ret;
+  char	*ret;
 
   if (nb < 0)
     {

@@ -383,6 +383,7 @@ input:focus::-webkit-input-placeholder {
   border: grey 2px solid;
   width: 45%;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .prompt-list .right {
@@ -393,6 +394,7 @@ input:focus::-webkit-input-placeholder {
   border: grey 2px solid;
   width: 45%;
   border-radius: 5px;
+  cursor: pointer;
 }
 
 .prompt-list .right:not(.selected):hover, .prompt-list .left:not(.selected):hover {
@@ -429,4 +431,10 @@ input:focus::-webkit-input-placeholder {
 
 .underline {
   text-decoration: underline;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
 }

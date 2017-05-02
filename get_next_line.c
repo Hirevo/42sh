@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Jan  2 12:59:49 2017 Nicolas Polomack
-** Last update Thu Feb  2 18:25:37 2017 Nicolas Polomack
+** Last update Tue May  2 19:10:00 2017 Arthur Knoepflin
 */
 
 #include <unistd.h>
@@ -116,7 +116,11 @@ char		*get_next_line(const int fd)
   static int	fd_s = -1;
 
   if (READ_SIZE <= 0)
-    return (NULL);
+    {
+      free(final);
+      final = NULL;
+      return (NULL);
+    }
   if (final == NULL || (fd_s != fd && fd_s == -1))
     {
       fd_s = fd;

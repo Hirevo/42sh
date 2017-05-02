@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 21:16:01 2016 Arthur Knoepflin
-** Last update Sat Apr 29 21:28:54 2017 Arthur Knoepflin
+** Last update Tue May  2 18:37:37 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
@@ -98,5 +98,6 @@ int		main(int ac, char **av, char **ae)
   t_config	config;
 
   config.env = ae;
+  config.prompt = 3;
   config_http(&config);
 }

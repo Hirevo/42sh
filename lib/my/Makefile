@@ -5,12 +5,13 @@
 ## Login   <arthur@epitech.net>
 ## 
 ## Started on  Sat Mar 25 22:39:41 2017 Arthur Knoepflin
-## Last update Sun Apr 23 11:10:14 2017 Arthur Knoepflin
+## Last update Tue May  2 19:25:08 2017 Arthur Knoepflin
 ##
 
 SRC	=	free_tab.c		\
 		is_a_num.c		\
 		is_in.c			\
+		my_strdup_until.c	\
 		my_memset.c		\
 		my_putstr.c		\
 		my_putchar.c		\

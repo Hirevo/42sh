@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Thu Oct 13 10:04:36 2016 Nicolas POLOMACK
-** Last update Thu Mar 30 15:11:34 2017 Arthur Knoepflin
+** Last update Tue May  2 21:12:26 2017 Arthur Knoepflin
 */
 
 #ifndef MY_H_
@@ -27,6 +27,10 @@ void	free_tab(char **);
 int	is_a_num(char *);
 int	is_in(char *, char);
 int	my_puterror(char *);
+char	*my_strdup_until(char *, char);
+int	my_strlen_until(char *, char);
+char	*my_strdup_until_x(char *, char, int);
+int	my_strlen_until_x(char *, char, int);
 void	*my_memset(void *, int, int);
 void	my_putchar(char);
 int	my_isneg(int);

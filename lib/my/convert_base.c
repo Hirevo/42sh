@@ -5,16 +5,16 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Sat Mar 25 22:40:00 2017 Arthur Knoepflin
-** Last update Sat Mar 25 22:40:03 2017 Arthur Knoepflin
+** Last update Tue May  2 16:26:57 2017 Arthur Knoepflin
 */
 
 #include "my.h"
 
 char	*my_custom_revstr(char *str, int isNegative)
 {
-  int   count;
-  int   reverse_count;
-  char  resp[my_strlen(str) + 2];
+  int	count;
+  int	reverse_count;
+  char	resp[my_strlen(str) + 2];
 
   count = 0;
   reverse_count = my_strlen(str) - 1;
