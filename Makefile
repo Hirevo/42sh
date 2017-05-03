@@ -5,10 +5,12 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Mon May  1 01:46:51 2017 Nicolas Polomack
+## Last update Wed May  3 11:33:19 2017 Benjamin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
+
+MAKE2	=	make -sC lib/lib_benjaminsolca --no-print-directory
 
 SRC	=	alias/alias.c		\
 		alias/alias2.c		\
@@ -45,7 +47,7 @@ SRC	=	alias/alias.c		\
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -lmy
+CFLAGS	=	-Iinclude -Llib/my -Llib -lmy -lbs -lmy_printf
 
 REDDARK	=	\033[31;2m
 
@@ -73,6 +75,7 @@ $(NAME):$(OBJ)
 	@echo
 	@echo -en "$(CYAN)Compiling libmy...$(RES)"
 	@$(MAKE1)
+	@$(MAKE2)
 	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
 	@echo -en "$(CYAN)Linking TurboSh...$(RES)"
 	@gcc -o $(NAME) $(OBJ) $(CFLAGS)
@@ -83,12 +86,14 @@ $(NAME):$(OBJ)
 
 clean:
 	@$(MAKE1) clean
+	@$(MAKE2) clean
 	@$(foreach var, $(OBJ), if [ -e $(var) ] ; then \
 	printf "[$(RED)RM$(RES)] $(YEL)$(var)$(RES)\n" \
 	&& $(RM) $(var) ; fi ;)
 
 fclean:	clean
 	@$(MAKE1) fclean
+	@$(MAKE2) fclean
 	@if [ -e $(NAME) ] ; then \
 	printf "[$(RED)RM EXEC$(RES)] $(YEL)$(NAME)$(RES)\n" \
 	&& rm -f $(NAME) ; fi
