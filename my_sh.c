@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Wed May  3 11:37:59 2017 Benjamin
+** Last update Fri May  5 00:54:04 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -68,6 +68,7 @@ void		reload_shell(t_shell *shell)
 int	init_shell(t_shell *shell, char **ae)
 {
   shell->exit = 0;
+  shell->prompt = 0;
   shell->env = copy_env(ae);
   shell->path = init_path(shell->env);
   shell->home = get_home(shell->env);
@@ -102,12 +103,7 @@ int		main(int ac, char **av, char **ae)
   else
     while (1)
       {
-	if (shell.exit_str)
-	  my_printf("\e[1m\e[31m(%s)\e[0m ", shell.exit_str);
-	my_putstr("\e[1m\e[31mMinishell2\e[21m\e[0m ");
-	if (shell.current != NULL)
-	  my_putstr(shell.current);
-	my_putstr("$> ");
+	print_prompt(&shell);
 	shell.exit = process_command(&shell, 0);
       }
   return (exit);

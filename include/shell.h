@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May  4 22:14:31 2017 Arthur Knoepflin
+** Last update Thu May  4 23:49:41 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -53,6 +53,7 @@ typedef struct		s_alias
 */
 typedef struct		s_shell
 {
+  int			prompt;
   char			**env;
   char			**path;
   char			*home;
@@ -229,6 +230,13 @@ void	insert_int(int **, int);
 ** print.c
 */
 int	ret_error(t_shell *, char *);
+
+/*
+** prompt.c
+*/
+
+char	*get_hostname(void);
+void	print_prompt(t_shell *);
 
 /*
 ** exit.c

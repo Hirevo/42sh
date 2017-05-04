@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:04:03 2017 Nicolas Polomack
-** Last update Sun Jan 22 01:16:40 2017 Nicolas Polomack
+** Last update Fri May  5 00:12:37 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -65,12 +65,11 @@ char	*get_current(char *current, char *home)
     return (NULL);
   temp[0] = 0;
   current[0] = 0;
-  current = my_strcat(current, "\e[32m");
   if ((temp = getcwd(temp, 256)) == NULL)
     return (NULL);
   if (home && my_strcmp(home, "/"))
   temp = detect_home(temp, home);
-  current = my_strcat(my_strcat(current, temp), "\e[0m ");
+  current = my_strcat(current, temp);
   free(temp);
   return (current);
 }

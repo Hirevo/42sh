@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 20:40:56 2017 Arthur Knoepflin
-** Last update Thu May  4 22:58:49 2017 Arthur Knoepflin
+** Last update Thu May  4 23:28:03 2017 Arthur Knoepflin
 */
 
 #include "shell.h"
@@ -18,9 +18,9 @@ int		launch_config(t_shell *shell)
   t_config	config;
 
   config.env = shell->env;
-  config.prompt = 1;
+  config.prompt = shell->prompt;
   ret = config_http(&config);
-  /* shell->prompt = config.prompt; */
+  shell->prompt = config.prompt;
   shell->env = config.env;
   return (ret);
 }
