@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 21:32:22 2017 Arthur Knoepflin
-** Last update Sun Apr 23 11:03:46 2017 Arthur Knoepflin
+** Last update Thu May  4 21:46:44 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -63,14 +63,14 @@ int	send_env(t_socket client, char **env)
   send = my_strdup("[");
   while (env[i])
     {
-      send = my_strcat(send, "\"");
-      send = my_strcat(send, env[i]);
-      send = my_strcat(send, "\"");
+      send = my_strcatdup(send, "\"");
+      send = my_strcatdup(send, env[i]);
+      send = my_strcatdup(send, "\"");
       if (env[i + 1])
-	send = my_strcat(send, ",\n");
+	send = my_strcatdup(send, ",\n");
       i += 1;
     }
-  send = my_strcat(send, "]");
+  send = my_strcatdup(send, "]");
   send = encode_bs(send);
   write_client(client, HEAD_RESP);
   write_client(client, "Content-type: application/json\r\n\r\n");

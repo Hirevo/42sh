@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon Apr 24 23:36:51 2017 Arthur Knoepflin
-** Last update Wed Apr 26 23:23:47 2017 Arthur Knoepflin
+** Last update Thu May  4 22:30:35 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -15,6 +15,7 @@
 void	add_env_http(t_socket client, char **arg, char ***ae)
 {
   char	*str;
+  char	*decode;
 
   str = NULL;
   if (indexof(*ae, arg[3]) != -1)
@@ -24,15 +25,15 @@ void	add_env_http(t_socket client, char **arg, char ***ae)
     }
   if (nb_args(arg) == 6)
     {
-      str = my_strcat("", arg[3]);
-      str = my_strcat(str, "=");
-      str = my_strcat(str, arg[5]);
+      str = my_strcatdup(arg[3], "=");
+      if ((decode = malloc(sizeof(char) *
+			   (my_strlen(arg[5]) + 1))) == NULL)
+	return ;
+      urldecode(arg[5], decode);
+      str = my_strcatdup(str, decode);
     }
   else if (nb_args(arg) == 5)
-    {
-      str = my_strcat("", arg[3]);
-      str = my_strcat(str, "=");
-    }
+    str = my_strcatdup(arg[3], "=");
   *ae = add_to_chardouble(str, *ae);
   write_client(client, BASE_RESP);
   write_client(client, "add_env_ok");
@@ -51,14 +52,14 @@ void	update_env_http(t_socket client, char **arg, char ***ae)
   char	*decode;
   char	*new;
 
-  new = my_strcat(arg[3], "=");
+  new = my_strcatdup(arg[3], "=");
   if (nb_args(arg) == 6)
     {
       if ((decode = malloc(sizeof(char) *
 			   (my_strlen(arg[5]) + 1))) == NULL)
 	return ;
       urldecode(arg[5], decode);
-      new = my_strcat(new, decode);
+      new = my_strcatdup(new, decode);
     }
   if ((idx = indexof(*ae, arg[3])) != -1)
     (*ae)[idx] = new;

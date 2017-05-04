@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Tue May  2 22:12:48 2017 Arthur Knoepflin
+** Last update Thu May  4 22:15:51 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -47,7 +47,7 @@ typedef struct	s_config
 # define	FIREFOX		"firefox"
 # define	MAGIC		"exec"
 # define	PATH_WEB	"http://localhost:"
-# define	PATH_DOC	"WebC/"
+# define	PATH_DOC	"config/WebC/"
 # define	NF_RESP		"HTTP/1.0 404\r\n\
 Access-Control-Allow-Origin: *\r\n\r\n\
 <!DOCTYPE html><html><head><title>Configuration</title></head>\

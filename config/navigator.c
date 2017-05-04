@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 15:20:13 2017 Arthur Knoepflin
-** Last update Mon Apr 24 22:27:28 2017 Arthur Knoepflin
+** Last update Thu May  4 21:35:55 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -37,11 +37,11 @@ static char	*test_access(char *tmp)
 {
   char		*ret;
 
-  ret = my_strcat(tmp, CHROME);
+  ret = my_strcatdup(tmp, CHROME);
   if (access(ret, X_OK) == 0)
     return (ret);
   free(ret);
-  ret = my_strcat(tmp, FIREFOX);
+  ret = my_strcatdup(tmp, FIREFOX);
   if (access(ret, X_OK) == 0)
     return (ret);
   free(ret);
@@ -61,7 +61,7 @@ char	*find_navigator(char **ae)
   while (path[i])
     {
       if (path[i][my_strlen(path[i]) - 1] != '/')
-      	tmp = my_strcat(path[i], "/");
+      	tmp = my_strcatdup(path[i], "/");
       else
       	tmp = my_strdup(path[i]);
       if ((ret = test_access(tmp)) != NULL)
@@ -93,7 +93,7 @@ int	launch_nav(char *path, int port, char **ae)
   argv[2] = NULL;
   argv[0] = path;
   argv[1] = my_strdup(PATH_WEB);
-  argv[1] = my_strcat(argv[1], int_toc(port));
+  argv[1] = my_strcatdup(argv[1], int_toc(port));
   if ((pid = fork()) == 0)
     {
       dup_child();

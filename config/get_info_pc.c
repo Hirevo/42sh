@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  2 17:20:13 2017 Arthur Knoepflin
-** Last update Tue May  2 22:19:55 2017 Arthur Knoepflin
+** Last update Thu May  4 19:23:59 2017 Arthur Knoepflin
 */
 
 #include <sys/types.h>
@@ -13,9 +13,9 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include "my.h"
 #include "server.h"
 #include "get_next_line.h"
-#include "my.h"
 
 int	parse_version(t_info_pc *ret)
 {

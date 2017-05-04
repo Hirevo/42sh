@@ -5,13 +5,14 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri Apr  7 19:00:20 2017 Nicolas Polomack
+** Last update Thu May  4 22:14:31 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
 # define SHELL_H_
 
 # include <sys/stat.h>
+# include "server.h"
 
 typedef struct		s_command
 {
@@ -138,6 +139,12 @@ void	exec_piped_command(char *, t_command *, int[2], t_shell *);
 int	parse_alias(t_shell *);
 
 /*
+** config.c
+*/
+
+int	config_http(t_config *);
+
+/*
 ** history2.c
 */
 int	parse_history(t_shell *);
@@ -151,6 +158,12 @@ unsigned int	exec_redirected_builtins(t_shell *, int, int *, int[2]);
 ** exec/close.c
 */
 int	close_pipes(int *);
+
+/*
+** launch_config.c
+*/
+
+int	launch_config(t_shell *);
 
 /*
 ** redirects.c
