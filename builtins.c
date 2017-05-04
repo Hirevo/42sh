@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Sun Jan 22 01:15:56 2017 Nicolas Polomack
+** Last update Thu May  4 22:13:02 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -64,7 +64,12 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   int	i;
 
   i = 0;
-  if (my_strcmp(shell->cur->av[0], "exit") == 0)
+  if (!my_strcmp(shell->cur->av[0], "config"))
+    {
+      *r = launch_config(shell);
+      i = 1;
+    }
+  else if (my_strcmp(shell->cur->av[0], "exit") == 0)
     {
       *r = check_exit(shell, args);
       i = 1;

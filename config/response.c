@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Tue May  2 18:20:05 2017 Arthur Knoepflin
+** Last update Thu May  4 21:38:43 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -51,7 +51,7 @@ static int	parse_arg(t_socket client, char **arg, t_config *config)
   if (!my_strcmp(arg[1], "quit"))
     {
       my_putstr("Configuration terminé\n");
-      write_client(client, my_strcat(BASE_RESP, "quit"));
+      write_client(client, my_strcatdup(BASE_RESP, "quit"));
       return (1);
     }
   else if (!my_strcmp(arg[1], "get_env"))
@@ -90,6 +90,6 @@ int	response(t_socket client, char *buf, t_config *config)
 	    return (parse_arg(client, arg, config));
     }
   else
-    send_file_http(client, my_strcat(PATH_DOC, get_file_http(buf)));
+    send_file_http(client, my_strcatdup(PATH_DOC, get_file_http(buf)));
   return (0);
 }

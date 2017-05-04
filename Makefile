@@ -5,49 +5,73 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Wed May  3 11:33:19 2017 Benjamin
+## Last update Thu May  4 22:56:33 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
 
 MAKE2	=	make -sC lib/lib_benjaminsolca --no-print-directory
 
-SRC	=	alias/alias.c		\
-		alias/alias2.c		\
-		alias/alias3.c		\
-		parse/bufferize.c	\
-		builtins.c		\
-		cd.c			\
-		env/env.c		\
-		env/env2.c		\
-		exec/exec.c		\
-		exec/exec2.c		\
-		exec/pipe.c		\
-		exec/close.c		\
-		exec/setup.c		\
-		free.c			\
-		history.c		\
-		history2.c		\
-		home.c			\
-		misc.c			\
-		parse/parse.c		\
-		parse/error.c		\
-		path/path.c		\
-		path/path2.c		\
-		print.c			\
-		my_sh.c			\
-		exit.c			\
-		parse/line.c		\
-		redirects.c		\
-		buffer.c		\
-		char.c			\
-		is/is.c			\
-		is/is2.c		\
+SRC	=	alias/alias.c			\
+		alias/alias2.c			\
+		alias/alias3.c			\
+		parse/bufferize.c		\
+		builtins.c			\
+		cd.c				\
+		config/add_env_http.c		\
+		config/char_double.c		\
+		config/client.c			\
+		config/com_serv.c		\
+		config/config.c			\
+		config/exec_cmd_http.c		\
+		config/decode.c			\
+		config/get_env.c		\
+		config/get_info_pc.c		\
+		config/get_file_http.c		\
+		config/init_connection.c	\
+		config/indexof.c		\
+		config/int_toc.c		\
+		config/my_split.c		\
+		config/my_split_char.c		\
+		config/my_split_mulchar.c	\
+		config/navigator.c		\
+		config/prompt.c			\
+		config/response.c		\
+		config/send_env.c		\
+		config/send_info.c		\
+		config/send_file_http.c		\
+		config/send_mime.c		\
+		env/env.c			\
+		env/env2.c			\
+		exec/exec.c			\
+		exec/exec2.c			\
+		exec/pipe.c			\
+		exec/close.c			\
+		exec/setup.c			\
+		launch_config.c			\
+		free.c				\
+		history.c			\
+		history2.c			\
+		home.c				\
+		misc.c				\
+		parse/parse.c			\
+		parse/error.c			\
+		path/path.c			\
+		path/path2.c			\
+		print.c				\
+		my_sh.c				\
+		exit.c				\
+		parse/line.c			\
+		redirects.c			\
+		buffer.c			\
+		char.c				\
+		is/is.c				\
+		is/is2.c			\
 		get_next_line.c
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -Llib -lmy -lbs -lmy_printf
+CFLAGS	=	-Iinclude -Llib/my -Llib -lmy -lbs -lmy_printf -g
 
 REDDARK	=	\033[31;2m
 

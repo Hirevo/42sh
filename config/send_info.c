@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  2 18:21:00 2017 Arthur Knoepflin
-** Last update Tue May  2 22:36:41 2017 Arthur Knoepflin
+** Last update Thu May  4 22:08:37 2017 Arthur Knoepflin
 */
 
 #include "server.h"
@@ -15,20 +15,20 @@ static char	*get_resp(t_info_pc *info)
 {
   char		*ret;
 
-  ret = my_strcat("{\"hostname\" : \"", info->hostname);
-  ret = my_strcat(ret, "\", \"os\" : \"");
-  ret = my_strcat(ret, info->os);
-  ret = my_strcat(ret, "\", \"platform\" : \"");
-  ret = my_strcat(ret, info->plateforme);
-  ret = my_strcat(ret, "\", \"version\" : \"");
-  ret = my_strcat(ret, info->version);
-  ret = my_strcat(ret, "\", \"memory_total\" : ");
-  ret = my_strcat(ret, int_toc(info->mem_total));
-  ret = my_strcat(ret, ", \"memory_available\" : ");
-  ret = my_strcat(ret, int_toc(info->mem_available));
-  ret = my_strcat(ret, ", \"process\" : \"");
-  ret = my_strcat(ret, info->proco);
-  return (my_strcat(ret, "\"}"));
+  ret = my_strcatdup("{\"hostname\" : \"", info->hostname);
+  ret = my_strcatdup(ret, "\", \"os\" : \"");
+  ret = my_strcatdup(ret, info->os);
+  ret = my_strcatdup(ret, "\", \"platform\" : \"");
+  ret = my_strcatdup(ret, info->plateforme);
+  ret = my_strcatdup(ret, "\", \"version\" : \"");
+  ret = my_strcatdup(ret, info->version);
+  ret = my_strcatdup(ret, "\", \"memory_total\" : ");
+  ret = my_strcatdup(ret, int_toc(info->mem_total));
+  ret = my_strcatdup(ret, ", \"memory_available\" : ");
+  ret = my_strcatdup(ret, int_toc(info->mem_available));
+  ret = my_strcatdup(ret, ", \"process\" : \"");
+  ret = my_strcatdup(ret, info->proco);
+  return (my_strcatdup(ret, "\"}"));
 }
 
 void		send_info(t_socket client)

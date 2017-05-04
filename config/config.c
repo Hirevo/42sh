@@ -5,13 +5,14 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 21:16:01 2016 Arthur Knoepflin
-** Last update Tue May  2 18:37:37 2017 Arthur Knoepflin
+** Last update Thu May  4 23:00:26 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "server.h"
+#include "get_next_line.h"
 #include "my.h"
 
 static int	init_client(fd_set *rdfs,
@@ -62,12 +63,14 @@ static int	core(t_socket sock, t_config *config, int actual)
     {
       init_client(&rdfs, actual, sock, clients);
       if (FD_ISSET(STDIN_FILENO, &rdfs))
-	stop = 1;
+	stop = 2;
       else if (FD_ISSET(sock, &rdfs))
 	new_client(clients, &actual, &rdfs, sock);
       else
 	stop = client_talk(clients, &actual, &rdfs, config);
     }
+  if (stop == 2)
+    free(get_next_line(0));
   my_putstr("Fermeture du serveur\n");
   clear_clients(clients, actual);
   closesocket(sock);
@@ -91,13 +94,4 @@ int		config_http(t_config *config)
   launch_nav(p_nav, port, config->env);
   core(serv, config, 0);
   return (0);
-}
-
-int		main(int ac, char **av, char **ae)
-{
-  t_config	config;
-
-  config.env = ae;
-  config.prompt = 3;
-  config_http(&config);
 }
