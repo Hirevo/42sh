@@ -5,7 +5,7 @@
 ## Login   <benjamin.solca@epitech.eu>
 ##
 ## Started on  Wed Apr  5 11:14:13 2017 Benjamin
-## Last update Wed May  3 11:17:54 2017 
+## Last update Thu May  4 11:03:34 2017 Arthur Knoepflin
 ##
 
 RM	=	rm -rf
@@ -27,7 +27,6 @@ clean:
 
 
 fclean:		clean
-		rm ../*.a
 
 re: 		fclean all
 
