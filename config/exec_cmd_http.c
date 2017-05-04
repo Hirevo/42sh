@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed Apr 26 23:40:25 2017 Arthur Knoepflin
-** Last update Thu Apr 27 18:18:55 2017 Arthur Knoepflin
+** Last update Thu May  4 17:34:28 2017 Arthur Knoepflin
 */
 
 #include <errno.h>
@@ -16,10 +16,15 @@
 
 char	*get_cmd_exc(char *cmd_path, char *cmd)
 {
+  char	*tmp;
+
   if (cmd_path && !my_strcmp(cmd_path, "emacs"))
     return (my_strdup(cmd));
   else
-    return (my_strcat("timeout 1 ", cmd));
+    {
+      tmp = my_strcat("timeout 1 ", cmd);
+      return (my_strcat(tmp, " 2>&1"));
+    }
 }
 
 static int	execute_http(t_socket client, char *cmd, char **cmd_p)
@@ -33,11 +38,7 @@ static int	execute_http(t_socket client, char *cmd, char **cmd_p)
   cmd_exc = get_cmd_exc(cmd_p[0], cmd);
   if (dup2(client, 1) == -1)
     return (1);
-  if (system(cmd_exc) == 32512)
-    {
-      write(client, cmd_p[0], my_strlen(cmd_p[0]));
-      write(client, ": Command not found", 19);
-    }
+  system(cmd_exc);
   dup2(sauv, 1);
 }
 
