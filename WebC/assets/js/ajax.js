@@ -196,15 +196,11 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$("#informationLink").click(function() {
-		var nom = $("#nameUpdateEnv").val();
-		var val = $("#valUpdateEnv").val();
-
+	function load_pc_info() {
 		var xhr = getXMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
 					var jsonResp = JSON.parse(xhr.responseText);
-					console.log(jsonResp);
 					var ram = Math.round((100 - ((jsonResp["memory_available"] / jsonResp["memory_total"]) * 100)));
 					var add = "";
 					add += "<p>OS : " + jsonResp["os"] + "</p>";
@@ -223,7 +219,7 @@ $(document).ready(function() {
         	]);
 
         	var options = {
-          	pieHole: 0.4,
+          	pieHole: 0,
         	};
 					$("#addConfig").html(add);
 					var elem = document.createElement("div");
@@ -240,6 +236,10 @@ $(document).ready(function() {
 			alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
 		}
 		return false;
+	}
+
+	$("#informationLink").click(function() {
+		load_pc_info();
 	});
 
 	$(".nav-link").click(function() {
@@ -248,6 +248,7 @@ $(document).ready(function() {
 	$("#terminalLink").click(function() {
 		$("#terminal").css("display", "block");
 	});
+	setInterval(load_pc_info, 10000);
 });
 
 request(readEnv, 'get_env', 2);
