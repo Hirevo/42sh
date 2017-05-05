@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May  5 06:42:11 2017 Nicolas Polomack
+** Last update Fri May  5 13:35:50 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -104,7 +104,8 @@ int		main(int ac, char **av, char **ae)
         write(1, "\n", 1);
       if (!shell.line || !strcmp(shell.line, "exit"))
         break;
-      shell.exit = exec_line(&shell, 0);
+      if (!is_line_empty(&shell))
+	shell.exit = exec_line(&shell, 0);
     }
   if (shell.tty)
     {

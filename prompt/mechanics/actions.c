@@ -5,12 +5,13 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Fri May  5 06:26:41 2017 Nicolas Polomack
+** Last update Fri May  5 13:32:40 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include "my.h"
 #include "shell.h"
 
 void	remove_char(t_shell *shell)
@@ -80,6 +81,8 @@ void	clear_term(t_shell *shell)
     {
       write(1, shell->w.clear, strlen(shell->w.clear));
       init_prompt(shell);
+      if (shell->line)
+	my_putstr(shell->line);
       pos_cursor(shell);
     }
 }
