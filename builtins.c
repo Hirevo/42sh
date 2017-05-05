@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Fri May  5 02:06:06 2017 Nicolas Polomack
+** Last update Fri May  5 06:44:20 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -25,6 +25,11 @@ int	exec_builtins3(t_shell *shell, int args, int *r, int i)
         *r = add_alias(shell, shell->cur->av[1], shell->cur->av[2]);
       else
 	*r = my_print_err("alias: invalid syntax\n");
+      i = 1;
+    }
+  else if (my_strcmp(shell->cur->av[0], "echo") == 0)
+    {
+      *r = echo_term(shell->cur->av + 1);
       i = 1;
     }
   return (i);

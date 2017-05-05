@@ -5,12 +5,13 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May  5 02:05:13 2017 Nicolas Polomack
+** Last update Fri May  5 06:47:51 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
 # define SHELL_H_
 
+# include <termio.h>
 # include <sys/stat.h>
 # include "server.h"
 
@@ -35,6 +36,17 @@ typedef struct		s_alias
   char			*command;
   struct s_alias	*next;
 }			t_alias;
+
+typedef struct	s_window
+{
+  struct termio	oterm;
+  char		*clear;
+  char		*forw;
+  char		*backw;
+  char		*left;
+  char		*right;
+  int		cur;
+}		t_window;
 
 /*
 ** This is the main structure that binds the shell together
@@ -69,9 +81,12 @@ typedef struct		s_shell
   char			*last;
   char			*prev;
   int			*fds;
+  int			tty;
+  char			*cwd;
   t_alias		*alias;
   t_command		*commands;
   t_command		*cur;
+  t_window		w;
 }			t_shell;
 
 unsigned int	count_args(char *);
@@ -201,6 +216,11 @@ void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int *);
 
 /*
+** echo.c
+*/
+int	echo_term(char **);
+
+/*
 ** is.c
 */
 int	is_redirect(char *);
@@ -238,5 +258,44 @@ void	print_prompt(t_shell *);
 ** exit.c
 */
 int	set_error(t_shell *, int);
+
+/*
+** init.c
+*/
+void	init(t_shell *);
+void	init_prompt(t_shell *);
+
+/*
+** misc.c
+*/
+char	get_input();
+void	handle_error(char *);
+
+/*
+** prompt/mechanics/char.c
+*/
+void	insert_char_cur(char **, char, int);
+void	delete_char(char **, int);
+
+/*
+** prompt/mechanics/actions.c
+*/
+void	remove_char(t_shell *);
+void	add_char(t_shell *, char);
+void	move_cursor(t_shell *, char);
+void	clear_term(t_shell *);
+void	pos_cursor(t_shell *);
+
+/*
+** prompt/mechanics/cursor.c
+*/
+void	buffer_seq(t_shell *, char **, int *, char);
+void	move_forw(t_shell *);
+void	move_backw(t_shell *);
+
+/*
+** prompt/mechanics/prompt.c
+*/
+void	prompt_line(t_shell *);
 
 #endif /* !SHELL_H_ */

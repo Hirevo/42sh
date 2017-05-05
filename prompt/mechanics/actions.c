@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Sat Apr 22 17:42:41 2017 Nicolas Polomack
+** Last update Fri May  5 06:26:41 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -35,7 +35,7 @@ void	remove_char(t_shell *shell)
 
 void	add_char(t_shell *shell, char c)
 {
-  insert_char(&shell->line, c, shell->w.cur);
+  insert_char_cur(&shell->line, c, shell->w.cur);
   if (shell->tty)
     {
       write(1, shell->line + shell->w.cur, strlen(shell->line + shell->w.cur));
@@ -69,8 +69,8 @@ void	move_cursor(t_shell *shell, char c)
     move_forw(shell);
   else
     while (str[++dir])
-      insert_char(&shell->line, str[dir],
-		  shell->line ? strlen(shell->line) : 0);
+      insert_char_cur(&shell->line, str[dir],
+		      shell->line ? strlen(shell->line) : 0);
   free(str);
 }
 

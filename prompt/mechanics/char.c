@@ -5,14 +5,14 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Mar 23 10:29:41 2017 Nicolas Polomack
-** Last update Tue Apr 18 19:12:58 2017 Nicolas Polomack
+** Last update Fri May  5 06:28:04 2017 Nicolas Polomack
 */
 
 #include <string.h>
 #include <stdlib.h>
 #include "shell.h"
 
-void	insert_char(char **str, char c, int cur)
+void	insert_char_cur(char **str, char c, int cur)
 {
   int	i;
   char	*new;
@@ -63,28 +63,6 @@ void	delete_char(char **str, int cur)
       c += 1;
     }
   new[c] = 0;
-  free(*str);
-  *str = new;
-}
-
-void	insert_int(int **str, int c)
-{
-  int	i;
-  int	*new;
-
-  i = -1;
-  if (*str == NULL)
-    i = 0;
-  else
-    while ((*str)[++i]);
-  if ((new = malloc(sizeof(int) * (i + 2))) == NULL)
-    return ;
-  i = (*str == NULL) ? 0 : -1;
-  if (*str != NULL)
-    while ((*str)[++i])
-      new[i] = (*str)[i];
-  new[i++] = c;
-  new[i] = 0;
   free(*str);
   *str = new;
 }

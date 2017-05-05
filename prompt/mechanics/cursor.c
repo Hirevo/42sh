@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 17:04:32 2017 Nicolas Polomack
-** Last update Sat Apr 22 17:41:55 2017 Nicolas Polomack
+** Last update Fri May  5 06:27:32 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -16,12 +16,12 @@ void	buffer_seq(t_shell *shell, char **str, int *dir, char c)
 {
   *str = NULL;
   *dir = -1;
-  insert_char(str, c, 0);
+  insert_char_cur(str, c, 0);
   while (strstr(shell->w.left, *str) ||
          strstr(shell->w.right, *str))
     {
       while (!(c = get_input()));
-      insert_char(str, c, strlen(*str));
+      insert_char_cur(str, c, strlen(*str));
       if (!strcmp(*str, shell->w.left))
         {
           *dir = 1;

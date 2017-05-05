@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Fri May  5 02:34:56 2017 Nicolas Polomack
+## Last update Fri May  5 06:47:24 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -41,6 +41,7 @@ SRC	=	alias/alias.c			\
 		config/send_info.c		\
 		config/send_file_http.c		\
 		config/send_mime.c		\
+		echo.c				\
 		env/env.c			\
 		env/env2.c			\
 		exec/exec.c			\
@@ -64,19 +65,25 @@ SRC	=	alias/alias.c			\
 		prompt/turbosh.c		\
 		prompt/tcsh.c			\
 		prompt/minimalist.c		\
+		prompt/mechanics/prompt.c	\
+		prompt/mechanics/actions.c	\
+		prompt/mechanics/char.c		\
+		prompt/mechanics/cursor.c	\
+		prompt/mechanics/misc.c		\
 		my_sh.c				\
 		exit.c				\
 		parse/line.c			\
 		redirects.c			\
 		buffer.c			\
 		char.c				\
+		init.c				\
 		is/is.c				\
 		is/is2.c			\
 		get_next_line.c
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -Llib -lmy -lbs -lmy_printf -g -D_GNU_SOURCE=1
+CFLAGS	=	-Iinclude -Llib/my -Llib -lmy -lbs -lmy_printf -lncurses -D_GNU_SOURCE=1 -g
 
 REDDARK	=	\033[31;2m
 

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:05:01 2017 Nicolas Polomack
-** Last update Sat Apr 22 17:54:28 2017 Nicolas Polomack
+** Last update Fri May  5 06:34:09 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -18,8 +18,8 @@ static void	make_action(t_shell *shell, char c)
     clear_term(shell);
   else if (c == 127)
     remove_char(shell);
-  else if (c == shell->w.forw[0] ||
-	   c == shell->w.backw[0])
+  else if (shell->tty && (c == shell->w.forw[0] ||
+			  c == shell->w.backw[0]))
     move_cursor(shell, c);
   else
     add_char(shell, c);

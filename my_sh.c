@@ -5,9 +5,11 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May  5 02:29:35 2017 Nicolas Polomack
+** Last update Fri May  5 06:42:11 2017 Nicolas Polomack
 */
 
+#include <string.h>
+#include <sys/ioctl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -91,13 +93,24 @@ int		main(int ac, char **av, char **ae)
   signal(SIGINT, SIG_IGN);
   if (init_shell(&shell, ae) == -1)
     return (84);
-  if (!isatty(0))
-    exit = process_command(&shell, 1);
-  else
-    while (1)
-      {
-	print_prompt(&shell);
-	shell.exit = process_command(&shell, 0);
-      }
-  return (exit);
+  init(&shell);
+  while (1)
+    {
+      shell.line = NULL;
+      shell.w.cur = 0;
+      init_prompt(&shell);
+      prompt_line(&shell);
+      if (shell.line && shell.tty)
+        write(1, "\n", 1);
+      if (!shell.line || !strcmp(shell.line, "exit"))
+        break;
+      shell.exit = exec_line(&shell, 0);
+    }
+  if (shell.tty)
+    {
+      write(1, "exit\n", 5);
+      if (ioctl(0, TCSETA, &shell.w.oterm) == -1)
+        handle_error("ioctl");
+    }
+  return (shell.exit);
 }
