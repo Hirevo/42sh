@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Wed Oct 12 09:23:05 2016 Nicolas POLOMACK
-** Last update Thu Feb  2 00:30:51 2017 Nicolas Polomack
+** Last update Sun Mar 26 18:47:14 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -29,10 +29,24 @@ char	*my_strdup(char *src)
   return (resp);
 }
 
+char	*my_strndup(char *str, int size)
+{
+  int	i;
+  char	*ret;
+
+  ret = malloc(size + 1);
+  i = -1;
+  while (++i < size)
+    ret[i] = str[i];
+  ret[i] = 0;
+  return (ret);
+}
+
 char	**my_strarrdup(char **arr)
 {
   char	**final;
   int	i;
+  int	j;
 
   i = -1;
   while (arr[++i]);
@@ -40,7 +54,12 @@ char	**my_strarrdup(char **arr)
     return (NULL);
   i = -1;
   while (arr[++i])
-    final[i] = my_strdup(arr[i]);
+    {
+      if (arr[i][0] == '"' || arr[i][0] == '\'')
+	final[i] = my_strndup(arr[i] + 1, my_strstrlen(arr[i] + 1, "\"'"));
+      else
+	final[i] = my_strdup(arr[i]);
+    }
   final[i] = NULL;
   return (final);
 }

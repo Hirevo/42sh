@@ -5,17 +5,8 @@
 ** Login   <nicolas.polomack@epitech.net>
 ** 
 ** Started on  Mon Oct 10 09:09:04 2016 Nicolas POLOMACK
-** Last update Fri Mar 17 12:17:26 2017 Nicolas Polomack
+** Last update Tue Feb 21 20:32:06 2017 
 */
-
-void	my_memcpy(void *ptr, void *ptr2, int size)
-{
-  int	i;
-
-  i = -1;
-  while (++i < size)
-    *((char *)ptr) = *((char *)ptr2);
-}
 
 char	*my_memset(char *buffer, char c, int size)
 {
