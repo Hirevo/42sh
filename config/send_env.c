@@ -5,11 +5,12 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 21:32:22 2017 Arthur Knoepflin
-** Last update Thu May  4 21:46:44 2017 Arthur Knoepflin
+** Last update Fri May  5 09:53:37 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
 #include "server.h"
+#include "shell.h"
 #include "my.h"
 
 static int	get_len(char *str)
@@ -61,12 +62,12 @@ int	send_env(t_socket client, char **env)
 
   i = 0;
   send = my_strdup("[");
-  while (env[i])
+  while (environ[i])
     {
       send = my_strcatdup(send, "\"");
-      send = my_strcatdup(send, env[i]);
+      send = my_strcatdup(send, environ[i]);
       send = my_strcatdup(send, "\"");
-      if (env[i + 1])
+      if (environ[i + 1])
 	send = my_strcatdup(send, ",\n");
       i += 1;
     }
