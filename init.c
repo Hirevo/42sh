@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Sat Apr 22 17:38:30 2017 Nicolas Polomack
+** Last update Fri May  5 05:55:34 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -50,15 +50,5 @@ void	init_prompt(t_shell *shell)
 {
   if (!shell->tty)
     return ;
-  shell->cwd = getcwd(NULL, 0);
-  write(1, RED, strlen(RED));
-  write(1, "42sh", 4);
-  write(1, RESET, strlen(RESET));
-  write(1, " ", 1);
-  write(1, GREEN, strlen(GREEN));
-  write(1, shell->cwd, strlen(shell->cwd));
-  write(1, RESET, strlen(RESET));
-  write(1, " $> ", 4);
-  if (shell->line)
-    write(1, shell->line, strlen(shell->line));
+  print_prompt(shell);
 }
