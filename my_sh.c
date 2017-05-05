@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May  5 06:42:11 2017 Nicolas Polomack
+** Last update Fri May  5 10:27:57 2017 Arthur Knoepflin
 */
 
 #include <string.h>

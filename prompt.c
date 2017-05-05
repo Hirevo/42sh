@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:33:54 2017 Arthur Knoepflin
-** Last update Fri May  5 00:52:17 2017 Arthur Knoepflin
+** Last update Fri May  5 10:15:13 2017 Arthur Knoepflin
 */
 
 #include <sys/stat.h>
@@ -34,6 +34,8 @@ static void	get_tab_prompt(void (*tab_prompt[6])(t_shell *))
   tab_prompt[1] = &bash_prompt;
   tab_prompt[2] = &tcsh_prompt;
   tab_prompt[3] = &minimalist_prompt;
+  tab_prompt[4] = &ketchup_prompt;
+  tab_prompt[5] = &bigmac_prompt;
 }
 
 void	print_prompt(t_shell *shell)
