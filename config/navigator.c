@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 15:20:13 2017 Arthur Knoepflin
-** Last update Thu May  4 21:35:55 2017 Arthur Knoepflin
+** Last update Fri May  5 02:35:19 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -28,7 +28,7 @@ static char	**get_path(char **ae)
   ret[1] = my_strdup("/usr/bin");
   if (!ae)
     return (ret);
-  if ((tmp = get_env(ae, "PATH")) == NULL)
+  if ((tmp = get_env("PATH")) == NULL)
     return (ret);
   return (my_split(tmp, ":"));
 }

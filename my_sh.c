@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May  5 00:54:04 2017 Arthur Knoepflin
+** Last update Fri May  5 02:29:35 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -44,24 +44,18 @@ void		reload_shell(t_shell *shell)
 {
   int		i;
   int		k;
+  char		*path;
 
-  i = -1;
-  while (shell->env && shell->env[++i])
-    if (!my_strncmp(shell->env[i], "PATH=", 4))
+  if ((path = getenv("PATH")))
+    if (shell->path)
       {
-	if (shell->path)
-          {
-	    k = -1;
-            while (shell->path[++k])
-	      free(shell->path[k]);
-            free(shell->path);
-          }
-	shell->path = init_path(shell->env);
-	break;
+	k = -1;
+	while (shell->path[++k])
+	  free(shell->path[k]);
+	free(shell->path);
       }
-  if (shell->home != NULL)
-    free(shell->home);
-  shell->home = get_home(shell->env);
+  shell->path = init_path(path);
+  shell->home = getenv("HOME");
   shell->current = get_current(shell->current, shell->home);
 }
 
@@ -69,9 +63,8 @@ int	init_shell(t_shell *shell, char **ae)
 {
   shell->exit = 0;
   shell->prompt = 0;
-  shell->env = copy_env(ae);
-  shell->path = init_path(shell->env);
-  shell->home = get_home(shell->env);
+  shell->path = init_path(getenv("PATH"));
+  shell->home = getenv("HOME");
   if ((shell->current = malloc(512)) == NULL)
     return (-1);
   shell->current[0] = 0;

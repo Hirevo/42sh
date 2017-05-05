@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Sun Jan 22 01:16:37 2017 Nicolas Polomack
+** Last update Fri May  5 02:28:47 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -20,7 +20,7 @@ int	check_wave(t_shell *shell)
   char	*new;
   int	i;
 
-  if ((home = get_home(shell->env)) == NULL ||
+  if ((home = getenv("HOME")) == NULL ||
       (new = malloc(my_strlen(home) + my_strlen(shell->line) + 1)) == NULL)
     return (0);
   i = 0;
@@ -30,14 +30,12 @@ int	check_wave(t_shell *shell)
   if (shell->line[i] == 0)
     {
       free(new);
-      free(home);
       return (0);
     }
   new = my_strcat(new, home);
   new = my_strcat(new, shell->line + i + 1);
   free(shell->line);
   shell->line = my_strdup(new);
-  free(home);
   free(new);
   return (1);
 }

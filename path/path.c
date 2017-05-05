@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:46:13 2017 Nicolas Polomack
-** Last update Sun Jan 22 01:17:02 2017 Nicolas Polomack
+** Last update Fri May  5 02:00:52 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -50,21 +50,12 @@ int	is_path(char *str)
   return (0);
 }
 
-char	**init_path(char **ae)
+char	**init_path(char *str)
 {
   int	i;
   int	arg;
   char	**path;
-  char	*str;
 
-  if (ae == NULL)
-    return (NULL);
-  i = -1;
-  str = NULL;
-  while (ae[++i] != NULL)
-    if (ae[i][0] == 'P' && ae[i][1] == 'A' && ae[i][2] == 'T' &&
-        ae[i][3] == 'H' && ae[i][4] == '=')
-      str = my_strdup((ae[i]) + 5);
   if (str == NULL ||
       (path = malloc(sizeof(char *) * (count_entries(str) + 2))) == NULL)
     return (NULL);
@@ -74,7 +65,6 @@ char	**init_path(char **ae)
     if (i == -1)
       return (NULL);
   path[arg] = NULL;
-  free(str);
   return (path);
 }
 
@@ -101,7 +91,7 @@ void		set_path(t_shell *shell, char *path)
   while ((path + obj)[++i] != 0)
     entry[i] = (path + obj)[i];
   entry[i] = 0;
-  set_env(&(shell->env), name, entry);
+  setenv(name, entry, 1);
   free(name);
   free(entry);
 }

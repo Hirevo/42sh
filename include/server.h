@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Thu May  4 22:15:51 2017 Arthur Knoepflin
+** Last update Fri May  5 02:27:39 2017 Nicolas Polomack
 */
 
 #ifndef SERVER_H_
@@ -75,9 +75,9 @@ Access-Control-Allow-Origin: *\r\n"
 ** add_env_http.c
 */
 
-void	add_env_http(t_socket, char **, char ***);
-void	del_env_http(t_socket, char **, char ***);
-void	update_env_http(t_socket, char **, char ***);
+void	add_env_http(t_socket, char **);
+void	del_env_http(t_socket, char **);
+void	update_env_http(t_socket, char **);
 
 /*
 ** char_double.c
@@ -135,7 +135,7 @@ char	*int_toc(int);
 ** get_env.c
 */
 
-char	*get_env(char **, char *);
+char	*get_env(char *);
 
 /*
 ** get_info.c

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Thu May  4 22:13:02 2017 Arthur Knoepflin
+** Last update Fri May  5 02:06:06 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -41,15 +41,15 @@ int	exec_builtins2(t_shell *shell, int args, int *r, int i)
            my_strcmp(shell->cur->av[0], "unsetenv") == 0)
     {
       if (args == 3 && my_strcmp(shell->cur->av[0], "setenv") == 0)
-        *r = set_env(&(shell->env), shell->cur->av[1], shell->cur->av[2]);
+        *r = set_env(shell->cur->av[1], shell->cur->av[2]);
       else if (args == 1 && my_strcmp(shell->cur->av[0], "setenv") == 0)
-        *r = disp_env(shell->env);
+        *r = disp_env();
       else if (args == 2 && my_strcmp(shell->cur->av[0], "setenv") == 0)
-        *r = set_env(&(shell->env), shell->cur->av[1], "");
+        *r = set_env(shell->cur->av[1], "");
       else if (args == 1 && my_strcmp(shell->cur->av[0], "unsetenv") == 0)
         *r = my_print_err("unsetenv: Too few arguments.\n");
       else if (my_strcmp(shell->cur->av[0], "unsetenv") == 0)
-	*r = unset_env(&(shell->env), shell->cur->av);
+	*r = unset_env(shell->cur->av);
       else
         *r = my_print_err(shell->cur->av[0]) +
           my_print_err(": Too many arguments.\n") - 1;
@@ -77,7 +77,7 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   else if (my_strcmp(shell->cur->av[0], "env") == 0)
     {
       if (args == 1)
-        *r = disp_env(shell->env);
+        *r = disp_env();
       else
         my_print_err("env - invalid number of arguments\n");
       i = 1;

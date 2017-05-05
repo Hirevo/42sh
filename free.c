@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:12:24 2017 Nicolas Polomack
-** Last update Wed Mar 22 23:59:20 2017 Nicolas Polomack
+** Last update Fri May  5 02:36:29 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -43,15 +43,7 @@ void	free_shell(t_shell *shell)
         free(shell->path[i]);
       free(shell->path);
     }
-  i = -1;
-  if (shell->env != NULL)
-    {
-      while (shell->env[++i] != NULL)
-        free(shell->env[i]);
-      free(shell->env);
-    }
   save_alias(shell);
-  (shell->home != NULL) ? free(shell->home) : 0;
   free(shell->current);
   free_shell2(shell);
 }

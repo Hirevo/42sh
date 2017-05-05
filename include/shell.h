@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May  4 23:49:41 2017 Arthur Knoepflin
+** Last update Fri May  5 02:05:13 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -13,6 +13,8 @@
 
 # include <sys/stat.h>
 # include "server.h"
+
+extern char	**environ;
 
 typedef struct		s_command
 {
@@ -54,7 +56,6 @@ typedef struct		s_alias
 typedef struct		s_shell
 {
   int			prompt;
-  char			**env;
   char			**path;
   char			*home;
   char			*current;
@@ -83,20 +84,15 @@ unsigned int	exec_line(t_shell *, unsigned int);
 void	parse_path(t_shell *);
 int	count_entries(char *);
 int	get_next_entry(char *, char **, int);
-char	**init_path(char **);
+char	**init_path(char *);
 char	**set_default_path();
-int	disp_env(char **);
+int	disp_env();
 int	move_dir(char **, int, t_shell *);
 unsigned int	exec_action(t_shell *, unsigned int);
 unsigned int	process_command(t_shell *, int);
-char	**add_to_env(char **, char *, char *);
 int	is_char_alpha(char *);
-void	mod_env(char ***, char *, char *, int);
-int	set_env(char ***, char *, char *);
-int	unset_env(char ***, char **);
-int	remove_env_entry(char ***, int);
-char	**copy_env(char **);
-char	*get_home(char **);
+int	set_env(char *, char *);
+int	unset_env(char **);
 void	free_shell(t_shell *);
 void	free_shell2(t_shell *);
 void	free_commands(t_shell *);

@@ -5,64 +5,59 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon Apr 24 23:36:51 2017 Arthur Knoepflin
-** Last update Thu May  4 22:30:35 2017 Arthur Knoepflin
+** Last update Fri May  5 02:32:00 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
+#include "shell.h"
 #include "server.h"
 #include "my.h"
 
-void	add_env_http(t_socket client, char **arg, char ***ae)
+void	add_env_http(t_socket client, char **arg)
 {
-  char	*str;
   char	*decode;
 
-  str = NULL;
-  if (indexof(*ae, arg[3]) != -1)
+  if (getenv(arg[3]))
     {
       write_client(client, ERROR_RESP);
       return ;
     }
   if (nb_args(arg) == 6)
     {
-      str = my_strcatdup(arg[3], "=");
       if ((decode = malloc(sizeof(char) *
 			   (my_strlen(arg[5]) + 1))) == NULL)
 	return ;
       urldecode(arg[5], decode);
-      str = my_strcatdup(str, decode);
+      set_env(arg[3], decode);
+      free(decode);
     }
   else if (nb_args(arg) == 5)
-    str = my_strcatdup(arg[3], "=");
-  *ae = add_to_chardouble(str, *ae);
+    set_env(arg[3], "");
   write_client(client, BASE_RESP);
   write_client(client, "add_env_ok");
 }
 
-void	del_env_http(t_socket client, char **arg, char ***ae)
+void	del_env_http(t_socket client, char **arg)
 {
-  *ae = del_to_chardouble(arg[3], *ae);
+  unsetenv(arg[3]);
   write_client(client, BASE_RESP);
   write_client(client, "del_env_ok");
 }
 
-void	update_env_http(t_socket client, char **arg, char ***ae)
+void	update_env_http(t_socket client, char **arg)
 {
   int	idx;
   char	*decode;
   char	*new;
 
-  new = my_strcatdup(arg[3], "=");
   if (nb_args(arg) == 6)
     {
       if ((decode = malloc(sizeof(char) *
 			   (my_strlen(arg[5]) + 1))) == NULL)
 	return ;
       urldecode(arg[5], decode);
-      new = my_strcatdup(new, decode);
+      set_env(arg[3], decode);
     }
-  if ((idx = indexof(*ae, arg[3])) != -1)
-    (*ae)[idx] = new;
   write_client(client, BASE_RESP);
   write_client(client, "update_env_ok");
 }

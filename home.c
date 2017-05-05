@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:04:03 2017 Nicolas Polomack
-** Last update Fri May  5 00:12:37 2017 Arthur Knoepflin
+** Last update Fri May  5 01:59:19 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -13,20 +13,6 @@
 #include "shell.h"
 #include "my.h"
 #include "get_next_line.h"
-
-char	*get_home(char **env)
-{
-  int	i;
-
-  i = -1;
-  if (env == NULL)
-    return (NULL);
-  while (env[++i] != NULL)
-    if (env[i][0] == 'H' && env[i][1] == 'O' && env[i][2] == 'M' &&
-        env[i][3] == 'E' && env[i][4] == '=' && env[i][5] != 0)
-      return (my_strdup(env[i] + 5));
-  return (NULL);
-}
 
 char	*detect_home(char *temp, char *home)
 {

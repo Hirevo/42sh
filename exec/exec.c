@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri Apr  7 19:07:18 2017 Nicolas Polomack
+** Last update Fri May  5 02:10:32 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -21,16 +21,16 @@
 
 void	exec_child(t_shell *shell, int i)
 {
-  if (!is_path(shell->cur->av[0]))
-      execve(cat_path(shell->path, shell->cur->av[0], i), shell->cur->av,
-	     shell->env);
-  else
-    execve(shell->cur->av[0], shell->cur->av, shell->env);
+  execvpe(shell->cur->av[0], shell->cur->av, environ);
   if (errno == ENOEXEC)
     exit(my_print_err(shell->cur->av[0]) +
 	 my_print_err(": Exec format error. Binary file not executable.\n") - 1);
-  exit(my_print_err(shell->cur->av[0]) +
-       my_print_err(": Command not found.\n") - 1);
+  else if (errno == ENOENT)
+    exit(my_print_err(shell->cur->av[0]) +
+	 my_print_err(": Command not found.\n") - 1);
+  else
+    exit(my_print_err(shell->cur->av[0]) +
+         my_print_err(": Permission denied.\n") - 1);
   exit(0);
 }
 

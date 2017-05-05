@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:38:58 2017 Arthur Knoepflin
-** Last update Fri May  5 00:19:54 2017 Arthur Knoepflin
+** Last update Fri May  5 01:37:04 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -18,7 +18,7 @@ void	bash_prompt(t_shell *shell)
   char	*login;
   char	*hostname;
 
-  if ((login = getlogin()) && (hostname = get_hostname()))
+  if ((login = getenv("LOGNAME")) && (hostname = get_hostname()))
     my_printf("\033[32;1m%s@%s\033[0m", login, hostname);
   free(hostname);
   my_putstr(":");
