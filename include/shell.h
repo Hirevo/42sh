@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May  5 06:47:51 2017 Nicolas Polomack
+** Last update Sat May  6 18:54:03 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -268,6 +268,7 @@ void	init_prompt(t_shell *);
 /*
 ** misc.c
 */
+void	set_raw();
 char	get_input();
 void	handle_error(char *);
 
