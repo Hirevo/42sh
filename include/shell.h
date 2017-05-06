@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May  5 06:47:51 2017 Nicolas Polomack
+** Last update Sat May  6 22:02:17 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -172,6 +172,35 @@ unsigned int	exec_redirected_builtins(t_shell *, int, int *, int[2]);
 int	close_pipes(int *);
 
 /*
+** dualcast.c
+*/
+
+int	launch_dualcast(t_shell *, int);
+
+/*
+** dualcast/connect.c
+*/
+
+t_socket	init_connect_dc(char *);
+
+/*
+** dualcast/wait_connection.c
+*/
+
+t_socket	wait_connection(t_socket, fd_set *, char *);
+
+/*
+** dualcast/init_dualcast.c
+*/
+
+int	init_dualcast(t_socket *);
+
+/*
+** dualcast/get_password.c
+*/
+char	*get_password();
+
+/*
 ** launch_config.c
 */
 
@@ -262,6 +291,8 @@ int	set_error(t_shell *, int);
 /*
 ** init.c
 */
+
+void	set_raw(struct termio *oterm);
 void	init(t_shell *);
 void	init_prompt(t_shell *);
 

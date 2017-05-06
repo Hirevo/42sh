@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Fri May  5 02:27:39 2017 Nicolas Polomack
+** Last update Sat May  6 17:04:32 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -18,10 +18,12 @@
 # include <unistd.h>
 # define	INVALID_SOCKET	-1
 # define	SOCKET_ERROR	-1
+# define	DUALCAST_PORT	33000
 # define	closesocket(s)	close(s)
-typedef		int		t_socket;
-typedef	struct	sockaddr_in	t_sockaddr_in;
-typedef struct	sockaddr	t_sockaddr;
+typedef int			t_socket;
+typedef	struct sockaddr_in	t_sockaddr_in;
+typedef struct sockaddr		t_sockaddr;
+typedef struct in_addr		t_in_addr;
 
 typedef struct	s_info_pc
 {

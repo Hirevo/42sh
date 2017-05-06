@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Fri May  5 10:15:41 2017 Arthur Knoepflin
+## Last update Sat May  6 21:58:43 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -49,6 +49,11 @@ SRC	=	alias/alias.c			\
 		exec/pipe.c			\
 		exec/close.c			\
 		exec/setup.c			\
+		dualcast.c			\
+		dualcast/connect.c		\
+		dualcast/get_password.c		\
+		dualcast/init_dualcast.c	\
+		dualcast/wait_connection.c	\
 		launch_config.c			\
 		free.c				\
 		history.c			\

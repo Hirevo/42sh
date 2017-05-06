@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Fri May  5 06:44:20 2017 Nicolas Polomack
+** Last update Sat May  6 18:35:15 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -30,6 +30,11 @@ int	exec_builtins3(t_shell *shell, int args, int *r, int i)
   else if (my_strcmp(shell->cur->av[0], "echo") == 0)
     {
       *r = echo_term(shell->cur->av + 1);
+      i = 1;
+    }
+  else if (my_strcmp(shell->cur->av[0], "dualcast") == 0)
+    {
+      *r = launch_dualcast(shell, args);
       i = 1;
     }
   return (i);
