@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Thu Jan 19 12:54:48 2017 Nicolas Polomack
-** Last update Fri May  5 06:13:05 2017 Nicolas Polomack
+** Last update Sat May  6 22:15:44 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -24,28 +24,6 @@ int	compare_stats(struct stat *stats)
       return (-3);
   else
     return (-2);
-}
-
-unsigned int	process_command(t_shell *shell, int i)
-{
-  unsigned int	args;
-
-  if (i)
-    while (shell->line = get_next_line(0))
-      {
-        if (is_line_empty(shell))
-          return (0);
-        args = exec_line(shell, 0);
-      }
-  else
-    {
-      if ((shell->line = get_next_line(0)) == NULL)
-        shell->line = my_strdup("exit");
-      if (is_line_empty(shell))
-        return (0);
-      args = exec_line(shell, 0);
-    }
-  return (args);
 }
 
 unsigned int	exec_redirected_builtins(t_shell *shell, int count,

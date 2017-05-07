@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri May  5 02:10:32 2017 Nicolas Polomack
+** Last update Sun May  7 00:27:14 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -79,7 +79,8 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
     }
   if (shell->exit_str)
     free(shell->exit_str);
-  shell->exit_str = my_unsigned_to_char(r);
+  if ((shell->exit_str = my_unsigned_to_char(r)) == NULL)
+    exit(84);
   shell->hist = shell->final;
   shell->hist_args = args;
   return (r);
@@ -88,6 +89,7 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
 unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
   if (parse_alias(shell) == -1 || parse_history(shell) == -1 ||
+      parse_vars(shell) == -1 ||
       (shell->line = my_epurstr(shell->line)) == NULL ||
       (shell->line = my_epurcommand(shell->line)) == NULL)
     return (set_error(shell, 1));

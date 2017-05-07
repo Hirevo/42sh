@@ -5,12 +5,10 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Fri May  5 10:15:41 2017 Arthur Knoepflin
+## Last update Sat May  6 23:30:29 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
-
-MAKE2	=	make -sC lib/lib_benjaminsolca --no-print-directory
 
 SRC	=	alias/alias.c			\
 		alias/alias2.c			\
@@ -19,7 +17,6 @@ SRC	=	alias/alias.c			\
 		builtins.c			\
 		cd.c				\
 		config/add_env_http.c		\
-		config/char_double.c		\
 		config/client.c			\
 		config/com_serv.c		\
 		config/config.c			\
@@ -29,7 +26,6 @@ SRC	=	alias/alias.c			\
 		config/get_info_pc.c		\
 		config/get_file_http.c		\
 		config/init_connection.c	\
-		config/indexof.c		\
 		config/int_toc.c		\
 		config/my_split.c		\
 		config/my_split_char.c		\
@@ -51,8 +47,8 @@ SRC	=	alias/alias.c			\
 		exec/setup.c			\
 		launch_config.c			\
 		free.c				\
-		history.c			\
-		history2.c			\
+		globbing/globbing.c		\
+		globbing/history.c		\
 		home.c				\
 		misc.c				\
 		parse/parse.c			\
@@ -85,7 +81,7 @@ SRC	=	alias/alias.c			\
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -Llib -lmy -lbs -lmy_printf -lncurses -D_GNU_SOURCE=1 -g
+CFLAGS	=	-Iinclude -Llib/my -lmy -lncurses -D_GNU_SOURCE=1 -g
 
 REDDARK	=	\033[31;2m
 
@@ -113,7 +109,6 @@ $(NAME):$(OBJ)
 	@echo
 	@echo -en "$(CYAN)Compiling libmy...$(RES)"
 	@$(MAKE1)
-	@$(MAKE2)
 	@echo -e "\t$(GREEN)OK$(RES)$(CYAN)!$(RES)"
 	@echo -en "$(CYAN)Linking TurboSh...$(RES)"
 	@gcc -o $(NAME) $(OBJ) $(CFLAGS)
@@ -124,14 +119,12 @@ $(NAME):$(OBJ)
 
 clean:
 	@$(MAKE1) clean
-	@$(MAKE2) clean
 	@$(foreach var, $(OBJ), if [ -e $(var) ] ; then \
 	printf "[$(RED)RM$(RES)] $(YEL)$(var)$(RES)\n" \
 	&& $(RM) $(var) ; fi ;)
 
 fclean:	clean
 	@$(MAKE1) fclean
-	@$(MAKE2) fclean
 	@if [ -e $(NAME) ] ; then \
 	printf "[$(RED)RM EXEC$(RES)] $(YEL)$(NAME)$(RES)\n" \
 	&& rm -f $(NAME) ; fi

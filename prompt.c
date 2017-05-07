@@ -5,12 +5,13 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:33:54 2017 Arthur Knoepflin
-** Last update Fri May  5 10:15:13 2017 Arthur Knoepflin
+** Last update Sun May  7 00:54:38 2017 Nicolas Polomack
 */
 
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include "prompt.h"
 #include "get_next_line.h"
@@ -47,4 +48,13 @@ void	print_prompt(t_shell *shell)
     tab_prompt[shell->prompt](shell);
   else
     tab_prompt[0](shell);
+}
+
+void	get_prompt(t_shell *shell)
+{
+  char	*str;
+
+  shell->prompt = 0;
+  if ((str = getenv("PROMPT")) != NULL)
+    shell->prompt = strtol(str, NULL, 10);
 }

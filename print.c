@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:08:11 2017 Nicolas Polomack
-** Last update Sun Apr  2 18:00:29 2017 Nicolas Polomack
+** Last update Sat May  6 22:17:55 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -29,16 +29,6 @@ int	my_print_ret(char *err, int ret)
 {
   write(2, err, my_strlen(err));
   return (ret);
-}
-
-void	my_print_command(t_shell *shell)
-{
-  int	i;
-
-  i = -1;
-  while (shell->final[++i])
-    my_printf((i) ? " %s" : "%s", shell->final[i]);
-  my_putchar(10);
 }
 
 int	ret_error(t_shell *shell, char *message)

@@ -1,0 +1,6 @@
+make clean
+make CFLAGS="-Iinclude -I../include -I../../include -Llib/my -lmy -lncurses -D_GNU_SOURCE=1 -fdump-rtl-expand"
+egypt `find . -name "*.expand"` | dot -Grankdir=LR -Tpng -o callgraph.png
+make fclean
+find . -name "*.expand" -delete
+xdg-open callgraph.png

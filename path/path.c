@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:46:13 2017 Nicolas Polomack
-** Last update Fri May  5 02:00:52 2017 Nicolas Polomack
+** Last update Sun May  7 00:41:08 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -96,7 +96,7 @@ void		set_path(t_shell *shell, char *path)
   free(entry);
 }
 
-void	parse_path(t_shell *shell)
+void	parse_rc(t_shell *shell)
 {
   int	fd;
   char	*path;
@@ -108,7 +108,7 @@ void	parse_path(t_shell *shell)
   if (shell->home[my_strlen(shell->home)] != '/')
     path[my_strlen(shell->home)] = '/';
   path[my_strlen(shell->home) + 1] = 0;
-  path = my_strcat(path, ".myshrc");
+  path = my_strcat(path, RC_FILE);
   if ((fd = open(path, O_RDONLY)) == -1)
     return ;
   free(path);

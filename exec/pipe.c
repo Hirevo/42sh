@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Thu Apr 27 15:42:43 2017 Nicolas Polomack
+** Last update Sat May  6 22:46:57 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -106,7 +106,7 @@ int	get_return(t_shell *shell)
       waitpid(shell->fds[i], &r, 0);
       if (!WIFEXITED(r))
 	diagnose_status(r);
-      if (r)
+      if (r && !final)
 	final = r;
     }
   free(shell->fds);

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sat May  6 18:54:03 2017 Nicolas Polomack
+** Last update Sun May  7 00:55:51 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -14,6 +14,9 @@
 # include <termio.h>
 # include <sys/stat.h>
 # include "server.h"
+
+# define RC_FILE ".42shrc"
+# define ALIAS_FILE ".42sh_alias"
 
 extern char	**environ;
 
@@ -96,7 +99,7 @@ char	*cat_path(char **, char *, int);
 void	exec_child(t_shell *, int);
 unsigned int	exec_command(char **, t_shell *);
 unsigned int	exec_line(t_shell *, unsigned int);
-void	parse_path(t_shell *);
+void	parse_rc(t_shell *);
 int	count_entries(char *);
 int	get_next_entry(char *, char **, int);
 char	**init_path(char *);
@@ -216,6 +219,11 @@ void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int *);
 
 /*
+** globbing/globbing.c
+*/
+int	parse_vars(t_shell *);
+
+/*
 ** echo.c
 */
 int	echo_term(char **);
@@ -235,6 +243,7 @@ int	is_builtin(char *);
 int	is_separator(char);
 int	is_space(char);
 int	is_delimiter(char);
+int	is_alphanum(char);
 
 /*
 ** char.c
@@ -250,7 +259,6 @@ int	ret_error(t_shell *, char *);
 /*
 ** prompt.c
 */
-
 char	*get_hostname(void);
 void	print_prompt(t_shell *);
 

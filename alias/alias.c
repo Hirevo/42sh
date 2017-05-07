@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:38:06 2017 Nicolas Polomack
-** Last update Sun Jan 22 01:15:45 2017 Nicolas Polomack
+** Last update Sun May  7 00:55:03 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -59,7 +59,7 @@ void		save_alias(t_shell *shell)
   if (shell->home[my_strlen(shell->home)] != '/')
     path[my_strlen(shell->home)] = '/';
   path[my_strlen(shell->home) + 1] = 0;
-  path = my_strcat(path, ".mysh_alias");
+  path = my_strcat(path, ALIAS_FILE);
   if ((fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR |
                  S_IRGRP | S_IROTH)) == -1)
     return ;
@@ -114,7 +114,7 @@ void	init_aliases(t_shell *shell)
   if (shell->home[my_strlen(shell->home)] != '/')
     path[my_strlen(shell->home)] = '/';
   path[my_strlen(shell->home) + 1] = 0;
-  path = my_strcat(path, ".mysh_alias");
+  path = my_strcat(path, ALIAS_FILE);
   if ((fd = open(path, O_RDONLY)) == -1)
     return ;
   free(path);

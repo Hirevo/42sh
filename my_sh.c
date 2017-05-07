@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May  5 13:39:06 2017 Nicolas Polomack
+** Last update Sun May  7 00:54:06 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -64,7 +64,6 @@ void		reload_shell(t_shell *shell)
 int	init_shell(t_shell *shell, char **ae)
 {
   shell->exit = 0;
-  shell->prompt = 0;
   shell->path = init_path(getenv("PATH"));
   shell->home = getenv("HOME");
   if ((shell->current = malloc(512)) == NULL)
@@ -79,8 +78,9 @@ int	init_shell(t_shell *shell, char **ae)
   shell->fds = NULL;
   shell->is_done = 0;
   init_aliases(shell);
-  parse_path(shell);
+  parse_rc(shell);
   shell->path = (shell->path) ? shell->path : set_default_path();
+  get_prompt(shell);
   return (0);
 }
 
