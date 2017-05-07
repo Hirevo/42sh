@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Sun May  7 00:54:06 2017 Nicolas Polomack
+** Last update Sun May  7 22:55:56 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -81,6 +81,7 @@ int	init_shell(t_shell *shell, char **ae)
   parse_rc(shell);
   shell->path = (shell->path) ? shell->path : set_default_path();
   get_prompt(shell);
+  init(shell);
   return (0);
 }
 
@@ -93,7 +94,6 @@ int		main(int ac, char **av, char **ae)
   signal(SIGINT, SIG_IGN);
   if (init_shell(&shell, ae) == -1)
     return (84);
-  init(&shell);
   while (1)
     {
       shell.line = NULL;
@@ -108,10 +108,8 @@ int		main(int ac, char **av, char **ae)
 	shell.exit = exec_line(&shell, 0);
     }
   if (shell.tty)
-    {
-      write(1, "exit\n", 5);
-      if (ioctl(0, TCSETA, &shell.w.oterm) == -1)
-        handle_error("ioctl");
-    }
+    if (write(1, "exit\n", 5) == -1 ||
+	ioctl(0, TCSETA, &shell.w.oterm) == -1)
+      handle_error("ioctl");
   return (shell.exit);
 }

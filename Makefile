@@ -5,14 +5,15 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Sat May  6 23:30:29 2017 Nicolas Polomack
+## Last update Sun May  7 22:34:46 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
 
 SRC	=	alias/alias.c			\
-		alias/alias2.c			\
-		alias/alias3.c			\
+		alias/edit.c			\
+		alias/parse.c			\
+		alias/unalias.c			\
 		parse/bufferize.c		\
 		builtins.c			\
 		cd.c				\
@@ -81,7 +82,7 @@ SRC	=	alias/alias.c			\
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -lmy -lncurses -D_GNU_SOURCE=1 -g
+CFLAGS	=	-Iinclude -Llib/my -lmy -lncurses -D_GNU_SOURCE=1
 
 REDDARK	=	\033[31;2m
 

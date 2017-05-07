@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Mar 20 19:57:11 2017 Nicolas Polomack
-** Last update Thu Apr  6 17:53:17 2017 Nicolas Polomack
+** Last update Sun May  7 22:59:09 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -76,22 +76,14 @@ int	check_redirects(t_command *head, t_command *last)
 
   init_redirect(head, &r, &l, &i);
   while (head->av[++i])
-    {
-      if (is_right_redirect(head->av[i]))
-	{
-	  if (head->av[i + 1] == NULL)
-	    return (my_print_ret("Missing name for redirect.\n", -1));
-	  else
-	    r += 1;
-	}
-      if (is_left_redirect(head->av[i]))
-        {
-	  if (head->av[i + 1] == NULL)
-	    return (my_print_ret("Missing name for redirect.\n", -1));
-	  else
-	    l += 1;
-	}
-    }
+    if (is_right_redirect(head->av[i]) ||
+	is_left_redirect(head->av[i]))
+      {
+	if (head->av[i + 1] == NULL)
+	  return (my_print_ret("Missing name for redirect.\n", -1));
+	else
+	  (is_left_redirect(head->av[i])) ? (l += 1) : (r += 1);
+      }
   if (r > 1 || (r == 1 && head->link == '|'))
     return (my_print_ret("Ambiguous output redirect.\n", -1));
   else if (l > 1 || (l == 1 && last && last->link == '|'))

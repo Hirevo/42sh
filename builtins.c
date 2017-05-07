@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Fri May  5 06:44:20 2017 Nicolas Polomack
+** Last update Sun May  7 22:42:11 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -21,10 +21,17 @@ int	exec_builtins3(t_shell *shell, int args, int *r, int i)
         *r = disp_all_alias(shell);
       else if (args == 2)
         *r = disp_alias(shell, shell->cur->av[1]);
-      else if (args == 3)
-        *r = add_alias(shell, shell->cur->av[1], shell->cur->av[2]);
+      else if (args >= 3)
+        *r = add_alias(shell, shell->cur->av[1],
+		       construct_alias(shell->cur->av + 2));
+      i = 1;
+    }
+  else if (my_strcmp(shell->cur->av[0], "unalias") == 0)
+    {
+      if (args >= 2)
+	*r = unalias(shell, shell->cur->av + 1);
       else
-	*r = my_print_err("alias: invalid syntax\n");
+	*r = my_print_err("unalias: Too few arguments.\n");
       i = 1;
     }
   else if (my_strcmp(shell->cur->av[0], "echo") == 0)

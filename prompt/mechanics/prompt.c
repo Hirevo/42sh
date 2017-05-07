@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:05:01 2017 Nicolas Polomack
-** Last update Sat May  6 18:53:36 2017 Nicolas Polomack
+** Last update Sun May  7 22:51:52 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -29,7 +29,8 @@ void	prompt_line(t_shell *shell)
 {
   char  c;
 
-  set_raw(&shell->w.oterm);
+  if (shell->tty)
+    set_raw(&shell->w.oterm);
   c = -1;
   while (c != 10)
     {
@@ -45,6 +46,7 @@ void	prompt_line(t_shell *shell)
         break;
       make_action(shell, c);
     }
-  if (ioctl(0, TCSETA, &shell->w.oterm) == -1)
+  if (shell->tty &&
+      ioctl(0, TCSETA, &shell->w.oterm) == -1)
     handle_error("ioctl");
 }

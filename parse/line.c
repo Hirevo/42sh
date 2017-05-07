@@ -5,9 +5,10 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Thu Apr 27 15:44:38 2017 Nicolas Polomack
+** Last update Sun May  7 23:03:41 2017 Nicolas Polomack
 */
 
+#include <string.h>
 #include <stdlib.h>
 #include "my.h"
 #include "shell.h"
@@ -98,7 +99,7 @@ char	*my_epurcommand(char *str)
   int	t;
 
   if ((i = count_links(str)) == -1 ||
-      (ret = malloc(my_strlen(str) + 1 + i * 4)) == NULL)
+      (ret = malloc(strlen(str) + 1 + i * 4)) == NULL)
     return (NULL);
   i = -1 + (t = 0);
   while (str[++i])
@@ -116,7 +117,6 @@ char	*my_epurcommand(char *str)
 	  return (NULL);
       t += 1;
     }
-  free(str);
-  ret[t] = 0;
+  free(str + (ret[t] = 0));
   return (ret);
 }

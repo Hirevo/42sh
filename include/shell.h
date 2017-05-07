@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May  7 00:55:51 2017 Nicolas Polomack
+** Last update Sun May  7 23:04:48 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -149,9 +149,19 @@ void	check_exec(t_shell *, int, int *);
 void	exec_piped_command(char *, t_command *, int[2], t_shell *);
 
 /*
-** alias3.c
+** alias/alias.c
+*/
+char	*construct_alias(char **);
+
+/*
+** alias/edit.c
 */
 int	parse_alias(t_shell *);
+
+/*
+** alias/unalias.c
+*/
+int	unalias(t_shell *, char **);
 
 /*
 ** config.c
@@ -261,6 +271,7 @@ int	ret_error(t_shell *, char *);
 */
 char	*get_hostname(void);
 void	print_prompt(t_shell *);
+void	get_prompt(t_shell *);
 
 /*
 ** exit.c
