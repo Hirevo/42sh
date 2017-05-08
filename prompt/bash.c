@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:38:58 2017 Arthur Knoepflin
-** Last update Fri May  5 01:37:04 2017 Nicolas Polomack
+** Last update Sun May  7 23:41:54 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -26,5 +26,5 @@ void	bash_prompt(t_shell *shell)
     my_printf("\033[34;1m%s\033[0m", shell->current);
   else
     my_printf("\033[34;1m?\033[0m");
-  my_putstr("$ ");
+  my_putstr(getuid() ? "$ " : "# ");
 }

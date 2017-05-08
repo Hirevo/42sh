@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 09:57:18 2017 Arthur Knoepflin
-** Last update Fri May  5 10:10:15 2017 Arthur Knoepflin
+** Last update Sun May  7 23:42:25 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -23,5 +23,5 @@ void	ketchup_prompt(t_shell *shell)
     my_printf("\033[31;1m%s\033[0m", shell->current);
   else
     my_printf("\033[31;1m?\033[0m");
-  my_putstr("$ ");
+  my_putstr(getuid() ? "$ " : "# ");
 }

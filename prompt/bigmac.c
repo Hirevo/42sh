@@ -5,10 +5,11 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 10:10:32 2017 Arthur Knoepflin
-** Last update Fri May  5 10:21:56 2017 Arthur Knoepflin
+** Last update Sun May  7 23:41:32 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
+#include <unistd.h>
 #include "shell.h"
 #include "my.h"
 
@@ -29,5 +30,5 @@ void	bigmac_prompt(t_shell *shell)
     my_printf("\033[32;1m%s\033[0m", shell->current);
   else
     my_printf("\033[32;1m?\033[0m");
-  my_putstr("]$ ");
+  my_putstr(getuid() ? "]$ " : "]# ");
 }
