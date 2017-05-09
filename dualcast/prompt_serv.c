@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:03:28 2017 Arthur Knoepflin
-** Last update Tue May  9 19:01:44 2017 Arthur Knoepflin
+** Last update Tue May  9 20:29:25 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -17,7 +17,7 @@ static void	treat_client_resp(char *str, char **prompt, int *nb_char)
 {
   if (str)
     {
-      my_printf("\n%s", str + 4);
+      my_printf("\r%s", str + 4);
       free(str);
     }
 }

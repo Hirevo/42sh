@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 11:31:56 2017 Arthur Knoepflin
-** Last update Tue May  9 18:45:45 2017 Arthur Knoepflin
+** Last update Tue May  9 20:30:11 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -14,7 +14,8 @@
 
 static void	print_cmd(char *buf, char **prompt, int *nb_char)
 {
-  my_printf("\n%s", buf + 4);
+  del_prompt(*nb_char);
+  my_printf("\r%s", buf + 4);
   *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
   *nb_char = my_strlen(*prompt);
   my_printf("%s", *prompt);

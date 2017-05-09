@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 12:13:20 2017 Arthur Knoepflin
-** Last update Tue May  9 18:10:55 2017 Arthur Knoepflin
+** Last update Tue May  9 20:25:35 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -32,7 +32,8 @@ static void	treat_serv_resp(t_socket sock,
 
   if (str && my_strcmp(str, "OK"))
     {
-      my_printf("\n%s", str);
+      del_prompt(*nb_char);
+      my_printf("\r%s", str);
       tmp = my_strcatdup("cmd:", str);
       write_socket(sock, tmp);
       free(tmp);
