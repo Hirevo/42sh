@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat May  6 22:51:45 2017 Arthur Knoepflin
-** Last update Mon May  8 18:12:24 2017 Arthur Knoepflin
+** Last update Tue May  9 16:31:53 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -45,7 +45,10 @@ int		new_client_dc(t_socket sock)
   close(csock);
 }
 
-static int	client_talk_dc(t_socket client, fd_set *rdfs)
+static int	client_talk_dc(t_socket client,
+			       fd_set *rdfs,
+			       char **prompt,
+			       int *nb_char)
 {
   int		ret;
   int		len;
@@ -60,20 +63,21 @@ static int	client_talk_dc(t_socket client, fd_set *rdfs)
 	  return (1);
 	}
       else
-	{
-	  write_socket(client, "OK");
-	  printf("%s\n", buf);
-	}
+	response_serv(client, buf, prompt, nb_char);
     }
   return (0);
 }
 
 int	core_server_dc(t_socket sock, t_socket client, fd_set *rdfs)
 {
+  int	nb_char;
+  char	*prompt;
   int	stop;
 
   stop = 0;
-  my_putstr("(\033[32;1mDualCast\033[0m) $> ");
+  prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
+  my_putstr(prompt);
+  nb_char = my_strlen(prompt);
   while (!stop)
     {
       stop = init_client_dc(rdfs, &sock, &client);
@@ -82,7 +86,7 @@ int	core_server_dc(t_socket sock, t_socket client, fd_set *rdfs)
       else if (FD_ISSET(sock, rdfs) && !stop)
 	new_client_dc(sock);
       else if (!stop)
-	stop = client_talk_dc(client, rdfs);
+	stop = client_talk_dc(client, rdfs, &prompt, &nb_char);
     }
   if (FD_ISSET(STDIN_FILENO, rdfs))
     free(get_next_line(0));

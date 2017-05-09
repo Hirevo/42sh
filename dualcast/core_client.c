@@ -5,9 +5,10 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 12:13:20 2017 Arthur Knoepflin
-** Last update Tue May  9 09:47:39 2017 Arthur Knoepflin
+** Last update Tue May  9 18:10:55 2017 Arthur Knoepflin
 */
 
+#include <stdlib.h>
 #include "get_next_line.h"
 #include "server.h"
 #include "my.h"
@@ -22,23 +23,52 @@ static int		init_select_dc(t_socket *com, fd_set *rdfs)
   return (0);
 }
 
-static int	read_term(t_socket sock, char **prompt)
+static void	treat_serv_resp(t_socket sock,
+				char *str,
+				char **prompt,
+				int *nb_char)
+{
+  char		*tmp;
+
+  if (str && my_strcmp(str, "OK"))
+    {
+      my_printf("\n%s", str);
+      tmp = my_strcatdup("cmd:", str);
+      write_socket(sock, tmp);
+      free(tmp);
+      *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
+      *nb_char = my_strlen(*prompt);
+      my_putstr(*prompt);
+    }
+}
+
+static int	read_term(t_socket sock, char **prompt, int *nb_char)
 {
   char		c;
 
   c = getch_c();
+  if (c == 13)
+    {
+      *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
+      *nb_char = my_strlen(*prompt);
+      my_printf("\n%s", *prompt);
+    }
   if (c == 3)
-    return (1);
+    {
+      my_putchar('\n');
+      return (1);
+    }
   if (c >= 32 && c <= 126)
-    add_char_dc(prompt, c);
+    add_char_dc(prompt, c, nb_char);
   else if (c == 127)
-    del_last_char(prompt);
-  my_putstr("\r");
-  my_putstr(*prompt);
+    del_last_char(prompt, nb_char);
+  del_prompt(*nb_char);
+  my_printf("\r%s", *prompt);
+  send_char(sock, c);
   return (0);
 }
 
-static int	read_sock(t_socket sock)
+static int	read_sock(t_socket sock, char **prompt, int *nb_char)
 {
   char		*buf;
   int		len;
@@ -50,7 +80,8 @@ static int	read_sock(t_socket sock)
       return (1);
     }
   else
-    printf("%s\n", buf);
+    treat_serv_resp(sock, buf, prompt, nb_char);
+  free(buf);
   return (0);
 }
 
@@ -60,9 +91,11 @@ int			core_client_dc(t_socket com)
   fd_set		rdfs;
   char			*prompt;
   struct termios	orig_termios;
+  int			nb_char;
 
   stop = 0;
   prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
+  nb_char = my_strlen(prompt);
   my_putstr(prompt);
   while (!stop)
     {
@@ -70,8 +103,8 @@ int			core_client_dc(t_socket com)
       stop = init_select_dc(&com, &rdfs);
       reset_terminal_mode(&orig_termios);
       if (FD_ISSET(STDIN_FILENO, &rdfs))
-	stop = read_term(com, &prompt);
+	stop = read_term(com, &prompt, &nb_char);
       else if (FD_ISSET(com, &rdfs))
-	stop = read_sock(com);
+	stop = read_sock(com, &prompt, &nb_char);
     }
 }

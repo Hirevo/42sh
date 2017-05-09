@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Tue May  9 09:25:32 2017 Arthur Knoepflin
+** Last update Tue May  9 16:31:33 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -239,6 +239,18 @@ int	read_socket(t_socket, char **);
 void	write_socket(t_socket, char *);
 
 /*
+** prompt_serv.c
+*/
+
+void	prompt_serv(t_socket, char, char **, int *);
+
+/*
+** response_serv.c
+*/
+
+int	response_serv(t_socket, char *, char **, int *);
+
+/*
 ** termio.c
 */
 
@@ -251,7 +263,9 @@ int	getch_c();
 ** term_emul.c
 */
 
-void	del_last_char(char **);
-void	add_char_dc(char **, char);
+void	del_last_char(char **, int *);
+void	add_char_dc(char **, char, int *);
+void	del_prompt(int);
+void	send_char(t_socket, char);
 
 #endif /* !SERVER_H_ */

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 16:02:42 2017 Arthur Knoepflin
-** Last update Mon May  8 14:57:18 2017 Arthur Knoepflin
+** Last update Tue May  9 09:53:25 2017 Arthur Knoepflin
 */
 
 #include <sys/select.h>
@@ -79,6 +79,7 @@ t_socket	wait_connection(t_socket sock, fd_set *rdfs, char *passwd)
     }
   if (stop == 2)
     {
+      close(sock);
       free(get_next_line(0));
       return (-1);
     }
