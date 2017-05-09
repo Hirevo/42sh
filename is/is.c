@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Sun May  7 22:23:50 2017 Nicolas Polomack
+** Last update Tue May  9 19:06:25 2017 Arthur Knoepflin
 */
 
 #include <sys/stat.h>
@@ -27,5 +27,5 @@ int	is_builtin(char *str)
 	  !my_strcmp(str, "setenv") || !my_strcmp(str, "exit") ||
 	  !my_strcmp(str, "unsetenv") || !my_strcmp(str, "cd") ||
 	  !my_strcmp(str, "config") || !my_strcmp(str, "echo") ||
-	  !my_strcmp(str, "unalias"));
+	  !my_strcmp(str, "unalias") || !my_strcmp(str, "dualcast"));
 }

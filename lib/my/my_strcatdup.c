@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Tue Feb 21 10:22:56 2017 
-** Last update Wed Feb 22 22:20:54 2017 Nicolas Polomack
+** Last update Tue May  9 09:18:19 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -14,24 +14,27 @@
 char	*my_strcatdup(char *s1, char *s2)
 {
   int	i;
+  int	j;
   char	*dest;
   int	len;
 
   i = 0;
-  if (s2 == NULL)
-    return (s1);
   len = 0;
   if (s1 != NULL)
     len = my_strlen(s1);
   if ((dest = malloc(sizeof(char) * (len + my_strlen(s2) + 1))) == NULL)
     return (NULL);
-  while (i <  (len + my_strlen(s2)))
+  while (s1[i])
     {
-      if (i < len)
-	dest[i] = s1[i];
-      else
-	dest[i] = s2[i - len];
+      dest[i] = s1[i];
       i += 1;
+    }
+  j = 0;
+  while (s2[j])
+    {
+      dest[i] = s2[j];
+      i += 1;
+      j += 1;
     }
   dest[i] = '\0';
   return (dest);

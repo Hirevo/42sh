@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Sun May  7 22:55:56 2017 Nicolas Polomack
+** Last update Tue May  9 19:05:44 2017 Arthur Knoepflin
 */
 
 #include <string.h>
@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <time.h>
 #include <sys/wait.h>
 #include <signal.h>
 #include "my.h"
@@ -63,6 +64,7 @@ void		reload_shell(t_shell *shell)
 
 int	init_shell(t_shell *shell, char **ae)
 {
+  srand(getpid() * time(NULL));
   shell->exit = 0;
   shell->path = init_path(getenv("PATH"));
   shell->home = getenv("HOME");
@@ -91,7 +93,7 @@ int		main(int ac, char **av, char **ae)
   t_shell	shell;
 
   exit = 0;
-  signal(SIGINT, SIG_IGN);
+  /* signal(SIGINT, SIG_IGN); */
   if (init_shell(&shell, ae) == -1)
     return (84);
   while (1)
