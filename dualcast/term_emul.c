@@ -5,9 +5,10 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 18:23:09 2017 Arthur Knoepflin
-** Last update Tue May  9 12:54:00 2017 Arthur Knoepflin
+** Last update Tue May  9 20:48:27 2017 Arthur Knoepflin
 */
 
+#include <stdlib.h>
 #include <string.h>
 #include "shell.h"
 #include "my.h"
@@ -42,10 +43,16 @@ void	del_prompt(int nb_char)
 
 void	send_char(t_socket sock, char c)
 {
+  char	*buf;
   char	send[7];
 
   strcpy(send, "char:");
   send[5] = c;
   send[6] = '\0';
   write_socket(sock, send);
+  if (c != 13)
+    {
+      read_socket(sock, &buf);
+      free(buf);
+    }
 }
