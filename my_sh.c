@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Sat May  6 18:37:46 2017 Arthur Knoepflin
+** Last update Tue May  9 09:22:28 2017 Arthur Knoepflin
 */
 
 #include <string.h>
@@ -92,7 +92,7 @@ int		main(int ac, char **av, char **ae)
   t_shell	shell;
 
   exit = 0;
-  signal(SIGINT, SIG_IGN);
+  /* signal(SIGINT, SIG_IGN); */
   if (init_shell(&shell, ae) == -1)
     return (84);
   init(&shell);

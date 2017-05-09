@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 11:39:08 2017 Arthur Knoepflin
-** Last update Sat May  6 22:55:05 2017 Arthur Knoepflin
+** Last update Mon May  8 12:17:30 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -26,10 +26,11 @@ int		launch_dc_server(t_shell *shell)
   if (init_dualcast(&socket) == -1)
     return (1);
   my_printf("DualCast prêt\nVotre code de session est : %s\n", code);
-  if (client = wait_connection(socket, &rdfs, code) == -1)
+  if ((client = wait_connection(socket, &rdfs, code)) == -1)
     return (1);
-  /* core_server_dc(client, &rdfs); */
+  core_server_dc(socket, client, &rdfs);
   free(code);
+  close(client);
   close(socket);
   my_printf("La session DualCast est terminé\n");
   return (0);
@@ -41,6 +42,7 @@ static int	launch_dc_client(t_shell *shell, char *addr)
 
   if ((com = init_connect_dc(addr)) == -1)
     return (1);
+  core_client_dc(com);
   close(com);
   return (0);
 }

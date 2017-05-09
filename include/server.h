@@ -5,12 +5,13 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Sat May  6 17:04:32 2017 Arthur Knoepflin
+** Last update Tue May  9 09:25:32 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
 # define SERVER_H_
 
+# include <termios.h>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <netinet/in.h>
@@ -19,6 +20,7 @@
 # define	INVALID_SOCKET	-1
 # define	SOCKET_ERROR	-1
 # define	DUALCAST_PORT	33000
+# define	SIZE_SOCK	4096
 # define	closesocket(s)	close(s)
 typedef int			t_socket;
 typedef	struct sockaddr_in	t_sockaddr_in;
@@ -212,5 +214,44 @@ void	send_file_http(t_socket, char *);
 */
 
 void	send_mime(t_socket, char *);
+
+/*
+** DUALCAST
+*/
+
+/*
+** core_client.c
+*/
+
+int	core_client_dc(t_socket);
+
+/*
+** core_server.c
+*/
+
+int	core_server_dc(t_socket, t_socket, fd_set *);
+
+/*
+** com_sock.c
+*/
+
+int	read_socket(t_socket, char **);
+void	write_socket(t_socket, char *);
+
+/*
+** termio.c
+*/
+
+void	reset_terminal_mode(struct termios *);
+void	set_conio_terminal_mode(struct termios *);
+int	kbhit();
+int	getch_c();
+
+/*
+** term_emul.c
+*/
+
+void	del_last_char(char **);
+void	add_char_dc(char **, char);
 
 #endif /* !SERVER_H_ */

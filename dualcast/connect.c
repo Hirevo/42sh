@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat May  6 16:37:18 2017 Arthur Knoepflin
-** Last update Sat May  6 22:55:09 2017 Arthur Knoepflin
+** Last update Mon May  8 17:14:15 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
@@ -62,22 +62,23 @@ static int	send_passwd(t_socket sock)
   if ((code = get_next_line(0)) == NULL)
     {
       close(sock);
-      return (1);
+      return (0);
     }
   if (!is_valid_code(code))
     {
       my_printf("Ceci n'est pas un code valide\n");
       close(sock);
-      return (1);
+      return (0);
     }
   if (send(sock, code, my_strlen(code), 0) < 0)
     {
       close(sock);
-      return (1);
+      return (0);
     }
   if (check_correct_passwd(sock))
-    return (0);
-  return (1);
+    return (1);
+  my_printf("Mauvais code de session\n");
+  return (0);
 }
 
 t_socket		init_connect_dc(char *addr)
@@ -98,7 +99,7 @@ t_socket		init_connect_dc(char *addr)
   sin.sin_family = AF_INET;
   if (connect(sock, (t_sockaddr *) &sin, sizeof(t_sockaddr)) == -1)
     {
-      dprintf(2, "Erreur de connexion sur %s\n", addr);
+      dprintf(2, "Impossible de se connecter sur %s\n", addr);
       return (-1);
     }
   if (send_passwd(sock))
