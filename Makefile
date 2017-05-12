@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Fri May 12 22:14:30 2017 Arthur Knoepflin
+## Last update Fri May 12 23:13:27 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -98,7 +98,7 @@ SRC	=	alias/alias.c			\
 
 OBJ	=	$(SRC:.c=.o)
 
-CFLAGS	=	-Iinclude -Llib/my -lmy -lncurses -D_GNU_SOURCE=1
+CFLAGS	=	-Iinclude -Llib/my -lmy -lncurses -D_GNU_SOURCE=1 -g
 
 REDDARK	=	\033[31;2m
 

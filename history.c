@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 11 20:41:13 2017 Nicolas Polomack
-** Last update Fri May 12 12:08:54 2017 Nicolas Polomack
+** Last update Fri May 12 21:46:18 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -130,4 +130,5 @@ void	init_history(t_shell *shell)
       add_hist_elem(shell, line);
       free(line);
     }
+  close(fd);
 }

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 12 22:48:35 2017 Arthur Knoepflin
+** Last update Fri May 12 23:10:32 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -53,6 +53,7 @@ typedef struct	s_hist_ctrl
   t_history	*first;
   t_history	*last;
   t_history	*cur;
+  char		*cur_line;
 }		t_hist_ctrl;
 
 typedef struct	s_window
@@ -272,14 +273,14 @@ int	check_error(t_shell *);
 ** exec/pipe.c
 */
 int	exec_pipeline(t_shell *);
-int	father_action(t_command **, int **, int *, t_shell *);
-void	exec_piped_child(int *, t_command *, int[2], t_shell *);
+int	father_action(t_command **, int *, int *, t_shell *);
+void	exec_piped_child(int, t_command *, int[2], t_shell *);
 
 /*
 ** exec/setup.c
 */
 void	init_redirect(t_command *, int *, int *, int *);
-void	setup_exec(t_command *, int *, int *);
+void	setup_exec(t_command *, int *, int);
 
 /*
 ** globbing/globbing.c
@@ -380,6 +381,8 @@ void	pos_cursor(t_shell *);
 void	buffer_seq(t_shell *, char **, int *, char);
 void	move_forw(t_shell *);
 void	move_backw(t_shell *);
+void	move_upw(t_shell *);
+void	move_downw(t_shell *);
 
 /*
 ** prompt/mechanics/prompt.c
