@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:05:01 2017 Nicolas Polomack
-** Last update Fri May 12 10:19:49 2017 Nicolas Polomack
+** Last update Fri May 12 23:02:44 2017 Arthur Knoepflin
 */
 
 #include <unistd.h>
@@ -27,7 +27,7 @@ static void	make_action(t_shell *shell, char c)
 
 void	prompt_line(t_shell *shell)
 {
-  char  c;
+  char	c;
 
   if (shell->tty)
     set_raw(&shell->w.oterm);

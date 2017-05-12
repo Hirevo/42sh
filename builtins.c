@@ -1,11 +1,11 @@
 /*
-1;4803;0c** builtins.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
+** builtins.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
 **
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Fri May 12 11:49:45 2017 Nicolas Polomack
+** Last update Fri May 12 23:05:08 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -13,7 +13,7 @@
 #include "shell.h"
 #include "my.h"
 
-int     exec_builtins4(t_shell *shell, int args, int *r, int i)
+int	exec_builtins4(t_shell *shell, int args, int *r, int i)
 {
   if (my_strcmp(shell->cur->av[0], "echo") == 0)
     {

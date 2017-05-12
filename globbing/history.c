@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Thu May 11 21:24:43 2017 Nicolas Polomack
+** Last update Fri May 12 23:04:02 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -14,8 +14,8 @@
 
 int	insert_one_hist(t_shell *shell, int i, int n)
 {
-  int   len;
-  char  *str;
+  int	len;
+  char	*str;
 
   if (!shell->hist.last)
     return (-1);

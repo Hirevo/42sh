@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Tue May  9 11:35:32 2017 Nicolas Polomack
+** Last update Fri May 12 22:59:23 2017 Arthur Knoepflin
 */
 
 #include <fcntl.h>
@@ -70,7 +70,10 @@ int		exec_pipeline(t_shell *shell)
   return (r);
 }
 
-void	exec_piped_child(int *pipes, t_command *head, int *fds, t_shell *shell)
+void	exec_piped_child(int *pipes,
+			 t_command *head,
+			 int *fds,
+			 t_shell *shell)
 {
   int	i;
   int	args;

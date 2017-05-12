@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed Apr 26 23:40:25 2017 Arthur Knoepflin
-** Last update Tue May  9 16:34:12 2017 Arthur Knoepflin
+** Last update Fri May 12 23:01:01 2017 Arthur Knoepflin
 */
 
 #include <errno.h>
@@ -28,7 +28,10 @@ char	*get_cmd_exc(char *cmd_path, char *cmd)
     }
 }
 
-static int	execute_http(t_socket client, char *cmd, char **cmd_p, char **env)
+static int	execute_http(t_socket client,
+			     char *cmd,
+			     char **cmd_p,
+			     char **env)
 {
   t_shell	shell;
   char		*cmd_exc;

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:33:54 2017 Arthur Knoepflin
-** Last update Sun May  7 00:54:38 2017 Nicolas Polomack
+** Last update Fri May 12 18:52:37 2017 Arthur Knoepflin
 */
 
 #include <sys/stat.h>
@@ -29,7 +29,7 @@ char	*get_hostname(void)
   return (ret);
 }
 
-static void	get_tab_prompt(void (*tab_prompt[6])(t_shell *))
+static void	get_tab_prompt(void (*tab_prompt[7])(t_shell *))
 {
   tab_prompt[0] = &turbosh_prompt;
   tab_prompt[1] = &bash_prompt;
@@ -37,14 +37,15 @@ static void	get_tab_prompt(void (*tab_prompt[6])(t_shell *))
   tab_prompt[3] = &minimalist_prompt;
   tab_prompt[4] = &ketchup_prompt;
   tab_prompt[5] = &bigmac_prompt;
+  tab_prompt[6] = &oh_my_zsh;
 }
 
 void	print_prompt(t_shell *shell)
 {
-  void	(*tab_prompt[6])(t_shell *);
+  void	(*tab_prompt[7])(t_shell *);
 
   get_tab_prompt(tab_prompt);
-  if (shell->prompt >= 0 && shell->prompt < 6)
+  if (shell->prompt >= 0 && shell->prompt < 7)
     tab_prompt[shell->prompt](shell);
   else
     tab_prompt[0](shell);

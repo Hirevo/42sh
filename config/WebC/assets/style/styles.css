@@ -409,6 +409,10 @@ input:focus::-webkit-input-placeholder {
   color: rgb(0, 140, 216);
 }
 
+.light-blue {
+  color: rgb(51, 153, 255);
+}
+
 .red {
   color: rgb(255, 99, 71);
 }

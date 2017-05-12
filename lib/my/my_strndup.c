@@ -5,9 +5,8 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Tue Feb 21 14:23:56 2017 
-** Last update Tue Feb 21 14:35:50 2017 
+** Last update Fri May 12 23:00:42 2017 Arthur Knoepflin
 */
-
 
 #include <stdlib.h>
 #include "my.h"

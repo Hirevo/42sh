@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 12 11:47:10 2017 Nicolas Polomack
+** Last update Fri May 12 22:48:35 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -351,6 +351,19 @@ void	handle_error(char *);
 */
 void	insert_char_cur(char **, char, int);
 void	delete_char(char **, int);
+
+/*
+** prompt/mechanics/sauv.c
+*/
+
+void	sauv_prompt(t_shell *);
+
+/*
+** prompt/mechanics/load_file.c
+*/
+
+void	free_tab(char **);
+char	**load_file(int);
 
 /*
 ** prompt/mechanics/actions.c

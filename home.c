@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:04:03 2017 Nicolas Polomack
-** Last update Fri May  5 01:59:19 2017 Nicolas Polomack
+** Last update Fri May 12 23:04:15 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -43,8 +43,8 @@ char	*detect_home(char *temp, char *home)
 
 char	*get_current(char *current, char *home)
 {
-  int   i;
-  char  *temp;
+  int	i;
+  char	*temp;
 
   i = -1;
   if ((temp = malloc(512)) == NULL)

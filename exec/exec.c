@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri May 12 12:20:12 2017 Nicolas Polomack
+** Last update Fri May 12 22:59:42 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -28,7 +28,8 @@ void	exec_child(t_shell *shell, int i)
     execve(shell->cur->av[0], shell->cur->av, environ);
   if (errno == ENOEXEC)
     exit(my_print_err(shell->cur->av[0]) +
-         my_print_err(": Exec format error. Binary file not executable.\n") - 1);
+         my_print_err(": Exec format error. Binary \
+file not executable.\n") - 1);
   exit(my_print_err(shell->cur->av[0]) +
        my_print_err(": Command not found.\n") - 1);
   exit(0);
@@ -80,7 +81,7 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
 
 unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
-  if (strcmp(shell->line, "exit"))
+  if (my_strcmp(shell->line, "exit"))
     add_hist_elem(shell, shell->line);
   if (parse_alias(shell) == -1 || parse_history(shell) == -1 ||
       parse_vars(shell) == -1 ||

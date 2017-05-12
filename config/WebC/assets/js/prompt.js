@@ -24,6 +24,10 @@ $(document).ready(function() {
     {
       "name" : "Big Mac",
       "prompt" : "[<span class=\"purple\">arthur</span>@<span class=\"red\">arthur-pc</span> <span class=\"green\">~/actual/path</span>]$ "
+    },
+    {
+	"name" : "Oh My Zsh",
+	"prompt" : "<span class=\"green\">→</span> <span class=\"light-blue\">path</span>"
     }
   ];
   var selected = -1;

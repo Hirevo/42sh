@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Thu May 11 21:52:23 2017 Nicolas Polomack
+** Last update Fri May 12 23:01:25 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -26,7 +26,8 @@ void	remove_char(t_shell *shell)
   if (shell->tty)
     {
       write(1, shell->w.backw, strlen(shell->w.backw));
-      write(1, shell->line + shell->w.cur, strlen(shell->line + shell->w.cur));
+      write(1, shell->line + shell->w.cur,
+	    strlen(shell->line + shell->w.cur));
       write(1, " ", 1);
       shell->w.cur -= 1;
       pos_cursor(shell);
@@ -39,7 +40,8 @@ void	add_char(t_shell *shell, char c)
   insert_char_cur(&shell->line, c, shell->w.cur);
   if (shell->tty)
     {
-      write(1, shell->line + shell->w.cur, strlen(shell->line + shell->w.cur));
+      write(1, shell->line + shell->w.cur,
+	    strlen(shell->line + shell->w.cur));
       shell->w.cur += 1;
       pos_cursor(shell);
     }

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 17:04:32 2017 Nicolas Polomack
-** Last update Fri May 12 10:29:38 2017 Nicolas Polomack
+** Last update Fri May 12 23:01:58 2017 Arthur Knoepflin
 */
 
 #include <unistd.h>
@@ -87,7 +87,7 @@ void	move_upw(t_shell *shell)
 
 void	move_downw(t_shell *shell)
 {
-  int   len;
+  int	len;
 
   if (shell->hist.last == NULL)
     return ;

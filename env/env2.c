@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:01:50 2017 Nicolas Polomack
-** Last update Fri May  5 02:05:00 2017 Nicolas Polomack
+** Last update Fri May 12 22:58:57 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -28,7 +28,8 @@ int	check_env_error(char *name)
 {
   if (name[0] == 0 || ((name[0] < 'a' || name[0] > 'z') &&
                        (name[0] < 'A' || name[0] > 'Z')))
-    return (my_print_err("setenv: Variable name must begin with a letter.\n"));
+    return (my_print_err("setenv: Variable name must \
+begin with a letter.\n"));
   if (!is_char_alpha(name))
     return (my_print_err("setenv: Variable name must") - 1 +
 	    my_print_err(" contain alphanumeric characters.\n"));

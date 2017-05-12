@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Fri May 12 10:29:03 2017 Nicolas Polomack
+** Last update Fri May 12 22:07:13 2017 Arthur Knoepflin
 */
 
 #include <curses.h>
@@ -52,5 +52,9 @@ void	init(t_shell *shell)
 void	init_prompt(t_shell *shell)
 {
   if (shell->tty)
-    print_prompt(shell);
+    {
+      get_prompt(shell);
+      sauv_prompt(shell);
+      print_prompt(shell);
+    }
 }
