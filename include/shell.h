@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May  9 19:06:41 2017 Arthur Knoepflin
+** Last update Fri May 12 11:47:10 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -16,6 +16,7 @@
 # include "server.h"
 
 # define RC_FILE ".42shrc"
+# define HIST_FILE ".42sh_history"
 # define ALIAS_FILE ".42sh_alias"
 
 extern char	**environ;
@@ -40,12 +41,28 @@ typedef struct		s_alias
   struct s_alias	*next;
 }			t_alias;
 
+typedef struct		s_history
+{
+  char			**cmd;
+  struct s_history	*next;
+  struct s_history	*prev;
+}			t_history;
+
+typedef struct	s_hist_ctrl
+{
+  t_history	*first;
+  t_history	*last;
+  t_history	*cur;
+}		t_hist_ctrl;
+
 typedef struct	s_window
 {
   struct termio	oterm;
   char		*clear;
   char		*forw;
   char		*backw;
+  char		*upw;
+  char		*downw;
   char		*left;
   char		*right;
   int		cur;
@@ -76,9 +93,7 @@ typedef struct		s_shell
   char			*current;
   char			*line;
   char			**final;
-  char			**hist;
   char			is_done;
-  unsigned int		hist_args;
   unsigned int		exit;
   char			*exit_str;
   char			*last;
@@ -87,6 +102,7 @@ typedef struct		s_shell
   int			tty;
   char			*cwd;
   t_alias		*alias;
+  t_hist_ctrl		hist;
   t_command		*commands;
   t_command		*cur;
   t_window		w;
@@ -168,6 +184,14 @@ int	unalias(t_shell *, char **);
 */
 
 int	config_http(t_config *);
+
+/*
+** history.c
+*/
+void	save_history(t_shell *);
+int	disp_hist(t_shell *);
+void	add_hist_elem(t_shell *, char *);
+void	init_history(t_shell *);
 
 /*
 ** history2.c
