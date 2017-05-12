@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Fri May 12 10:29:03 2017 Nicolas Polomack
+** Last update Fri May 12 20:09:39 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -42,7 +42,6 @@ void	init(t_shell *shell)
       shell->w.upw = tigetstr("cuu1");
       shell->w.downw = strdup(shell->w.upw);
       shell->w.downw[2] += 1;
-      //shell->w.downw = tigetstr("cud1");
       shell->w.left = "\033[D";
       shell->w.right = "\033[C";
       shell->line = NULL;

@@ -5,14 +5,15 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Thu May 11 21:24:43 2017 Nicolas Polomack
+** Last update Fri May 12 20:08:09 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include "my.h"
 #include "shell.h"
 
-int	insert_one_hist(t_shell *shell, int i, int n)
+static int	insert_one_hist(t_shell *shell, int i, int n)
 {
   int   len;
   char  *str;
@@ -20,7 +21,7 @@ int	insert_one_hist(t_shell *shell, int i, int n)
   if (!shell->hist.last)
     return (-1);
   len = -1;
-  while (shell->hist.last->cmd[++len]);
+  while (shell->hist.last->prev->cmd[++len]);
   if (n >= len)
     return (ret_error(shell, "Bad ! arg selector.\n"));
   len = my_strlen(shell->hist.last->cmd[n]);
@@ -28,14 +29,14 @@ int	insert_one_hist(t_shell *shell, int i, int n)
   if ((str = malloc(len + 1)) == NULL)
     return (-1);
   my_strncpy(str, shell->line, i);
-  my_strcat(str, shell->hist.last->cmd[n]);
+  my_strcat(str, shell->hist.last->prev->cmd[n]);
   my_strcat(str, shell->line + i + 3);
   free(shell->line);
   shell->line = str;
   return (0);
 }
 
-int	insert_full_hist(t_shell *shell, int i)
+static int	insert_full_hist(t_shell *shell, int i)
 {
   int	len;
   int	l;
@@ -44,7 +45,7 @@ int	insert_full_hist(t_shell *shell, int i)
 
   if (!shell->hist.last)
     return (-1);
-  cmd = shell->hist.last->cmd;
+  cmd = shell->hist.last->prev->cmd;
   len = 0;
   l = -1;
   while (cmd[++l])
@@ -63,7 +64,7 @@ int	insert_full_hist(t_shell *shell, int i)
   return (0);
 }
 
-int	insert_last_hist(t_shell *shell, int i)
+static int	insert_last_hist(t_shell *shell, int i)
 {
   int	len;
   int	l;
@@ -72,7 +73,7 @@ int	insert_last_hist(t_shell *shell, int i)
 
   if (!shell->hist.last)
     return (-1);
-  cmd = shell->hist.last->cmd;
+  cmd = shell->hist.last->prev->cmd;
   l = -1;
   while (cmd[++l]);
   l -= 1;
@@ -88,6 +89,14 @@ int	insert_last_hist(t_shell *shell, int i)
   return (0);
 }
 
+static void	final_things(t_shell *shell, char *last)
+{
+  if (last != shell->line)
+    my_printf("%s\n", shell->line);
+  if (strcmp(shell->line, "exit"))
+    add_hist_elem(shell, shell->line);
+}
+
 int	parse_history(t_shell *shell)
 {
   int	i;
@@ -95,7 +104,8 @@ int	parse_history(t_shell *shell)
 
   i = -1;
   last = shell->line;
-  while (shell->hist.last && shell->line[++i])
+  while (shell->hist.last && shell->hist.last->prev
+	 && shell->line[++i])
     if (my_strncmp(shell->line + i, "!!", 2) == 0)
       {
 	if (insert_full_hist(shell, i) == -1)
@@ -111,7 +121,6 @@ int	parse_history(t_shell *shell)
 	      shell->line[i + 2] <= '9'))
       if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
 	return (-1);
-  if (last != shell->line)
-    my_printf("%s\n", shell->line);
+  final_things(shell, last);
   return (0);
 }

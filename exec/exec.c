@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri May 12 12:20:12 2017 Nicolas Polomack
+** Last update Fri May 12 20:47:32 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -15,6 +15,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <errno.h>
+#include <string.h>
 #include "shell.h"
 #include "my.h"
 #include "get_next_line.h"
@@ -80,9 +81,7 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
 
 unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
-  if (strcmp(shell->line, "exit"))
-    add_hist_elem(shell, shell->line);
-  if (parse_alias(shell) == -1 || parse_history(shell) == -1 ||
+  if (parse_history(shell) == -1 || parse_alias(shell) == -1 || 
       parse_vars(shell) == -1 ||
       (shell->line = my_epurstr(shell->line)) == NULL ||
       (shell->line = my_epurcommand(shell->line)) == NULL)
