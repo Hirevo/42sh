@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Fri May  5 13:32:40 2017 Nicolas Polomack
+** Last update Thu May 11 21:52:23 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -68,6 +68,10 @@ void	move_cursor(t_shell *shell, char c)
     move_backw(shell);
   else if (dir == 2)
     move_forw(shell);
+  else if (dir == 3)
+    move_upw(shell);
+  else if (dir == 4)
+    move_downw(shell);
   else
     while (str[++dir])
       insert_char_cur(&shell->line, str[dir],

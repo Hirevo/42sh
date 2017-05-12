@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Tue May  9 19:05:44 2017 Arthur Knoepflin
+** Last update Fri May 12 12:03:16 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -75,10 +75,10 @@ int	init_shell(t_shell *shell, char **ae)
   shell->exit = 0;
   shell->last = NULL;
   shell->prev = NULL;
-  shell->hist = NULL;
   shell->exit_str = NULL;
   shell->fds = NULL;
   shell->is_done = 0;
+  init_history(shell);
   init_aliases(shell);
   parse_rc(shell);
   shell->path = (shell->path) ? shell->path : set_default_path();
@@ -93,7 +93,7 @@ int		main(int ac, char **av, char **ae)
   t_shell	shell;
 
   exit = 0;
-  /* signal(SIGINT, SIG_IGN); */
+  signal(SIGINT, SIG_IGN);
   if (init_shell(&shell, ae) == -1)
     return (84);
   while (1)
@@ -104,8 +104,8 @@ int		main(int ac, char **av, char **ae)
       prompt_line(&shell);
       if (shell.line && shell.tty)
         write(1, "\n", 1);
-      if (!shell.line || !strcmp(shell.line, "exit"))
-        break;
+      if (!shell.line)
+        shell.line = strdup("exit");
       if (!is_line_empty(&shell))
 	shell.exit = exec_line(&shell, 0);
     }

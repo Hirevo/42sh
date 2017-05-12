@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Thu May 11 13:34:41 2017 Nicolas Polomack
+** Last update Fri May 12 12:20:12 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -71,23 +71,17 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
     }
   free_commands(shell);
   free(shell->line);
-  if (shell->hist)
-    {
-      while (shell->hist[++i] != 0)
-        free(shell->hist[i]);
-      free(shell->hist);
-    }
   if (shell->exit_str)
     free(shell->exit_str);
   if ((shell->exit_str = my_unsigned_to_char(r)) == NULL)
     exit(84);
-  shell->hist = shell->final;
-  shell->hist_args = args;
   return (r);
 }
 
 unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
+  if (strcmp(shell->line, "exit"))
+    add_hist_elem(shell, shell->line);
   if (parse_alias(shell) == -1 || parse_history(shell) == -1 ||
       parse_vars(shell) == -1 ||
       (shell->line = my_epurstr(shell->line)) == NULL ||

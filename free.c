@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:12:24 2017 Nicolas Polomack
-** Last update Fri May  5 02:36:29 2017 Nicolas Polomack
+** Last update Fri May 12 11:44:41 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -43,6 +43,7 @@ void	free_shell(t_shell *shell)
         free(shell->path[i]);
       free(shell->path);
     }
+  save_history(shell);
   save_alias(shell);
   free(shell->current);
   free_shell2(shell);
@@ -58,13 +59,6 @@ void	free_shell2(t_shell *shell)
       while (shell->final[++i] != NULL)
 	free(shell->final[i]);
       free(shell->final);
-    }
-  i = -1;
-  if (shell->hist != NULL)
-    {
-      while (shell->hist[++i] != NULL)
-        free(shell->hist[i]);
-      free(shell->hist);
     }
   free_alias(shell);
   free(shell->last);

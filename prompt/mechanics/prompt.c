@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:05:01 2017 Nicolas Polomack
-** Last update Tue May  9 19:05:34 2017 Arthur Knoepflin
+** Last update Fri May 12 10:19:49 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -31,6 +31,7 @@ void	prompt_line(t_shell *shell)
 
   if (shell->tty)
     set_raw(&shell->w.oterm);
+  shell->hist.cur = NULL;
   c = -1;
   while (c != 10)
     {
