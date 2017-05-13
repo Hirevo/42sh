@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 20:42:53 2017 Nicolas Polomack
-** Last update Fri May 12 18:02:59 2017 Nicolas Polomack
+** Last update Sat May 13 16:22:58 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -29,6 +29,8 @@ void	setup_exec(t_command *head, int *fds, int ret)
   int	i;
 
   dup2(ret, 0);
+  if (ret != 0)
+    close(ret);
   if (head->next && head->link == '|')
     dup2(fds[1], 1);
   else if (head->r_type)
