@@ -1,11 +1,11 @@
 /*
 ** my_strlen.c for my_strlen in /home/nicolas.polomack/CPool_Day04
-** 
+**
 ** Made by Nicolas POLOMACK
 ** Login   <nicolas.polomack@epitech.net>
-** 
+**
 ** Started on  Thu Oct  6 10:41:18 2016 Nicolas POLOMACK
-** Last update Sat Mar 25 21:49:21 2017 Nicolas Polomack
+** Last update	Sat May 13 20:17:34 2017 Full Name
 */
 
 int	my_strlen(char *str)
@@ -13,7 +13,7 @@ int	my_strlen(char *str)
   int	count;
 
   count = 0;
-  while (str[count] != 0)
+  while (str && str[count] != 0)
     count = count + 1;
   return (count);
 }

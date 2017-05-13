@@ -1,16 +1,18 @@
 /*
 ** prompt.c for 42sh in /home/nicolaspolomack/psu/2/PSU_2016_42sh
-** 
+**
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
-** 
+**
 ** Started on  Tue Apr 18 19:05:01 2017 Nicolas Polomack
-** Last update Fri May 12 23:02:44 2017 Arthur Knoepflin
+** Last update	Sat May 13 21:03:36 2017 Full Name
 */
 
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 #include "shell.h"
+#include "auto_complete.h"
 
 static void	make_action(t_shell *shell, char c)
 {
@@ -18,6 +20,8 @@ static void	make_action(t_shell *shell, char c)
     clear_term(shell);
   else if (c == 127)
     remove_char(shell);
+  else if (c == '\t')
+    auto_complete(shell, getenv("PATH"));
   else if (shell->tty && (c == shell->w.forw[0] ||
 			  c == shell->w.backw[0]))
     move_cursor(shell, c);

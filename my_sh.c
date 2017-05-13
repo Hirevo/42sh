@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May 12 12:03:16 2017 Nicolas Polomack
+** Last update	Sat May 13 21:02:27 2017 Full Name
 */
 
 #include <string.h>
@@ -73,6 +73,7 @@ int	init_shell(t_shell *shell, char **ae)
   shell->current[0] = 0;
   shell->current = get_current(shell->current, shell->home);
   shell->exit = 0;
+  shell->is_comp = 0;
   shell->last = NULL;
   shell->prev = NULL;
   shell->exit_str = NULL;

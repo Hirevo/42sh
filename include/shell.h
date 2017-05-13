@@ -1,11 +1,11 @@
 /*
 ** shell.h for progammation shell in /home/nicolaspolomack/shell/PSU_2016_minishell1
-** 
+**
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
-** 
+**
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 12 23:10:32 2017 Arthur Knoepflin
+** Last update	Sat May 13 21:02:51 2017 Full Name
 */
 
 #ifndef SHELL_H_
@@ -107,6 +107,7 @@ typedef struct		s_shell
   t_command		*commands;
   t_command		*cur;
   t_window		w;
+  int			is_comp;
 }			t_shell;
 
 unsigned int	count_args(char *);

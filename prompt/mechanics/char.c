@@ -1,11 +1,11 @@
 /*
 ** char.c for minishell2 in /home/nicolaspolomack/psu/2/PSU_2016_minishell2
-** 
+**
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
-** 
+**
 ** Started on  Thu Mar 23 10:29:41 2017 Nicolas Polomack
-** Last update Fri May  5 06:28:04 2017 Nicolas Polomack
+** Last update	Tue May 09 23:28:00 2017 Full Name
 */
 
 #include <string.h>
