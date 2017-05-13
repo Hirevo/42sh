@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri May 12 23:12:55 2017 Arthur Knoepflin
+** Last update Sat May 13 21:33:16 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -87,7 +87,7 @@ unsigned int	exec_line(t_shell *shell, unsigned int args)
       (shell->line = my_epurstr(shell->line)) == NULL ||
       (shell->line = my_epurcommand(shell->line)) == NULL)
     return (set_error(shell, 1));
-  while (check_wave(shell));
+  replace_home(shell);
   free(shell->last);
   shell->last = NULL;
   if ((shell->final = bufferize(shell->line,

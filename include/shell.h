@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 12 23:10:32 2017 Arthur Knoepflin
+** Last update Sat May 13 21:33:08 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -286,6 +286,11 @@ void	setup_exec(t_command *, int *, int);
 ** globbing/globbing.c
 */
 int	parse_vars(t_shell *);
+
+/*
+** globbing/home.c
+*/
+void	replace_home(t_shell *);
 
 /*
 ** echo.c
