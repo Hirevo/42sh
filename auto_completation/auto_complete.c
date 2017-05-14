@@ -28,8 +28,10 @@ static int	find_matches(t_match **list, char *path, char *str)
   int		size;
   char		*str2;
 
-  if ((size = scandir(path, &namelist, NULL, NULL)) == -1)
+  if ((size = scandir(path, &namelist, NULL, NULL)) <= 0)
     return (0);
+  if (size == 1 && strcmp(namelist[0]->d_name, str) == 0)
+    return (-1);
   n = size - 1;
   str2 = my_strcatdup(str, "*");
   while (n >= 0)
@@ -100,13 +102,14 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
           shell->line = my_strcatdup(my_strcatdup(t->pre_token, (*list)->cmd),
 				     t->post_token);
 	  (*list)->cmd = delete_str(s, (*list)->cmd);
-	  s = strdup(my_strcatdup((*list)->cmd, t->post_token));
+	  if (t->post_token)
+	    s = strdup(my_strcatdup((*list)->cmd, t->post_token));
 	  shell->w.cur = strlen(shell->line);
 	}
       shell->is_comp > 0 ? show_autolist(shell, *list, is_dir) : 0;
       shell->is_comp > 0 ? print_prompt(shell) : 0;
       shell->is_comp > 0 ? my_putstr(shell->line) : 0;
-      my_strcmp(s, t->token) ? my_putstr(shell->line) : 0;
+      my_strcmp(s, t->token) ? my_putstr(s) : 0;
     }
   shell->is_comp++;
   destroy_the_list(list);

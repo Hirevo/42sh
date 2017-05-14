@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Sun May 14 00:48:43 2017 Nicolas Polomack
+** Last update Sun May 14 18:52:02 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -71,6 +71,9 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
       free_shell(shell);
       exit(r);
     }
+  while (shell->final[++i])
+    free(shell->final[i]);
+  free(shell->final);
   free_commands(shell);
   free(shell->line);
   if (shell->exit_str)
