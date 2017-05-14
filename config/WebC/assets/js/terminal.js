@@ -3,8 +3,6 @@ $(document).ready(function() {
   var historynb = localStorage.length;
 
 	$("#terminalCore").click(function() {
-    console.log(localStorage);
-    console.log(historynb);
 		$("#terminalInput").focus();
 		document.getElementById("terminalInput").selectionStart = $("#terminalInput").val().length;
     document.getElementById("terminalInput").selectionEnd = $("#terminalInput").val().length;
@@ -77,7 +75,19 @@ $(document).ready(function() {
             $("#terminalInput").val("$> ");
             validcmd += 1;
             historynb += 1;
-            $("#terminalCore").val(xhr.responseText);
+            var ret;
+            ret = xhr.responseText;
+            ret = ret.replace(/\033\[01;30m(.*)\033\[0m/g, "<span class=\"black\">$1</span>"); //noir
+            ret = ret.replace(/\033\[01;31m(.*)\033\[0m/g, "<span class=\"red\">$1</span>"); //rouge
+            ret = ret.replace(/\033\[01;32m(.*)\033\[0m/g, "<span class=\"green\">$1</span>"); //vert
+            ret = ret.replace(/\033\[01;33m(.*)\033\[0m/g, "<span class=\"yellow\">$1</span>"); //jaune
+            ret = ret.replace(/\033\[01;34m(.*)\033\[0m/g, "<span class=\"blue\">$1</span>"); //blue
+            ret = ret.replace(/\033\[01;35m(.*)\033\[0m/g, "<span class=\"purple\">$1</span>"); //violet
+            ret = ret.replace(/\033\[01;36m(.*)\033\[0m/g, "<span class=\"light-blue\">$1</span>"); //blue claire
+            ret = ret.replace(/\033\[01;37m(.*)\033\[0m/g, "<span class=\"white\">$1</span>"); //blue claire
+            ret = ret.replace(/\033\[0m(.*)\033\[0m/g, "<span class=\"bold\">$1</span>"); //bold
+            ret = ret.replace(/\n/g, "<br />");
+            $("#terminalCore").html(ret);
             $("#terminalCore").scrollTop(99999999);
 					}
 				};
