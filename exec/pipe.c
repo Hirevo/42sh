@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Fri May 12 23:12:02 2017 Arthur Knoepflin
+** Last update Fri May 12 23:17:21 2017 Arthur Knoepflin
 */
 
 #include <fcntl.h>
@@ -18,10 +18,10 @@
 #include "shell.h"
 #include "my.h"
 
-int		exec_branch(t_shell *shell, t_command **head,
-			    int fds[3], int *ret)
+int	exec_branch(t_shell *shell, t_command **head,
+		    int fds[3], int *ret)
 {
-  int		r;
+  int	r;
 
   if (((*head)->link == ';' || (*head)->next == NULL) &&
       exec_redirected_builtins(shell, fds[2], &r, fds) != 0)
@@ -37,7 +37,7 @@ int		exec_branch(t_shell *shell, t_command **head,
   if ((fds[2] = fork()) == -1)
     return (84);
   fds[2] ? (r = father_action(head, ret, fds, shell)) :
-    exec_piped_child(*ret, *head, fds, shell);
+    exec_piped_child(ret, *head, fds, shell);
   return (r);
 }
 
