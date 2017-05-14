@@ -1,11 +1,11 @@
 /*
 ** shell.h for progammation shell in /home/nicolaspolomack/shell/PSU_2016_minishell1
-** 
+**
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
-** 
+**
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sat May 13 21:33:08 2017 Nicolas Polomack
+** Last update Sun May 14 15:31:29 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -107,6 +107,7 @@ typedef struct		s_shell
   t_command		*commands;
   t_command		*cur;
   t_window		w;
+  int			is_comp;
 }			t_shell;
 
 unsigned int	count_args(char *);
@@ -197,7 +198,7 @@ void	init_history(t_shell *);
 /*
 ** history2.c
 */
-int	parse_history(t_shell *);
+int	parse_history(t_shell *, int);
 
 /*
 ** exec/exec2.c

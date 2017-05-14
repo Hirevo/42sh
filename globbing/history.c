@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Fri May 12 23:11:03 2017 Arthur Knoepflin
+** Last update Sun May 14 00:49:30 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -89,15 +89,15 @@ static int	insert_last_hist(t_shell *shell, int i)
   return (0);
 }
 
-static void	final_things(t_shell *shell, char *last)
+static void	final_things(t_shell *shell, char *last, int save)
 {
   if (last != shell->line)
     my_printf("%s\n", shell->line);
-  if (strcmp(shell->line, "exit"))
+  if (save && strcmp(shell->line, "exit"))
     add_hist_elem(shell, shell->line);
 }
 
-int	parse_history(t_shell *shell)
+int	parse_history(t_shell *shell, int save)
 {
   int	i;
   char	*last;
@@ -121,6 +121,6 @@ int	parse_history(t_shell *shell)
 	      shell->line[i + 2] <= '9'))
       if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
 	return (-1);
-  final_things(shell, last);
+  final_things(shell, last, save);
   return (0);
 }

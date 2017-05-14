@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Fri May 12 12:03:16 2017 Nicolas Polomack
+** Last update	Sat May 13 21:02:27 2017 Full Name
 */
 
 #include <string.h>
@@ -73,6 +73,7 @@ int	init_shell(t_shell *shell, char **ae)
   shell->current[0] = 0;
   shell->current = get_current(shell->current, shell->home);
   shell->exit = 0;
+  shell->is_comp = 0;
   shell->last = NULL;
   shell->prev = NULL;
   shell->exit_str = NULL;
@@ -93,7 +94,7 @@ int		main(int ac, char **av, char **ae)
   t_shell	shell;
 
   exit = 0;
-  signal(SIGINT, SIG_IGN);
+  //signal(SIGINT, SIG_IGN);
   if (init_shell(&shell, ae) == -1)
     return (84);
   while (1)
@@ -107,7 +108,7 @@ int		main(int ac, char **av, char **ae)
       if (!shell.line)
         shell.line = strdup("exit");
       if (!is_line_empty(&shell))
-	shell.exit = exec_line(&shell, 0);
+	shell.exit = exec_line(&shell, 1);
     }
   if (shell.tty)
     if (write(1, "exit\n", 5) == -1 ||
