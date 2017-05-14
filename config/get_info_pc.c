@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  2 17:20:13 2017 Arthur Knoepflin
-** Last update Thu May  4 19:23:59 2017 Arthur Knoepflin
+** Last update Sun May 14 23:49:59 2017 Arthur Knoepflin
 */
 
 #include <sys/types.h>
@@ -17,20 +17,32 @@
 #include "server.h"
 #include "get_next_line.h"
 
+int	parse_info_version(t_info_pc *ret, int fd)
+{
+  char	*tmp;
+
+  ret->version = NULL;
+  ret->os = NULL;
+  while ((tmp = get_next_line(fd)))
+    {
+      if (!my_strncmp("NAME=", tmp, 5))
+	ret->os = my_strndup(tmp + 6, my_strlen(tmp) - 7);
+      if (!my_strncmp("VERSION=", tmp, 8))
+	ret->version = my_strndup(tmp + 9, my_strlen(tmp) - 10);
+      free(tmp);
+    }
+}
+
 int	parse_version(t_info_pc *ret)
 {
   char	*str;
   int	fd;
 
-  if ((fd = open("/proc/version", O_RDONLY)) == -1)
+  if ((fd = open("/etc/os-release", O_RDONLY)) == -1)
     return (1);
   get_next_line(-1);
-  str = get_next_line(fd);
-  ret->plateforme = my_strdup_until_x(str, ' ', 0);
-  ret->version = my_strdup_until_x(str +
-				   my_strlen_until_x(str, ' ', 1) + 1, ' ', 1);
-  ret->os = my_strdup_until_x(str +
-			      my_strlen_until_x(str, ' ', 13) + 1, ' ', 2);
+  parse_info_version(ret, fd);
+  ret->plateforme = my_strdup("Linux");
   close(fd);
   if ((fd = open("/etc/hostname", O_RDONLY)) == -1)
     return (1);
