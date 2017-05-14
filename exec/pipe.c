@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Sat May 13 00:05:30 2017 Nicolas Polomack
+** Last update Sun May 14 21:04:15 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -38,7 +38,7 @@ int		exec_branch(t_shell *shell,
   if ((fds[2] = fork()) == -1)
     return (84);
   fds[2] ? (r = father_action(head, ret, fds, shell)) :
-    exec_piped_child(ret, *head, fds, shell);
+    exec_piped_child(*ret, *head, fds, shell);
   return (r);
 }
 
