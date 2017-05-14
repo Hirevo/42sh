@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Thu Jan 19 12:54:48 2017 Nicolas Polomack
-** Last update Fri May 12 19:51:16 2017 Nicolas Polomack
+** Last update Mon May 15 01:15:09 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -38,9 +38,11 @@ unsigned int	exec_redirected_builtins(t_shell *shell, int count,
   if (!is_builtin(head->av[0]))
     return (0);
   fd = 0;
-  last = dup(1);
   if (head->r_type)
-    fd = setup_right_redirect(head, fds, (head->r_type[1] == 0));
+    {
+      last = dup(1);
+      fd = setup_right_redirect(head, fds, (head->r_type[1] == 0));
+    }
   ret = exec_builtins(shell, count, i);
   if (fd)
     {
