@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 12 18:42:45 2017 Arthur Knoepflin
-** Last update Fri May 12 19:00:47 2017 Arthur Knoepflin
+** Last update Fri May 12 23:33:42 2017 Nicolas Polomack
 */
 
 #include <libgen.h>
@@ -18,7 +18,7 @@ void	oh_my_zsh(t_shell *shell)
     my_putstr("\033[32;1m");
   else
     my_putstr("\033[31;1m");
-  my_putstr("→ ");
+  my_putstr("→  ");
   my_putstr("\033[0m");
   my_printf("\033[36;1m%s\033[0m ", basename(shell->current));
 }

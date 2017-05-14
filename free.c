@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:12:24 2017 Nicolas Polomack
-** Last update Fri May 12 20:12:30 2017 Nicolas Polomack
+** Last update Sun May 14 15:29:51 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -43,7 +43,8 @@ void	free_shell(t_shell *shell)
         free(shell->path[i]);
       free(shell->path);
     }
-  free(shell->w.downw);
+  if (shell->tty)
+    free(shell->w.downw);
   save_history(shell);
   save_alias(shell);
   free(shell->current);

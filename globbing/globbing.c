@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Sun May  7 00:27:04 2017 Nicolas Polomack
+** Last update Sat May 13 21:31:13 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -15,34 +15,6 @@
 #include "shell.h"
 #include "my.h"
 #include "get_next_line.h"
-
-int	check_wave(t_shell *shell)
-{
-  char	*home;
-  char	*new;
-  int	i;
-
-  if ((home = getenv("HOME")) == NULL)
-    return (0);
-  if ((new = malloc(my_strlen(home) + my_strlen(shell->line) + 1)) == NULL)
-    exit(84);
-  i = 0;
-  while (shell->line[i] != 0 && shell->line[i] != '~')
-    new[i] = shell->line[i++];
-  new[i] = 0;
-  if (shell->line[i] == 0)
-    {
-      free(new);
-      return (0);
-    }
-  new = my_strcat(new, home);
-  new = my_strcat(new, shell->line + i + 1);
-  free(shell->line);
-  if ((shell->line = my_strdup(new)) == NULL)
-    exit(84);
-  free(new);
-  return (1);
-}
 
 static char	*get_var(char *str)
 {
@@ -75,7 +47,7 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
     i = asprintf(&str, "%.*s%s%s", *cur, shell->line, getenv(var),
 		 shell->line + *cur + strlen(var) + 1);
   if (i == -1 || str == NULL)
-    exit(84);
+    handle_error("malloc");
   *cur += (strlen(str) - strlen(shell->line)) + 1;
   free(shell->line);
   shell->line = str;
@@ -99,6 +71,6 @@ int	parse_vars(t_shell *shell)
 	    exit(84);
 	  if (replace_var(shell, &cur, var) == -1)
 	    return (-1);
-        }
+	}
     }
 }

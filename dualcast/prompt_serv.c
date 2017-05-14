@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:03:28 2017 Arthur Knoepflin
-** Last update Tue May  9 20:29:25 2017 Arthur Knoepflin
+** Last update Sat May 13 18:44:25 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -31,11 +31,9 @@ static void	exc_cmd(t_socket sock, char **str, int *nb_char)
 
   init_shell(&shell, NULL);
   shell.line = my_strdup(*str + 25);
-  sauv = 8;
-  sauv = 9;
-  if (dup2(1, sauv) == -1)
+  if ((sauv = dup(1)) == -1)
     return ;
-  if (dup2(2, sauv2) == -1)
+  if ((sauv2 = dup(2)) == -1)
     return ;
   if (dup2(sock, 1) == -1)
     return ;

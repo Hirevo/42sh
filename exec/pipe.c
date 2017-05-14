@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Fri May 12 23:17:21 2017 Arthur Knoepflin
+** Last update Sat May 13 00:05:30 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -18,8 +18,9 @@
 #include "shell.h"
 #include "my.h"
 
-int	exec_branch(t_shell *shell, t_command **head,
-		    int fds[3], int *ret)
+int		exec_branch(t_shell *shell,
+			    t_command **head,
+			    int fds[3], int *ret)
 {
   int	r;
 
@@ -65,7 +66,7 @@ int		exec_pipeline(t_shell *shell)
   return (r);
 }
 
-void	exec_piped_child(int *pipes,
+void	exec_piped_child(int ret,
 			 t_command *head,
 			 int *fds,
 			 t_shell *shell)
@@ -119,7 +120,10 @@ int	get_return(t_shell *shell)
   return (final);
 }
 
-int	father_action(t_command **head, int *ret, int *fds, t_shell *shell)
+int	father_action(t_command **head,
+		      int *ret,
+		      int *fds,
+		      t_shell *shell)
 {
   int	r;
 
