@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Sun May 14 00:49:30 2017 Nicolas Polomack
+** Last update Mon May 15 17:10:43 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -91,10 +91,18 @@ static int	insert_last_hist(t_shell *shell, int i)
 
 static void	final_things(t_shell *shell, char *last, int save)
 {
+  char		*str;
+
+  str = NULL;
+  if (shell->hist.last != NULL)
+    str = construct_alias(shell->hist.last->cmd);
   if (last != shell->line)
     my_printf("%s\n", shell->line);
-  if (save && strcmp(shell->line, "exit"))
+  if (save && strcmp(shell->line, "exit") &&
+      (shell->hist.last == NULL ||
+       (strcmp(str, shell->line))))
     add_hist_elem(shell, shell->line);
+  free(str);
 }
 
 int	parse_history(t_shell *shell, int save)
