@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 11 20:41:13 2017 Nicolas Polomack
-** Last update Sun May 14 18:42:42 2017 Nicolas Polomack
+** Last update Mon May 15 08:38:59 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -42,6 +42,7 @@ void		write_hist(t_shell *shell, int fd)
       free(head->cmd);
       head = head->prev;
       free(last);
+      c += 1;
     }
   close(fd);
 }

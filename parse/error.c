@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Mar 30 01:22:31 2017 Nicolas Polomack
-** Last update Thu Mar 30 01:43:37 2017 Nicolas Polomack
+** Last update Mon May 15 08:35:11 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -22,7 +22,9 @@ int		check_error(t_shell *shell)
   while (head)
     {
       if (((head->av == NULL || head->av[0] == NULL) &&
-	   head->next) || (head->link == '|' && !head->next))
+	   head->next) ||
+	  ((head->link == '|' || head->link == 'e' ||
+	    head->link == 'o') && !head->next))
 	{
 	  shell->exit = 1;
 	  free(shell->exit_str);
