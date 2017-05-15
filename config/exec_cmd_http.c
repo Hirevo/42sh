@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed Apr 26 23:40:25 2017 Arthur Knoepflin
-** Last update Fri May 12 23:01:01 2017 Arthur Knoepflin
+** Last update Mon May 15 01:18:39 2017 Nicolas Polomack
 */
 
 #include <errno.h>
@@ -40,11 +40,9 @@ static int	execute_http(t_socket client,
 
   init_shell(&shell, env);
   shell.line = cmd;
-  sauv = 8;
-  sauv2 = 9;
-  if (dup2(1, sauv) == -1)
+  if ((sauv = dup(1)) == -1)
     return (1);
-  if (dup2(2, sauv2) == -1)
+  if ((sauv2 = dup(2)) == -1)
     return (1);
   cmd_exc = get_cmd_exc(cmd_p[0], cmd);
   if (dup2(client, 1) == -1)
@@ -54,6 +52,8 @@ static int	execute_http(t_socket client,
   exec_line(&shell, 0);
   dup2(sauv, 1);
   dup2(sauv2, 2);
+  close(sauv);
+  close(sauv2);
 }
 
 static int	change_dir_http(t_socket client, char **cmd_p)

@@ -5,9 +5,10 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May  5 06:44:42 2017 Nicolas Polomack
-** Last update Fri May  5 07:12:50 2017 Nicolas Polomack
+** Last update Mon May 15 08:23:55 2017 Nicolas Polomack
 */
 
+#include <string.h>
 #include <stdio.h>
 
 void	print_char(char *c, int *i)
@@ -40,7 +41,9 @@ int	echo_term(char **args)
 {
   int	i;
   int	j;
+  int	flag_n;
 
+  flag_n = (args[0] && !strcmp(args[0], "-n"));
   i = -1;
   while (args[++i])
     {
@@ -50,6 +53,9 @@ int	echo_term(char **args)
       while (args[i][++j])
 	print_char(args[i], &j);
     }
-  putchar('\n');
+  if (!flag_n)
+    putchar('\n');
+  else
+    fflush(stdout);
   return (0);
 }

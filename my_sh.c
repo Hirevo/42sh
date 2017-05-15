@@ -108,7 +108,7 @@ int		main(int ac, char **av, char **ae)
       if (!shell.line)
         shell.line = strdup("exit");
       if (!is_line_empty(&shell))
-	shell.exit = exec_line(&shell, 1);
+	shell.exit = exec_line(&shell, shell.tty);
     }
   if (shell.tty)
     if (write(1, "exit\n", 5) == -1 ||
