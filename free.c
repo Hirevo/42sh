@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:12:24 2017 Nicolas Polomack
-** Last update Sun May 14 15:29:51 2017 Nicolas Polomack
+** Last update Mon May 15 20:59:32 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -13,6 +13,25 @@
 #include "shell.h"
 #include "my.h"
 #include "get_next_line.h"
+
+void		free_hist(t_shell *shell)
+{
+  t_history	*head;
+  t_history	*last;
+  int		i;
+
+  head = shell->hist.first;
+  while (head)
+    {
+      last = head;
+      i = -1;
+      while (head->cmd[++i])
+	free(head->cmd[i]);
+      free(head->cmd);
+      head = head->next;
+      free(last);
+    }
+}
 
 void		free_alias(t_shell *shell)
 {

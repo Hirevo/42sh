@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Mon May 15 17:00:27 2017 Nicolas Polomack
+** Last update Mon May 15 21:00:01 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -152,6 +152,7 @@ void	init_aliases(t_shell *);
 void	set_alias(t_shell *, char *);
 void	reload_shell(t_shell *);
 void	free_alias(t_shell *);
+void	free_hist(t_shell *);
 int	disp_alias(t_shell *, char *);
 int	disp_all_alias(t_shell *);
 int	add_alias(t_shell *, char *, char *);
