@@ -5,9 +5,10 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May  5 06:44:42 2017 Nicolas Polomack
-** Last update Mon May 15 08:07:34 2017 Nicolas Polomack
+** Last update Mon May 15 08:23:55 2017 Nicolas Polomack
 */
 
+#include <string.h>
 #include <stdio.h>
 
 void	print_char(char *c, int *i)
