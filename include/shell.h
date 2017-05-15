@@ -1,11 +1,11 @@
 /*
-** shell.h for progammation shell in /home/nicolaspolomack/shell/PSU_2016_minishell1
+1;4803;0c** shell.h for progammation shell in /home/nicolaspolomack/shell/PSU_2016_minishell1
 **
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Mon May 15 21:00:01 2017 Nicolas Polomack
+** Last update Mon May 15 21:22:48 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -101,6 +101,7 @@ typedef struct		s_shell
   char			*prev;
   int			*fds;
   int			tty;
+  int			ioctl;
   char			*cwd;
   t_alias		*alias;
   t_hist_ctrl		hist;
