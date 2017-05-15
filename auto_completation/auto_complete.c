@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Sat May 13 21:07:31 2017 Full Name
+** Last update	Mon May 15 10:37:19 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -108,7 +108,7 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
 	}
       shell->is_comp > 0 ? show_autolist(shell, *list, is_dir) : 0;
       shell->is_comp > 0 ? print_prompt(shell) : 0;
-      shell->is_comp > 0 ? my_putstr(shell->line) : 0;
+      shell->is_comp > 0 ? my_putstr(shell->line ? shell->line : "") : 0;
       my_strcmp(s, t->token) ? my_putstr(s) : 0;
     }
   shell->is_comp++;
