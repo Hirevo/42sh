@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:03:28 2017 Arthur Knoepflin
-** Last update Sat May 13 18:44:25 2017 Nicolas Polomack
+** Last update Mon May 15 10:17:18 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -51,6 +51,7 @@ void	prompt_serv(t_socket sock,
 {
   if (c == 13)
     {
+      write_client(sock, "OK");
       exc_cmd(sock, prompt, nb_char);
       *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
       *nb_char = my_strlen(*prompt);

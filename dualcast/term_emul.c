@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 18:23:09 2017 Arthur Knoepflin
-** Last update Tue May  9 20:48:27 2017 Arthur Knoepflin
+** Last update Mon May 15 10:18:52 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -50,9 +50,6 @@ void	send_char(t_socket sock, char c)
   send[5] = c;
   send[6] = '\0';
   write_socket(sock, send);
-  if (c != 13)
-    {
-      read_socket(sock, &buf);
-      free(buf);
-    }
+  read_socket(sock, &buf);
+  free(buf);
 }

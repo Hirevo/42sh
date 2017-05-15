@@ -14,6 +14,15 @@
 #include "shell.h"
 #include "auto_complete.h"
 
+static void	block_read_zero(void)
+{
+  fd_set	rdfs;
+
+  FD_ZERO(&rdfs);
+  FD_SET(STDIN_FILENO, &rdfs);
+  select(1, &rdfs, NULL, NULL, NULL);
+}
+
 static void	make_action(t_shell *shell, char c)
 {
   if (c == 12)
@@ -39,6 +48,7 @@ void	prompt_line(t_shell *shell)
   c = -1;
   while (c != 10)
     {
+      block_read_zero();
       if ((c = get_input()) == -1)
         if (shell->tty)
           continue ;
@@ -50,6 +60,7 @@ void	prompt_line(t_shell *shell)
           (c == -2 && !shell->tty))
         break;
       make_action(shell, c);
+      
     }
   if (shell->tty &&
       ioctl(0, TCSETA, &shell->w.oterm) == -1)
