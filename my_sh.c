@@ -94,7 +94,7 @@ int		main(int ac, char **av, char **ae)
   t_shell	shell;
 
   exit = 0;
-  //signal(SIGINT, SIG_IGN);
+  signal(SIGINT, SIG_IGN);
   if (init_shell(&shell, ae) == -1)
     return (84);
   while (1)
