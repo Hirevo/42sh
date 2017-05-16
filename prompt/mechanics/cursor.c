@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 17:04:32 2017 Nicolas Polomack
-** Last update Tue May 16 21:58:01 2017 Nicolas Polomack
+** Last update Tue May 16 22:21:04 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -64,23 +64,9 @@ void	move_backw(t_shell *shell)
 
 void	move_upw(t_shell *shell)
 {
-  int	len;
-
   if (shell->hist.last == NULL)
     return ;
-  len = ((shell->line != NULL) ? strlen(shell->line) : 0);
-  while (shell->w.cur < len)
-    {
-      shell->w.cur += 1;
-      write(1, shell->w.forw, strlen(shell->w.forw));
-    }
-  while (shell->w.cur > 0)
-    {
-      shell->w.cur -= 1;
-      write(1, shell->w.backw, strlen(shell->w.backw));
-      write(1, " ", 1);
-      write(1, shell->w.backw, strlen(shell->w.backw));
-    }
+  suppress_line(shell);
   if (shell->hist.cur == NULL)
     {
       free(shell->hist.cur_line);
@@ -103,24 +89,10 @@ void	move_upw(t_shell *shell)
 
 void	move_downw(t_shell *shell)
 {
-  int	len;
-
   if (shell->hist.last == NULL ||
       shell->hist.cur == NULL)
     return ;
-  len = (shell->line ? strlen(shell->line) : 0);
-  while (shell->w.cur < len)
-    {
-      shell->w.cur += 1;
-      write(1, shell->w.forw, strlen(shell->w.forw));
-    }
-  while (shell->w.cur > 0)
-    {
-      shell->w.cur -= 1;
-      write(1, shell->w.backw, strlen(shell->w.backw));
-      write(1, " ", 1);
-      write(1, shell->w.backw, strlen(shell->w.backw));
-    }
+  suppress_line(shell);
   if (shell->hist.cur && !shell->hist.cur->next)
     return (set_hist_line(shell));
   else if (shell->hist.cur && shell->hist.cur->next)

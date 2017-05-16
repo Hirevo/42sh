@@ -45,8 +45,8 @@ void		show_autolist(t_shell *shell, t_match *list, int is_dir)
     {
       if (strcmp(tmp->cmd, "..") && strcmp(tmp->cmd, "."))
 	{
-	  if (asprintf(&cmd, "%s%s\\n", str, tmp->cmd) == -1)
-	    handle_error("malloc");
+	    if (asprintf(&cmd, "%s%s\\n", str, tmp->cmd) == -1)
+	      handle_error("malloc");
 	  free(str);
 	  str = cmd;
 	}
