@@ -88,6 +88,20 @@ int	init_shell(t_shell *shell, char **ae)
   return (0);
 }
 
+int	execute(t_shell *shell)
+{
+  if (shell->ioctl)
+    prompt_line(shell);
+  else
+    shell->line = get_next_line(0);
+  if (shell->line && shell->tty && shell->ioctl)
+    write(1, "\n", 1);
+  if (!shell->line)
+    shell->line = strdup("exit");
+  if (!is_line_empty(shell))
+    shell->exit = exec_line(shell, shell->tty);
+}
+
 int		main(int ac, char **av, char **ae)
 {
   int		exit;
@@ -102,17 +116,13 @@ int		main(int ac, char **av, char **ae)
       shell.line = NULL;
       shell.w.cur = 0;
       init_prompt(&shell);
-      prompt_line(&shell);
-      if (shell.line && shell.tty)
-        write(1, "\n", 1);
-      if (!shell.line)
-        shell.line = strdup("exit");
-      if (!is_line_empty(&shell))
-	shell.exit = exec_line(&shell, shell.tty);
+      execute(&shell);
     }
   if (shell.tty)
-    if (write(1, "exit\n", 5) == -1 ||
-	ioctl(0, TCSETA, &shell.w.oterm) == -1)
-      handle_error("ioctl");
+    {
+      write(1, "exit\n", 5);
+      if (shell.ioctl)
+	ioctl(0, TCSETA, &shell.w.oterm) == -1;
+    }
   return (shell.exit);
 }

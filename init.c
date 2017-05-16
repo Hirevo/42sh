@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Fri May 12 23:10:13 2017 Arthur Knoepflin
+** Last update Mon May 15 21:17:21 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -34,8 +34,7 @@ void	init(t_shell *shell)
   if (shell->tty)
     {
       setupterm(NULL, 0, NULL);
-      if (ioctl(0, TCGETA, &shell->w.oterm) == -1)
-        handle_error("ioctl");
+      shell->ioctl = ioctl(0, TCGETA, &shell->w.oterm) + 1;
       shell->w.clear = tigetstr("clear");
       shell->w.forw = tigetstr("cuf1");
       shell->w.backw = tigetstr("cub1");

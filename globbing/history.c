@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Sun May 14 00:49:30 2017 Nicolas Polomack
+** Last update Tue May 16 02:30:07 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -21,7 +21,7 @@ static int	insert_one_hist(t_shell *shell, int i, int n)
   if (!shell->hist.last)
     return (-1);
   len = -1;
-  while (shell->hist.last->prev->cmd[++len]);
+  while (shell->hist.last->cmd[++len]);
   if (n >= len)
     return (ret_error(shell, "Bad ! arg selector.\n"));
   len = my_strlen(shell->hist.last->cmd[n]);
@@ -29,7 +29,7 @@ static int	insert_one_hist(t_shell *shell, int i, int n)
   if ((str = malloc(len + 1)) == NULL)
     return (-1);
   my_strncpy(str, shell->line, i);
-  my_strcat(str, shell->hist.last->prev->cmd[n]);
+  my_strcat(str, shell->hist.last->cmd[n]);
   my_strcat(str, shell->line + i + 3);
   free(shell->line);
   shell->line = str;
@@ -45,7 +45,7 @@ static int	insert_full_hist(t_shell *shell, int i)
 
   if (!shell->hist.last)
     return (-1);
-  cmd = shell->hist.last->prev->cmd;
+  cmd = shell->hist.last->cmd;
   len = 0;
   l = -1;
   while (cmd[++l])
@@ -73,7 +73,7 @@ static int	insert_last_hist(t_shell *shell, int i)
 
   if (!shell->hist.last)
     return (-1);
-  cmd = shell->hist.last->prev->cmd;
+  cmd = shell->hist.last->cmd;
   l = -1;
   while (cmd[++l]);
   l -= 1;
@@ -91,10 +91,18 @@ static int	insert_last_hist(t_shell *shell, int i)
 
 static void	final_things(t_shell *shell, char *last, int save)
 {
+  char		*str;
+
+  str = NULL;
+  if (shell->hist.last != NULL)
+    str = construct_alias(shell->hist.last->cmd);
   if (last != shell->line)
     my_printf("%s\n", shell->line);
-  if (save && strcmp(shell->line, "exit"))
+  if (save && strcmp(shell->line, "exit") &&
+      (shell->hist.last == NULL ||
+       (strcmp(str, shell->line))))
     add_hist_elem(shell, shell->line);
+  free(str);
 }
 
 int	parse_history(t_shell *shell, int save)

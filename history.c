@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 11 20:41:13 2017 Nicolas Polomack
-** Last update Mon May 15 08:38:59 2017 Nicolas Polomack
+** Last update Mon May 15 20:57:02 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -26,25 +26,21 @@ void		write_hist(t_shell *shell, int fd)
   int		c;
 
   head = shell->hist.last;
-  c = 0;
+  c = -1;
+  while (head->prev && ++c < 500)
+    head = head->prev;
   while (head)
     {
       last = head;
       i = -1;
       while (head->cmd[++i])
-        {
-	  if (c < 500)
-	    dprintf(fd, i ? " %s" : "%s", head->cmd[i]);
-          free(head->cmd[i]);
-        }
-      if (c < 500)
-	dprintf(fd, "\n");
-      free(head->cmd);
-      head = head->prev;
-      free(last);
+	dprintf(fd, i ? " %s" : "%s", head->cmd[i]);
+      dprintf(fd, "\n");
+      head = head->next;
       c += 1;
     }
   close(fd);
+  free_hist(shell);
 }
 
 void		save_history(t_shell *shell)

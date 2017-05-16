@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Sat May 13 21:07:31 2017 Full Name
+** Last update	Mon May 15 16:08:51 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -76,7 +76,7 @@ static char		*delete_str(char *to_del, char *content)
   if (my_strlen(to_del) > my_strlen(content))
     return (to_del);
   i = 0;
-  while (to_del && to_del[i] == content[i])
+  while (to_del && to_del[i] && content[i] && to_del[i] == content[i])
     i++;
   if ((str = malloc(my_strlen(content) - i + 2)) == NULL)
     return (NULL);
@@ -92,7 +92,7 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
 {
   char			*s;
 
-  s = strdup(t->token);
+  s = t->token ? strdup(t->token) : NULL;
   if (*list)
     {
       if ((*list)->next == NULL)
@@ -108,7 +108,7 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
 	}
       shell->is_comp > 0 ? show_autolist(shell, *list, is_dir) : 0;
       shell->is_comp > 0 ? print_prompt(shell) : 0;
-      shell->is_comp > 0 ? my_putstr(shell->line) : 0;
+      shell->is_comp > 0 ? my_putstr(shell->line ? shell->line : "") : 0;
       my_strcmp(s, t->token) ? my_putstr(s) : 0;
     }
   shell->is_comp++;

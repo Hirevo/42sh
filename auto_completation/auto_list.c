@@ -30,6 +30,14 @@ void		destroy_the_list(t_match **list)
   *list = NULL;
 }
 
+static void	auto_exec(t_shell *shell, char *str, char *cmd)
+{
+  str = shell->line;
+  shell->line = cmd;
+  exec_line(shell, 0);
+  shell->line = str;
+}
+
 void		show_autolist(t_shell *shell, t_match *list, int is_dir)
 {
   t_match	*tmp;
@@ -56,10 +64,7 @@ void		show_autolist(t_shell *shell, t_match *list, int is_dir)
     handle_error("malloc");
   free(str);
   str = cmd;
-  str = shell->line;
-  shell->line = cmd;
-  exec_line(shell, 0);
-  shell->line = str;
+  auto_exec(shell, str, cmd);
 }
 
 int		add_in_autolist(t_match **list, char *cmd)
