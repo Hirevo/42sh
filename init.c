@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Sat Apr 22 17:38:30 2017 Nicolas Polomack
+** Last update Mon May 15 21:17:21 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -34,12 +34,13 @@ void	init(t_shell *shell)
   if (shell->tty)
     {
       setupterm(NULL, 0, NULL);
-      if (ioctl(0, TCGETA, &shell->w.oterm) == -1)
-        handle_error("ioctl");
-      set_raw(&shell->w.oterm);
+      shell->ioctl = ioctl(0, TCGETA, &shell->w.oterm) + 1;
       shell->w.clear = tigetstr("clear");
       shell->w.forw = tigetstr("cuf1");
       shell->w.backw = tigetstr("cub1");
+      shell->w.upw = tigetstr("cuu1");
+      shell->w.downw = strdup(shell->w.upw);
+      shell->w.downw[2] += 1;
       shell->w.left = "\033[D";
       shell->w.right = "\033[C";
       shell->line = NULL;
@@ -48,17 +49,10 @@ void	init(t_shell *shell)
 
 void	init_prompt(t_shell *shell)
 {
-  if (!shell->tty)
-    return ;
-  shell->cwd = getcwd(NULL, 0);
-  write(1, RED, strlen(RED));
-  write(1, "42sh", 4);
-  write(1, RESET, strlen(RESET));
-  write(1, " ", 1);
-  write(1, GREEN, strlen(GREEN));
-  write(1, shell->cwd, strlen(shell->cwd));
-  write(1, RESET, strlen(RESET));
-  write(1, " $> ", 4);
-  if (shell->line)
-    write(1, shell->line, strlen(shell->line));
+  if (shell->tty)
+    {
+      get_prompt(shell);
+      sauv_prompt(shell);
+      print_prompt(shell);
+    }
 }

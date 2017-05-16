@@ -5,16 +5,16 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Nov 14 10:47:52 2016 Nicolas Polomack
-** Last update Wed Mar 29 01:49:55 2017 Nicolas Polomack
+** Last update Fri May 12 22:55:42 2017 Arthur Knoepflin
 */
 
 #include "my.h"
 
 char	*my_custom_revstr(char *str, int isNegative)
 {
-  int   count;
-  int   reverse_count;
-  char  resp[my_strlen(str) + 2];
+  int	count;
+  int	reverse_count;
+  char	resp[my_strlen(str) + 2];
 
   count = 0;
   reverse_count = my_strlen(str) - 1;
@@ -58,7 +58,7 @@ char	*my_algorithm(int nbr, char *symbols, int base, int isNegative)
   return (my_custom_revstr(total, isNegative));
 }
 
-int	get_val(char symb, char *base_from)
+int	get_value(char symb, char *base_from)
 {
   int	count;
 
@@ -84,7 +84,7 @@ char	*convert_base(char *nbr, char *base_from, char *base_to)
   total = 0;
   while (size >= 0 && nbr[size] != '-')
     {
-      total = total + (get_val(nbr[size], base_from) * factor);
+      total = total + (get_value(nbr[size], base_from) * factor);
       factor = factor * base1;
       size = size - 1;
     }
