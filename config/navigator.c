@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 15:20:13 2017 Arthur Knoepflin
-** Last update Fri May  5 02:35:19 2017 Nicolas Polomack
+** Last update Tue May 16 11:10:12 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -14,6 +14,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "server.h"
+#include "shell.h"
 #include "my.h"
 
 static char	**get_path(char **ae)
@@ -30,6 +31,7 @@ static char	**get_path(char **ae)
     return (ret);
   if ((tmp = get_env("PATH")) == NULL)
     return (ret);
+  free_tab(ret);
   return (my_split(tmp, ":"));
 }
 
@@ -39,11 +41,17 @@ static char	*test_access(char *tmp)
 
   ret = my_strcatdup(tmp, CHROME);
   if (access(ret, X_OK) == 0)
-    return (ret);
+    {
+      free(tmp);
+      return (ret);
+    }
   free(ret);
   ret = my_strcatdup(tmp, FIREFOX);
   if (access(ret, X_OK) == 0)
-    return (ret);
+    {
+      free(tmp);
+      return (ret);
+    }
   free(ret);
   return (NULL);
 }
@@ -65,10 +73,14 @@ char	*find_navigator(char **ae)
       else
       	tmp = my_strdup(path[i]);
       if ((ret = test_access(tmp)) != NULL)
-	return (ret);
+	{
+	  free_tab(path);
+	  return (ret);
+	}
       free(tmp);
       i += 1;
     }
+  free_tab(path);
   return (NULL);
 }
 
@@ -93,12 +105,14 @@ int	launch_nav(char *path, int port, char **ae)
   argv[2] = NULL;
   argv[0] = path;
   argv[1] = my_strdup(PATH_WEB);
-  argv[1] = my_strcatdup(argv[1], int_toc(port));
+  argv[1] = my_fstrcat(argv[1], int_toc(port), 2);
   if ((pid = fork()) == 0)
     {
       dup_child();
       execve(path, argv, ae);
+      free_tab(argv);
       exit(0);
     }
+  free_tab(argv);
   return (0);
 }

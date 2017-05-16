@@ -140,7 +140,7 @@ $(document).ready(function() {
 		var kc = e.key;
 		if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_".indexOf(e.key) == -1 &&
 		kc != "Backspace" && kc != "Delete" && kc != "ArrowDown" &&
-		kc != "ArrowUp" && kc != "ArrowLeft" && kc != "ArrowRight") {
+		kc != "ArrowUp" && kc != "ArrowLeft" && kc != "ArrowRight" && kc != "Tab") {
 			return (false);
 		}
 	});

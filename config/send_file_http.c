@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon Apr 24 16:14:59 2017 Arthur Knoepflin
-** Last update Mon Apr 24 20:44:30 2017 Arthur Knoepflin
+** Last update Tue May 16 10:59:31 2017 Arthur Knoepflin
 */
 
 #include <sys/types.h>
@@ -29,7 +29,17 @@ int	read_file(char *path, char *ret, int size, t_socket client)
     }
   len = read(fd, ret, size);
   ret[len] = 0;
+  close(fd);
   return (0);
+}
+
+static void	send_length(t_socket sock, int size)
+{
+  char		*toc;
+
+  toc = int_toc(size);
+  write_client(sock, toc);
+  free(toc);
 }
 
 void		send_file_http(t_socket sock, char *path)
@@ -51,9 +61,11 @@ void		send_file_http(t_socket sock, char *path)
     return ;
   write_client(sock, HEAD_RESP);
   write_client(sock, "Content-length: ");
-  write_client(sock, int_toc(stati.st_size));
+  send_length(sock, stati.st_size);
   write_client(sock, CRLF);
   send_mime(sock, path);
   write_client(sock, "\r\n");
   send(sock, buf, stati.st_size, 0);
+  free(buf);
+  free(path);
 }

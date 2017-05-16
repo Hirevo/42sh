@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May 14 20:59:03 2017 Nicolas Polomack
+** Last update Tue May 16 01:53:43 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -14,7 +14,6 @@
 # include <termio.h>
 # include <sys/stat.h>
 # include "server.h"
-
 # define RC_FILE ".42shrc"
 # define HIST_FILE ".42sh_history"
 # define ALIAS_FILE ".42sh_alias"

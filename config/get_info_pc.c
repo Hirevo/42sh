@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  2 17:20:13 2017 Arthur Knoepflin
-** Last update Sun May 14 23:49:59 2017 Arthur Knoepflin
+** Last update Tue May 16 10:48:52 2017 Arthur Knoepflin
 */
 
 #include <sys/types.h>
@@ -52,11 +52,10 @@ int	parse_version(t_info_pc *ret)
   return (0);
 }
 
-int	parse_ram(t_info_pc *ret)
+int	parse_ram(t_info_pc *ret, int i)
 {
   char	*str;
   int	fd;
-  int	i;
 
   if ((fd = open("/proc/meminfo", O_RDONLY)) == -1)
     return (1);
@@ -76,6 +75,7 @@ int	parse_ram(t_info_pc *ret)
 	    i += 1;
 	  ret->mem_available = my_getnbr(str + i);
 	}
+      free(str);
     }
   close(fd);
   return (0);
@@ -90,14 +90,20 @@ int	parse_proco(t_info_pc *ret)
   if ((fd = open("/proc/cpuinfo", O_RDONLY)) == -1)
     return (1);
   while ((str = get_next_line(fd)))
-    if (!my_strncmp(str, "model name", 10))
-      {
-	i = 10;
-	while (str[i] && str[i] != ':')
-	  i += 1;
-	i += 2;
-	ret->proco = my_strdup(str + i);
-      }
+    {
+      if (!my_strncmp(str, "model name", 10))
+	{
+	  i = 10;
+	  while (str[i] && str[i] != ':')
+	    i += 1;
+	  i += 2;
+	  ret->proco = my_strdup(str + i);
+	  free(str);
+	  close(fd);
+	  return (0);
+	}
+      free(str);
+    }
   close(fd);
   return (0);
 }
@@ -111,7 +117,7 @@ t_info_pc	*get_info(void)
   my_memset(ret, 0, sizeof(t_info_pc));
   if (parse_version(ret))
     return (NULL);
-  if (parse_ram(ret))
+  if (parse_ram(ret, 0))
     return (NULL);
   if (parse_proco(ret))
     return (NULL);

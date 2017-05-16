@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Thu Oct 13 10:04:36 2016 Nicolas POLOMACK
-** Last update Thu May  4 19:23:11 2017 Arthur Knoepflin
+** Last update Tue May 16 09:48:12 2017 Arthur Knoepflin
 */
 
 #ifndef MY_H_
@@ -57,6 +57,7 @@ int	my_showstr(char *);
 int	my_showmem(char *, int);
 char	*my_strcat(char *, char *);
 char	*my_strcatdup(char *, char *);
+char	*my_fstrcat(char *, char *, int);
 char	*my_strncat(char *, char *, int);
 char	*my_strdup(char *);
 int	my_strlen_until(char *, char);
