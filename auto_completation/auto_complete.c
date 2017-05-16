@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Mon May 15 16:08:51 2017 Full Name
+** Last update	Tue May 16 19:03:38 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -21,7 +21,7 @@
 #include "my.h"
 #include "prompt.h"
 
-static int	find_matches(t_match **list, char *path, char *str)
+static int	find_matches(t_match **list, char *path, char *str, t_auto *t)
 {
   struct dirent	**namelist;
   int		n;
@@ -40,6 +40,7 @@ static int	find_matches(t_match **list, char *path, char *str)
 	{
 	  if ((add_in_autolist(list, strdup(namelist[n]->d_name))) == -1)
 	    return (-1);
+	  t->is_a_dir = (namelist[n]->d_type == DT_DIR) ? (1) : (0);
 	}
       n--;
     }
@@ -54,6 +55,10 @@ int		modify_path(t_auto *token, char **path)
   char		*str;
 
   i = 0;
+  if ((find_a_path(path, token)) == -1)
+    return (-1);
+  if (token->is_path == 1)
+    return (0);
   if (token->pre_token[0] == 0)
     return (0);
   str = token->pre_token;
@@ -67,11 +72,11 @@ int		modify_path(t_auto *token, char **path)
   return (0);
 }
 
-static char		*delete_str(char *to_del, char *content)
+char		*delete_str(char *to_del, char *content)
 {
-  int			i;
-  int			m;
-  char			*str;
+  int		i;
+  int		m;
+  char		*str;
 
   if (my_strlen(to_del) > my_strlen(content))
     return (to_del);
@@ -96,26 +101,19 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
   if (*list)
     {
       if ((*list)->next == NULL)
+	transform(shell, t, list, &s);
+      if (shell->is_comp > 0)
 	{
-	  shell->is_comp = 0;
-          s ? free(shell->line) : 0;
-          shell->line = my_strcatdup(my_strcatdup(t->pre_token, (*list)->cmd),
-				     t->post_token);
-	  (*list)->cmd = delete_str(s, (*list)->cmd);
-	  if (t->post_token)
-	    s = strdup(my_strcatdup((*list)->cmd, t->post_token));
-	  shell->w.cur = strlen(shell->line);
+	  show_autolist(shell, *list, is_dir);
+	  print_prompt(shell);
+	  my_putstr(shell->line ? shell->line : "");
 	}
-      shell->is_comp > 0 ? show_autolist(shell, *list, is_dir) : 0;
-      shell->is_comp > 0 ? print_prompt(shell) : 0;
-      shell->is_comp > 0 ? my_putstr(shell->line ? shell->line : "") : 0;
       my_strcmp(s, t->token) ? my_putstr(s) : 0;
     }
   shell->is_comp++;
   destroy_the_list(list);
+  free(s);
   free(t->token);
-  free(t->pre_token);
-  free(t->post_token);
 }
 
 int		auto_complete(t_shell *shell, char *path)
@@ -128,6 +126,7 @@ int		auto_complete(t_shell *shell, char *path)
 
   if ((find_token(shell, &token)) == -1)
     return (-1);
+  token.is_path = 0;
   modify_path(&token, &path);
   if (!path || !(parsed = split_it(path, ":")))
     return (-1);
@@ -136,10 +135,12 @@ int		auto_complete(t_shell *shell, char *path)
   err = 0;
   while (parsed[i] && err != 1)
     {
-      if ((err = find_matches(&list, parsed[i++], token.token)) == -1)
+      if ((err = find_matches(&list, parsed[i++], token.token, &token)) == -1)
 	return (-1);
     }
   my_free_tab((void **)parsed);
   reprint_and_free(shell, &list, &token, strcmp(path, ".") == 0);
+  free(token.pre_token);
+  free(token.post_token);
   return (0);
 }

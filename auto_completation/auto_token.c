@@ -5,13 +5,40 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Fri May 12 13:59:20 2017 Maxime Jenny
-** Last update	Sat May 13 21:11:58 2017 Full Name
+** Last update	Tue May 16 15:57:33 2017 Full Name
 */
 
 #include <stdlib.h>
 #include "auto_complete.h"
 #include "shell.h"
 #include "my.h"
+
+int		find_a_path(char **path, t_auto *token)
+{
+  int		i;
+  int		g;
+  char		*str;
+  char		*new;
+
+  str = token->token;
+  i = my_strlen(str) - 1;
+  while (i >= 0 && str[i] != '/')
+    i--;
+  if (i == 0 && str[i] != '/')
+    return (0);
+  else if (i >= 0)
+    {
+      if ((new = malloc(my_strlen((str + i)) + 1)) == NULL)
+	return (-1);
+      new = my_strdup(str + i + 1);
+      token->token = new;
+      *path = my_strndup(str, i + 1);
+      token->pre_token = my_strcatdup(token->pre_token, my_strndup(str, i + 1));
+      free(str);
+      token->is_path = 1;
+    }
+  return (1);
+}
 
 char		*extract_posttoken(char *str, int end)
 {

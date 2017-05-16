@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May  5 06:44:42 2017 Nicolas Polomack
-** Last update Mon May 15 08:23:55 2017 Nicolas Polomack
+** Last update Tue May 16 15:54:45 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -44,10 +44,10 @@ int	echo_term(char **args)
   int	flag_n;
 
   flag_n = (args[0] && !strcmp(args[0], "-n"));
-  i = -1;
+  i = flag_n ? 0 : -1;
   while (args[++i])
     {
-      if (i)
+      if (i - (flag_n))
 	putchar(' ');
       j = -1;
       while (args[i][++j])

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 20:37:53 2017 Arthur Knoepflin
+** Last update Tue May 16 19:10:27 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -59,6 +59,8 @@ typedef struct	s_window
 {
   struct termio	oterm;
   char		*clear;
+  char		*end;
+  char		*home;
   char		*forw;
   char		*backw;
   char		*upw;
@@ -401,6 +403,17 @@ void	move_forw(t_shell *);
 void	move_backw(t_shell *);
 void	move_upw(t_shell *);
 void	move_downw(t_shell *);
+
+/*
+** prompt/mechanics/advanced.c
+*/
+void	move_home(t_shell *);
+void	move_end(t_shell *);
+
+/*
+** prompt/mechanics/fct.c
+*/
+void	get_cur_fcts(void (*[6])(t_shell *));
 
 /*
 ** prompt/mechanics/prompt.c
