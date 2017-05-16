@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:42:33 2017 Nicolas Polomack
-** Last update Sun May  7 22:53:33 2017 Nicolas Polomack
+** Last update Tue May 16 15:16:40 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -90,4 +90,20 @@ char	*construct_alias(char **tab)
   while (tab[++i])
     strcat(i ? strcat(ret, " ") : ret, tab[i]);
   return (ret);
+}
+
+char		*get_alias_cmd(t_shell *shell, char *name)
+{
+  t_alias	*head;
+
+  if (name == NULL)
+    return (NULL);
+  head = shell->alias;
+  while (head)
+    {
+      if (!strcmp(head->alias, name))
+	return (strdup(head->command));
+      head = head->next;
+    }
+  return (NULL);
 }

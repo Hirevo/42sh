@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 20:42:53 2017 Nicolas Polomack
-** Last update Sat May 13 16:22:58 2017 Nicolas Polomack
+** Last update Tue May 16 02:18:13 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -36,4 +36,23 @@ void	setup_exec(t_command *head, int *fds, int ret)
   else if (head->r_type)
     if (setup_right_redirect(head, fds, (head->r_type[1] == 0)) == -1)
       exit(1);
+}
+
+void	skip_commands(t_command **head, unsigned char ret)
+{
+  char	last;
+
+  if ((*head) && (((*head)->link == 'e' && ret)
+		  || ((*head)->link == 'o' && !ret)))
+    {
+      last = (*head)->link;
+      (*head) = (*head)->next;
+      while ((*head) && (*head)->link != ';' &&
+	     (*head)->link != 'e' && (*head)->link != 'o')
+	(*head) = (*head)->next;
+      if ((*head) && (*head)->link == 'e' && last == 'o')
+	ret = 1;
+      if ((*head) && (*head)->link != ';')
+	skip_commands(head, ret);
+    }
 }

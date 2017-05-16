@@ -56,10 +56,7 @@ void		show_autolist(t_shell *shell, t_match *list, int is_dir)
     handle_error("malloc");
   free(str);
   str = cmd;
-  str = shell->line;
-  shell->line = cmd;
-  exec_line(shell, 0);
-  shell->line = str;
+  quick_exec(shell, cmd);
 }
 
 int		add_in_autolist(t_match **list, char *cmd)

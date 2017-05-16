@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Sun May 14 21:04:15 2017 Nicolas Polomack
+** Last update Tue May 16 02:09:27 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -143,9 +143,8 @@ int	father_action(t_command **head,
       r = get_return(shell);
       fds[2] = -1;
     }
-  while  ((*head) && (((*head)->link == 'e' && WEXITSTATUS(r)) ||
-		      ((*head)->link == 'o' && !WEXITSTATUS(r))))
+  skip_commands(head, WEXITSTATUS(r));
+  if (*head)
     (*head) = (*head)->next;
-  (*head) = (*head)->next;
   return (WIFEXITED(r) ? WEXITSTATUS(r) : r % 128 + 128);
 }

@@ -5,12 +5,13 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Fri May  5 02:35:59 2017 Nicolas Polomack
+** Last update Tue May 16 10:55:34 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
 #include <string.h>
 #include "server.h"
+#include "shell.h"
 #include "my.h"
 
 static int	strlen_space(char *str)
@@ -28,6 +29,7 @@ static char	*get_arg(char *head)
 {
   char		**resp;
   char		**req;
+  char		*ret;
   int		i;
 
   resp = my_split(head, "\r\n\r\n");
@@ -40,8 +42,13 @@ static char	*get_arg(char *head)
 	  while (req[0][i] && req[0][i] != '?')
 	    i += 1;
 	  i += 1;
-	  return (my_strndup(req[0] + i, strlen_space(req[0])));
+	  ret = my_strndup(req[0] + i, strlen_space(req[0]));
+	  free_tab(req);
+	  free_tab(resp);
+	  return (ret);
 	}
+      free_tab(req);
+      free_tab(resp);
     }
   return (NULL);
 }
@@ -49,11 +56,7 @@ static char	*get_arg(char *head)
 static int	parse_arg(t_socket client, char **arg, t_config *config)
 {
   if (!my_strcmp(arg[1], "quit"))
-    {
-      my_putstr("Configuration terminé\n");
-      write_client(client, my_strcatdup(BASE_RESP, "quit"));
-      return (1);
-    }
+    return (exit_config(client, arg));
   else if (!my_strcmp(arg[1], "get_env"))
     send_env(client, config->env);
   else if (!my_strcmp(arg[1], "get_info"))
@@ -72,6 +75,7 @@ static int	parse_arg(t_socket client, char **arg, t_config *config)
     update_prompt_sel(client, config, arg);
   else
     write_client(client, BASE_RESP);
+  free_tab(arg);
   return (0);
 }
 
@@ -87,9 +91,14 @@ int	response(t_socket client, char *buf, t_config *config)
     {
       if ((r_arg = get_arg(buf)) && (arg = my_split_mulchar(r_arg, "&=")))
 	  if (!my_strcmp(arg[0], "arg"))
-	    return (parse_arg(client, arg, config));
+	    {
+	      free(r_arg);
+	      free(file);
+	      return (parse_arg(client, arg, config));
+	    }
     }
   else
-    send_file_http(client, my_strcatdup(PATH_DOC, get_file_http(buf)));
+    send_file_http(client, my_fstrcat(PATH_DOC, get_file_http(buf), 3));
+  free(file);
   return (0);
 }

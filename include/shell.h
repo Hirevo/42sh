@@ -1,11 +1,11 @@
 /*
-** shell.h for progammation shell in /home/nicolaspolomack/shell/PSU_2016_minishell1
+1;4803;0c** shell.h for progammation shell in /home/nicolaspolomack/shell/PSU_2016_minishell1
 **
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May 14 20:59:03 2017 Nicolas Polomack
+** Last update Tue May 16 15:09:10 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -14,7 +14,6 @@
 # include <termio.h>
 # include <sys/stat.h>
 # include "server.h"
-
 # define RC_FILE ".42shrc"
 # define HIST_FILE ".42sh_history"
 # define ALIAS_FILE ".42sh_alias"
@@ -101,6 +100,7 @@ typedef struct		s_shell
   char			*prev;
   int			*fds;
   int			tty;
+  int			ioctl;
   char			*cwd;
   t_alias		*alias;
   t_hist_ctrl		hist;
@@ -152,6 +152,7 @@ void	init_aliases(t_shell *);
 void	set_alias(t_shell *, char *);
 void	reload_shell(t_shell *);
 void	free_alias(t_shell *);
+void	free_hist(t_shell *);
 int	disp_alias(t_shell *, char *);
 int	disp_all_alias(t_shell *);
 int	add_alias(t_shell *, char *, char *);
@@ -170,6 +171,7 @@ void	exec_piped_command(char *, t_command *, int[2], t_shell *);
 ** alias/alias.c
 */
 char	*construct_alias(char **);
+char	*get_alias_cmd(t_shell *, char *);
 
 /*
 ** alias/edit.c
@@ -204,6 +206,7 @@ int	parse_history(t_shell *, int);
 ** exec/exec2.c
 */
 unsigned int	exec_redirected_builtins(t_shell *, int, int *, int[2]);
+void		quick_exec(t_shell *, char *);
 
 /*
 ** exec/close.c
@@ -282,6 +285,7 @@ void	exec_piped_child(int, t_command *, int[2], t_shell *);
 */
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
+void	skip_commands(t_command **, unsigned char);
 
 /*
 ** globbing/globbing.c
@@ -352,6 +356,12 @@ void	init_prompt(t_shell *);
 void	set_raw();
 char	get_input();
 void	handle_error(char *);
+
+/*
+** prompt/get_cur_branch.c
+*/
+
+char	*show_cur_branch();
 
 /*
 ** prompt/mechanics/char.c

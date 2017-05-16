@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Fri May 12 23:13:14 2017 Arthur Knoepflin
+** Last update Tue May 16 01:43:24 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -86,11 +86,12 @@ int	exec_builtins2(t_shell *shell, int args, int *r, int i)
   return (exec_builtins3(shell, args, r, i));
 }
 
-int	exec_builtins(t_shell *shell, int args, int *r)
+int	exec_builtins_(t_shell *shell, int args, int *r)
 {
   int	i;
 
   i = 0;
+  /* exec_builtins_(shell, args, r); */
   if (!my_strcmp(shell->cur->av[0], "config"))
     {
       *r = launch_config(shell);

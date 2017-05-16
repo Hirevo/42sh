@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Thu Jan 19 12:54:48 2017 Nicolas Polomack
-** Last update Mon May 15 01:15:09 2017 Nicolas Polomack
+** Last update Tue May 16 15:30:00 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -51,4 +51,22 @@ unsigned int	exec_redirected_builtins(t_shell *shell, int count,
       close(last);
     }
   return (ret);
+}
+
+void		quick_exec(t_shell *shell, char *str)
+{
+  char		*save;
+  char		**final;
+  t_command	*cmds;
+
+  save = shell->line;
+  final = shell->final;
+  cmds = shell->commands;
+  shell->commands = NULL;
+  shell->final = NULL;
+  shell->line = str;
+  exec_line(shell, 0);
+  shell->line = save;
+  shell->final = final;
+  shell->commands = cmds;
 }

@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Tue May  9 16:31:33 2017 Arthur Knoepflin
+** Last update Tue May 16 10:53:53 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -116,6 +116,12 @@ int	urldecode(char *, char *);
 */
 
 int	exec_cmd_http(t_socket, char **, char ***);
+
+/*
+** exit.c
+*/
+
+int	exit_config(t_socket, char **);
 
 /*
 ** init_connection.c

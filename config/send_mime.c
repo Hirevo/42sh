@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon Apr 24 17:21:30 2017 Arthur Knoepflin
-** Last update Mon Apr 24 22:25:51 2017 Arthur Knoepflin
+** Last update Tue May 16 11:27:48 2017 Arthur Knoepflin
 */
 
 #include <sys/types.h>
@@ -23,7 +23,7 @@ static char	*ext(char *path)
   i = my_strlen(path) - 1;
   while (i >= 0 && path[i] != '.')
     i -= 1;
-  return (my_strdup(path + i + 1));
+  return (path + i + 1);
 }
 
 static char	*get_mime(int fd, char *ext)
@@ -57,6 +57,7 @@ void	send_mime(t_socket sock, char *path)
   mime = get_mime(fd, ex);
   close(fd);
   write_client(sock, "Content-type: ");
-  write_client(sock, mime);
+  write_client(sock, (mime) ? mime : "");
   write_client(sock, CRLF);
+  free(mime);
 }
