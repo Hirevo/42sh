@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 13:51:20 2017 Maxime Jenny
-** Last update	Tue May 16 15:36:26 2017 Full Name
+** Last update	Tue May 16 18:22:42 2017 Full Name
 */
 
 #ifndef AUTO_COMPLETE_H_
@@ -20,6 +20,7 @@ typedef struct		s_auto
   char			*token;
   char			*post_token;
   int			is_path;
+  int			is_a_dir;
 }			t_auto;
 
 typedef struct		s_match
