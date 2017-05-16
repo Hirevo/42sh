@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 13:51:20 2017 Maxime Jenny
-** Last update	Tue May 16 18:22:42 2017 Full Name
+** Last update	Tue May 16 19:03:52 2017 Full Name
 */
 
 #ifndef AUTO_COMPLETE_H_
@@ -36,6 +36,8 @@ int		word_length(char *str, int i, char *to_split);
 void		my_free_dirent(struct dirent **tab, int size);
 void		my_free_tab(void **tab);
 int		find_a_path(char **path, t_auto *token);
+void		transform(t_shell *shell, t_auto *t, t_match **list, char **s);
+char		*delete_str(char *to_del, char *content);
 
 /*
 ** List

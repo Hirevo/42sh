@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Tue May 16 18:45:21 2017 Full Name
+** Last update	Tue May 16 19:03:38 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -72,11 +72,11 @@ int		modify_path(t_auto *token, char **path)
   return (0);
 }
 
-static char		*delete_str(char *to_del, char *content)
+char		*delete_str(char *to_del, char *content)
 {
-  int			i;
-  int			m;
-  char			*str;
+  int		i;
+  int		m;
+  char		*str;
 
   if (my_strlen(to_del) > my_strlen(content))
     return (to_del);
@@ -92,25 +92,6 @@ static char		*delete_str(char *to_del, char *content)
   return (str);
 }
 
-static void		transform(t_shell *shell, t_auto *t, t_match **list,
-				  char **s)
-{
-  shell->is_comp = 0;
-  *s ? free(shell->line) : 0;
-  shell->line = my_strcatdup(t->pre_token, (*list)->cmd);
-  shell->line = my_fstrcat(shell->line, t->post_token, 1);
-  if (t->is_a_dir)
-    {
-      t->is_a_dir = 0;
-      shell->line = my_fstrcat(shell->line, "/", 1);
-    }
-  (*list)->cmd = delete_str(*s, (*list)->cmd);
-  if (t->post_token)
-    *s = my_strcatdup((*list)->cmd, t->post_token);
-  shell->line = my_fstrcat(shell->line, " ", 1);
-  shell->w.cur = strlen(shell->line);
-}
-
 static void		reprint_and_free(t_shell *shell, t_match **list,
 					 t_auto *t, int is_dir)
 {
@@ -121,9 +102,12 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
     {
       if ((*list)->next == NULL)
 	transform(shell, t, list, &s);
-      shell->is_comp > 0 ? show_autolist(shell, *list, is_dir) : 0;
-      shell->is_comp > 0 ? print_prompt(shell) : 0;
-      shell->is_comp > 0 ? my_putstr(shell->line ? shell->line : "") : 0;
+      if (shell->is_comp > 0)
+	{
+	  show_autolist(shell, *list, is_dir);
+	  print_prompt(shell);
+	  my_putstr(shell->line ? shell->line : "");
+	}
       my_strcmp(s, t->token) ? my_putstr(s) : 0;
     }
   shell->is_comp++;
