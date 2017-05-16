@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Tue May 16 13:32:06 2017 Arthur Knoepflin
+** Last update Tue May 16 14:42:10 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -13,6 +13,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <libgen.h>
+#include <string.h>
 #include "get_next_line.h"
 #include "my.h"
 
@@ -80,6 +82,18 @@ static char	*find_branch(char *path)
   return (cut_path(tmp));
 }
 
+static int	is_root(char *path)
+{
+  char	*str;
+  int	i;
+
+  str = malloc(strlen(path) + strlen("/home") + 1);
+  strcat(strcpy(str, path), "/home");
+  i = access(str, F_OK);
+  free(str);
+  return (i);
+}
+
 char	*show_cur_branch()
 {
   char	*branch;
@@ -87,24 +101,24 @@ char	*show_cur_branch()
 
   path = my_strdup("./.git");
   while (path != NULL)
-    {
-      if ((access(path, F_OK) == -1))
+    if ((access(path, F_OK) == -1))
+      if (is_root(dirname(path)))
 	{
-	  if ((access("./home", F_OK) == 1))
-	    path = NULL;
-	  path = my_strcatdup("../", path);
+	  free(path);
+	  path = NULL;
 	}
       else
-	{
-	  path = my_strcatdup(path, "/HEAD");
-	  if ((branch = find_branch(path)) == NULL)
-	    {
-	      free(path);
-	      return (NULL);
-	    }
-	  free(path);
-	  return (branch);
-	}
-    }
+	my_strcatdup("../", path);
+    else
+      {
+	path = my_strcatdup(path, "/HEAD");
+	if ((branch = find_branch(path)) == NULL)
+	  {
+	    free(path);
+	    return (NULL);
+	  }
+	free(path);
+	return (branch);
+      }
   return (NULL);
 }
