@@ -5,10 +5,11 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Tue May 16 09:54:20 2017 Arthur Knoepflin
+** Last update Tue May 16 14:09:17 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "shell.h"
 #include "builtin.h"
@@ -22,22 +23,23 @@ static const char	built_tab[][11] =
 
 static int	show_builtins(t_shell *shell, int args)
 {
-  t_shell	shell_e;
   char		*ret;
   int		i;
+  char		*str;
 
   i = 0;
-  ret = my_strdup("echo \"");
-  while (my_strlen((char *) built_tab[i]))
+  ret = strdup("echo \"");
+  while (strlen((char *) built_tab[i]))
     {
       ret = my_fstrcat(ret, (char *) built_tab[i], 1);
       ret = my_fstrcat(ret, "\n", 1);
       i += 1;
     }
   ret = my_fstrcat(ret, "\" | sort | column", 1);
-  init_shell(&shell_e, environ);
-  shell_e.line = ret;
-  exec_line(&shell_e, 0);
+  str = shell->line;
+  shell->line = ret;
+  exec_line(shell, 0);
+  shell->line = str;
   return (0);
 }
 
