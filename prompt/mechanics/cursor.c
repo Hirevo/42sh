@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 17:04:32 2017 Nicolas Polomack
-** Last update Mon May 15 10:44:51 2017 Arthur Knoepflin
+** Last update Tue May 16 19:17:31 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -22,7 +22,9 @@ void	buffer_seq(t_shell *shell, char **str, int *dir, char c)
   while (*dir == -1 && (strstr(shell->w.left, *str) ||
 			strstr(shell->w.right, *str) ||
 			strstr(shell->w.upw, *str) ||
-			strstr(shell->w.downw, *str)))
+			strstr(shell->w.downw, *str) ||
+			strstr(shell->w.home, *str) ||
+			strstr(shell->w.end, *str)))
     {
       while (!(c = get_input()));
       insert_char_cur(str, c, strlen(*str));
@@ -34,6 +36,10 @@ void	buffer_seq(t_shell *shell, char **str, int *dir, char c)
 	*dir = 3;
       else if (!strcmp(*str, shell->w.downw))
 	*dir = 4;
+      else if (!strcmp(*str, shell->w.home))
+	*dir = 5;
+      else if (!strcmp(*str, shell->w.end))
+	*dir = 6;
     }
 }
 

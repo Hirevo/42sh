@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Fri May 12 23:01:25 2017 Arthur Knoepflin
+** Last update Tue May 16 19:02:17 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -64,20 +64,16 @@ void	move_cursor(t_shell *shell, char c)
 {
   char	*str;
   int	dir;
+  void	(*cur_fct[6])(t_shell *);
 
   buffer_seq(shell, &str, &dir, c);
-  if (dir == 1)
-    move_backw(shell);
-  else if (dir == 2)
-    move_forw(shell);
-  else if (dir == 3)
-    move_upw(shell);
-  else if (dir == 4)
-    move_downw(shell);
-  else
-    while (str[++dir])
-      insert_char_cur(&shell->line, str[dir],
-		      shell->line ? strlen(shell->line) : 0);
+  if (dir == -1)
+    {
+      free(str);
+      return ;
+    }
+  get_cur_fcts(cur_fct);
+  cur_fct[dir - 1](shell);
   free(str);
 }
 
