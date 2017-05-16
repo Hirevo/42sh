@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 20:57:33 2017 Nicolas Polomack
+** Last update Tue May 16 21:24:28 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -409,6 +409,7 @@ void	move_downw(t_shell *);
 */
 void	move_home(t_shell *);
 void	move_end(t_shell *);
+void	set_hist_line(t_shell *);
 
 /*
 ** prompt/mechanics/fct.c

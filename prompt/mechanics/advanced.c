@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue May 16 18:37:16 2017 Nicolas Polomack
-** Last update Tue May 16 19:27:34 2017 Nicolas Polomack
+** Last update Tue May 16 21:59:34 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -34,3 +34,18 @@ void	move_home(t_shell *shell)
     }
 }
 
+void	set_hist_line(t_shell *shell)
+{
+  free(shell->line);
+  if (shell->hist.cur_line)
+    shell->line = strdup(shell->hist.cur_line);
+  else
+    shell->line = NULL;
+  if (shell->line)
+    {
+      printf("%s", shell->line);
+      fflush(stdout);
+      shell->w.cur = strlen(shell->line);
+    }
+  shell->hist.cur = NULL;
+}

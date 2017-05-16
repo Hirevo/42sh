@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Tue May 16 20:56:51 2017 Nicolas Polomack
+** Last update Tue May 16 21:15:02 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -52,6 +52,8 @@ void	init(t_shell *shell)
 
 void	init_prompt(t_shell *shell)
 {
+  shell->hist.cur = NULL;
+  shell->hist.cur_line = NULL;
   if (shell->tty)
     {
       get_prompt(shell);
