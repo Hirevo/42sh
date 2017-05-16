@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Tue May 16 12:50:17 2017 Arthur Knoepflin
+** Last update Tue May 16 13:32:06 2017 Arthur Knoepflin
 */
 
 #include <unistd.h>
@@ -26,12 +26,14 @@ static char	*cut_path(char *tmp)
   i = 0;
   j = 0;
   k = 0;
-  while (j != 2)
+  while (tmp && tmp[i] && j != 2)
     {
-      if (tmp[i] == '/')
+      if (tmp && tmp[i] == '/')
 	j++;
       i++;
     }
+  if (j != 2)
+    return (NULL);
   if ((res = malloc(sizeof(char) * ((my_strlen(tmp) - i) + 1))) == NULL)
     return (NULL);
   while (tmp[i])
@@ -39,6 +41,23 @@ static char	*cut_path(char *tmp)
   res[k] = '\0';
   free(tmp);
   return (res);
+}
+
+static int	is_sha1(char *str)
+{
+  int		i;
+
+  i = 0;
+  while (str[i])
+    {
+      if (!((str[i] >= '0' && str[i] <= '9') ||
+	    (str[i] >= 'a' && str[i] <= 'f')))
+	return (0);
+      i += 1;
+    }
+  if (i != 40)
+    return (0);
+  return (1);
 }
 
 static char	*find_branch(char *path)
@@ -50,7 +69,14 @@ static char	*find_branch(char *path)
   i = 0;
   if ((fd = open(path, O_RDONLY)) == -1)
     return (NULL);
-  tmp = get_next_line(fd);
+  if ((tmp = get_next_line(fd)) == NULL)
+    {
+      close(fd);
+      return (NULL);
+    }
+  close(fd);
+  if (is_sha1(tmp))
+    return (my_strndup(tmp, 7));
   return (cut_path(tmp));
 }
 
