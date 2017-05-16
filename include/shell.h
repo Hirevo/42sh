@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 12:58:05 2017 Arthur Knoepflin
+** Last update Tue May 16 15:09:10 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -171,6 +171,7 @@ void	exec_piped_command(char *, t_command *, int[2], t_shell *);
 ** alias/alias.c
 */
 char	*construct_alias(char **);
+char	*get_alias_cmd(t_shell *, char *);
 
 /*
 ** alias/edit.c
@@ -205,6 +206,7 @@ int	parse_history(t_shell *, int);
 ** exec/exec2.c
 */
 unsigned int	exec_redirected_builtins(t_shell *, int, int *, int[2]);
+void		quick_exec(t_shell *, char *);
 
 /*
 ** exec/close.c

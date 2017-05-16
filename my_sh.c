@@ -90,6 +90,8 @@ int	init_shell(t_shell *shell, char **ae)
 
 int	execute(t_shell *shell)
 {
+  char	*str;
+
   if (shell->ioctl)
     prompt_line(shell);
   else
@@ -99,7 +101,13 @@ int	execute(t_shell *shell)
   if (!shell->line)
     shell->line = strdup("exit");
   if (!is_line_empty(shell))
-    shell->exit = exec_line(shell, shell->tty);
+    {
+      if (str = get_alias_cmd(shell, "postcmd"))
+	quick_exec(shell, str);
+      shell->exit = exec_line(shell, shell->tty);
+      if (str = get_alias_cmd(shell, "precmd"))
+	quick_exec(shell, str);
+    }
 }
 
 int		main(int ac, char **av, char **ae)

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Tue May 16 14:09:17 2017 Nicolas Polomack
+** Last update Tue May 16 15:34:15 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -36,10 +36,7 @@ static int	show_builtins(t_shell *shell, int args)
       i += 1;
     }
   ret = my_fstrcat(ret, "\" | sort | column", 1);
-  str = shell->line;
-  shell->line = ret;
-  exec_line(shell, 0);
-  shell->line = str;
+  quick_exec(shell, ret);
   return (0);
 }
 
