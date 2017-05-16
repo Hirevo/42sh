@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Tue May 16 10:52:00 2017 Arthur Knoepflin
+## Last update Tue May 16 12:49:09 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -96,6 +96,7 @@ SRC	=	alias/alias.c				\
 		prompt/mechanics/sauv.c			\
 		prompt/mechanics/cursor.c		\
 		prompt/mechanics/misc.c			\
+		prompt/get_cur_branch.c			\
 		my_sh.c					\
 		exit.c					\
 		parse/line.c				\

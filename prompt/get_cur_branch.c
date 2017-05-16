@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Tue May 16 11:47:27 2017 ludovic leuzzi
+** Last update Tue May 16 12:50:17 2017 Arthur Knoepflin
 */
 
 #include <unistd.h>
@@ -13,6 +13,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include "get_next_line.h"
+#include "my.h"
 
 static char	*cut_path(char *tmp)
 {
@@ -64,11 +66,11 @@ char	*show_cur_branch()
 	{
 	  if ((access("./home", F_OK) == 1))
 	    path = NULL;
-	  path = my_strcat("../", path);
+	  path = my_strcatdup("../", path);
 	}
       else
 	{
-	  path = my_strcat(path, "/HEAD");
+	  path = my_strcatdup(path, "/HEAD");
 	  if ((branch = find_branch(path)) == NULL)
 	    {
 	      free(path);

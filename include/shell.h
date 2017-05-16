@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 02:33:36 2017 Nicolas Polomack
+** Last update Tue May 16 12:58:05 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -354,6 +354,12 @@ void	init_prompt(t_shell *);
 void	set_raw();
 char	get_input();
 void	handle_error(char *);
+
+/*
+** prompt/get_cur_branch.c
+*/
+
+char	*show_cur_branch();
 
 /*
 ** prompt/mechanics/char.c
