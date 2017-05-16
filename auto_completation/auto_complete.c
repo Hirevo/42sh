@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Mon May 15 16:08:51 2017 Full Name
+** Last update	Tue May 16 17:54:58 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -54,6 +54,10 @@ int		modify_path(t_auto *token, char **path)
   char		*str;
 
   i = 0;
+  if ((find_a_path(path, token)) == -1)
+    return (-1);
+  if (token->is_path == 1)
+    return (0);
   if (token->pre_token[0] == 0)
     return (0);
   str = token->pre_token;
@@ -113,9 +117,8 @@ static void		reprint_and_free(t_shell *shell, t_match **list,
     }
   shell->is_comp++;
   destroy_the_list(list);
+  free(s);
   free(t->token);
-  free(t->pre_token);
-  free(t->post_token);
 }
 
 int		auto_complete(t_shell *shell, char *path)
@@ -128,6 +131,7 @@ int		auto_complete(t_shell *shell, char *path)
 
   if ((find_token(shell, &token)) == -1)
     return (-1);
+  token.is_path = 0;
   modify_path(&token, &path);
   if (!path || !(parsed = split_it(path, ":")))
     return (-1);
@@ -141,5 +145,7 @@ int		auto_complete(t_shell *shell, char *path)
     }
   my_free_tab((void **)parsed);
   reprint_and_free(shell, &list, &token, strcmp(path, ".") == 0);
+  free(token.pre_token);
+  free(token.post_token);
   return (0);
 }
