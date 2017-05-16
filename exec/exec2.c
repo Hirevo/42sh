@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Thu Jan 19 12:54:48 2017 Nicolas Polomack
-** Last update Tue May 16 15:30:00 2017 Nicolas Polomack
+** Last update Tue May 16 20:35:29 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -35,7 +35,7 @@ unsigned int	exec_redirected_builtins(t_shell *shell, int count,
   unsigned int	ret;
 
   head = shell->cur;
-  if (!is_builtin(head->av[0]))
+  if (indexof_builtin(head->av[0]) == -1)
     return (0);
   fd = 0;
   if (head->r_type)

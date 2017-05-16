@@ -24,10 +24,11 @@ void		transform(t_shell *shell, t_auto *t, t_match **list, char **s)
       t->is_a_dir = 0;
       shell->line = my_fstrcat(shell->line, "/", 1);
     }
+  else
+    shell->line = my_fstrcat(shell->line, " ", 1);
   (*list)->cmd = delete_str(*s, (*list)->cmd);
   if (t->post_token)
     *s = my_strcatdup((*list)->cmd, t->post_token);
-  shell->line = my_fstrcat(shell->line, " ", 1);
   shell->w.cur = my_strlen(shell->line);
 }
 

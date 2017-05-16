@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Tue May 16 15:34:15 2017 Nicolas Polomack
+** Last update Tue May 16 20:33:52 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -15,10 +15,20 @@
 #include "builtin.h"
 #include "my.h"
 
-static const char	built_tab[][11] = 
+static const char	*built_tab[] = 
 {
-  "alias", "cd", "config", "dualcast", "echo", "exit",
-  "setenv", "unalias", "unsetenv", "builtins", ""
+  "alias",
+  "cd",
+  "config",
+  "dualcast",
+  "echo",
+  "exit",
+  "setenv",
+  "unalias",
+  "unsetenv",
+  "builtins",
+  "prompt",
+  NULL
 };
 
 static int	show_builtins(t_shell *shell, int args)
@@ -29,7 +39,7 @@ static int	show_builtins(t_shell *shell, int args)
 
   i = 0;
   ret = strdup("echo \"");
-  while (strlen((char *) built_tab[i]))
+  while (built_tab[i])
     {
       ret = my_fstrcat(ret, (char *) built_tab[i], 1);
       ret = my_fstrcat(ret, "\n", 1);
@@ -40,22 +50,39 @@ static int	show_builtins(t_shell *shell, int args)
   return (0);
 }
 
-static int	nb_built(const char str[][11])
+static int	nb_built(const char **str)
 {
   int		i;
 
   i = 0;
-  while (my_strlen((char *) built_tab[i]))
+  while (built_tab[i])
     i += 1;
   return (i);
 }
 
-static int	indexof_builtin(char *cmd)
+char	**get_builtin_tab()
 {
-  int		i;
+  int	i;
+  char	**ret;
+
+  if ((ret = malloc(sizeof(char *) *
+		    (nb_built(built_tab) + 1))) == NULL)
+    return (NULL);
+  i = 0;
+  while (built_tab[i])
+    {
+      ret[i] = my_strdup((char *) built_tab[i]);
+      i += 1;
+    }
+  return (ret);
+}
+
+int	indexof_builtin(char *cmd)
+{
+  int	i;
 
   i = 0;
-  while (my_strlen((char *) built_tab[i]))
+  while (built_tab[i])
     {
       if (!my_strcmp(cmd, (char *) built_tab[i]))
 	return (i);
@@ -79,6 +106,7 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   built_fnt[7] = &unalias_b;
   built_fnt[8] = &setenv_b;
   built_fnt[9] = &show_builtins;
+  built_fnt[10] = &prompt;
   idx = indexof_builtin(shell->cur->av[0]);
   if (idx >= 0)
     {

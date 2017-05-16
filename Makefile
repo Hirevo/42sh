@@ -23,6 +23,7 @@ SRC	=	alias/alias.c				\
 		builtins/dualcast.c			\
 		builtins/echo.c				\
 		builtins/exit.c				\
+		builtins/prompt.c			\
 		builtins/setenv.c			\
 		builtins/unalias.c			\
 		cd.c					\
