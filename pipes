@@ -1,5 +1,0 @@
-ls -l /dev | grep sda ; head -n 20 Makefile | hexdump -C | grep ab --color
-echo "./sig/sigsegv" | ./mysh
-ls | grep sh --color ; head -n 5 my_sh.c | hexdump -C
-rm lol ; ls > lol ; cat lol
-rm lol ; < Makefile cat -e > lol ; cat lol
