@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Mon May 15 21:22:48 2017 Nicolas Polomack
+** Last update Tue May 16 02:33:36 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -284,6 +284,7 @@ void	exec_piped_child(int, t_command *, int[2], t_shell *);
 */
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
+void	skip_commands(t_command **, unsigned char);
 
 /*
 ** globbing/globbing.c
