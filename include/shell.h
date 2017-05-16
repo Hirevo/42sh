@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 15:09:10 2017 Nicolas Polomack
+** Last update Tue May 16 20:37:53 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -142,6 +142,7 @@ void	add_hist(t_shell *);
 void	my_print_command(t_shell *);
 char	*detect_home(char *, char *);
 char	*get_current(char *, char *);
+int	indexof_builtin(char *);
 int	exec_builtins(t_shell *, int, int *);
 int	exec_builtins2(t_shell *, int, int *, int);
 unsigned int	get_unsigned_int(char *);
@@ -318,6 +319,7 @@ int	is_separator(char);
 int	is_space(char);
 int	is_delimiter(char);
 int	is_alphanum(char);
+int	is_num(char *);
 
 /*
 ** char.c

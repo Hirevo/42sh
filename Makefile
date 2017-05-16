@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Tue May 16 12:49:09 2017 Arthur Knoepflin
+## Last update Tue May 16 18:12:38 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -23,6 +23,7 @@ SRC	=	alias/alias.c				\
 		builtins/dualcast.c			\
 		builtins/echo.c				\
 		builtins/exit.c				\
+		builtins/prompt.c			\
 		builtins/setenv.c			\
 		builtins/unalias.c			\
 		cd.c					\
