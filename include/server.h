@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Wed May 17 12:44:36 2017 Arthur Knoepflin
+** Last update Thu May 18 00:12:07 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
