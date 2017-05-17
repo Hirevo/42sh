@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 13:38:58 2017 Arthur Knoepflin
-** Last update Tue May 16 18:16:05 2017 Arthur Knoepflin
+** Last update Wed May 17 09:50:32 2017 Arthur Knoepflin
 */
 
 #ifndef BUILTIN_H_
@@ -19,6 +19,7 @@ int	echo_b(t_shell *, int);
 int	exit_b(t_shell *, int);
 int	setenv_b(t_shell *, int);
 int	unalias_b(t_shell *, int);
+int	unsetenv_b(t_shell *, int);
 int	prompt(t_shell *, int);
 
 #endif /* !BUILTIN_H_ */

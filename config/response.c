@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Tue May 16 10:55:34 2017 Arthur Knoepflin
+** Last update Wed May 17 12:51:48 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -55,27 +55,19 @@ static char	*get_arg(char *head)
 
 static int	parse_arg(t_socket client, char **arg, t_config *config)
 {
-  if (!my_strcmp(arg[1], "quit"))
-    return (exit_config(client, arg));
-  else if (!my_strcmp(arg[1], "get_env"))
-    send_env(client, config->env);
-  else if (!my_strcmp(arg[1], "get_info"))
-    send_info(client);
-  else if (!my_strcmp(arg[1], "add_env") && nb_args(arg) >= 5)
-    add_env_http(client, arg);
-  else if (!my_strcmp(arg[1], "update_env") && nb_args(arg) >= 5)
-    update_env_http(client, arg);
-  else if (!my_strcmp(arg[1], "del_env") && nb_args(arg) == 4)
-    del_env_http(client, arg);
-  else if (!my_strcmp(arg[1], "exec") && nb_args(arg) == 4)
-    exec_cmd_http(client, arg, &(config->env));
-  else if (!my_strcmp(arg[1], "get_prompt_sel"))
-    send_prompt_sel(client, config->prompt);
-  else if (!my_strcmp(arg[1], "update_prompt_sel") && nb_args(arg) == 4)
-    update_prompt_sel(client, config, arg);
+  void		(*request_tab[nb_request()])(t_socket, t_config *, char **);
+  int		idx;
+
+  
+  idx = indexof_request(arg[1]);
+  get_tab_request(request_tab);
+  if (idx >= 0 && idx < nb_request())
+    request_tab[idx](client, config, arg);
   else
     write_client(client, BASE_RESP);
   free_tab(arg);
+  if (idx == 0)
+    return (1);
   return (0);
 }
 

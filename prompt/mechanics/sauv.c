@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 12 21:48:18 2017 Arthur Knoepflin
-** Last update Sun May 14 18:54:04 2017 Nicolas Polomack
+** Last update Wed May 17 12:54:57 2017 Arthur Knoepflin
 */
 
 #include <sys/stat.h>
@@ -89,12 +89,15 @@ static void	write_file(char **env)
 
 void	sauv_prompt(t_shell *shell)
 {
+  char	*home;
   char	*path;
   char	*str;
   char	**file;
   int	fd;
 
-  if ((path = my_strcatdup(get_env("HOME"), "/")) == NULL)
+  if (!(home = get_env("HOME")))
+    return ;
+  if ((path = my_strcatdup(home, "/")) == NULL)
     return ;
   if ((fd = open(str = my_strcatdup(path, RC_FILE), O_RDONLY)) == -1)
     return ;

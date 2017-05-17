@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 10:50:36 2017 Arthur Knoepflin
-** Last update Tue May 16 10:54:10 2017 Arthur Knoepflin
+** Last update Wed May 17 11:21:42 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -13,7 +13,7 @@
 #include "server.h"
 #include "my.h"
 
-int	exit_config(t_socket client, char **arg)
+void	exit_config(t_socket client, t_config *config, char **arg)
 {
   char	*str;
 
@@ -21,6 +21,4 @@ int	exit_config(t_socket client, char **arg)
   str = my_strcatdup(BASE_RESP, "quit");
   write_client(client, str);
   free(str);
-  free_tab(arg);
-  return (1);
 }
