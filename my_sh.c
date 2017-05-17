@@ -18,6 +18,8 @@
 #include <time.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <stdio.h>
+#include <curses.h>
 #include "my.h"
 #include "get_next_line.h"
 #include "shell.h"
@@ -130,7 +132,11 @@ int		main(int ac, char **av, char **ae)
     {
       write(1, "exit\n", 5);
       if (shell.ioctl)
-	ioctl(0, TCSETA, &shell.w.oterm) == -1;
+	{
+	  ioctl(0, TCSETA, &shell.w.oterm) == -1;
+	  printf(tigetstr("rmkx"));
+	  fflush(stdout);
+	}
     }
   return (shell.exit);
 }

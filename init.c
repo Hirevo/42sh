@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Tue May 16 19:22:40 2017 Nicolas Polomack
+** Last update Tue May 16 21:15:02 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -34,24 +34,26 @@ void	init(t_shell *shell)
   if (shell->tty)
     {
       setupterm(NULL, 0, NULL);
+      printf(tigetstr("smkx"));
+      fflush(stdout);
       shell->ioctl = ioctl(0, TCGETA, &shell->w.oterm) + 1;
       shell->w.clear = tigetstr("clear");
-      shell->w.end = strdup(tigetstr("kend"));
-      shell->w.end[1] = '[';
-      shell->w.home = tigetstr("home");
+      shell->w.end = tigetstr("kend");
+      shell->w.home = tigetstr("khome");
       shell->w.forw = tigetstr("cuf1");
       shell->w.backw = tigetstr("cub1");
-      shell->w.upw = tigetstr("cuu1");
-      shell->w.downw = strdup(shell->w.upw);
-      shell->w.downw[2] += 1;
-      shell->w.left = "\033[D";
-      shell->w.right = "\033[C";
+      shell->w.upw = tigetstr("kcuu1");
+      shell->w.downw = tigetstr("kcud1");
+      shell->w.left = tigetstr("kcub1");
+      shell->w.right = tigetstr("kcuf1");
       shell->line = NULL;
     }
 }
 
 void	init_prompt(t_shell *shell)
 {
+  shell->hist.cur = NULL;
+  shell->hist.cur_line = NULL;
   if (shell->tty)
     {
       get_prompt(shell);
