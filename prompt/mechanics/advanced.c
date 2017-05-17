@@ -5,13 +5,14 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue May 16 18:37:16 2017 Nicolas Polomack
-** Last update Wed May 17 13:37:57 2017 Nicolas Polomack
+** Last update Wed May 17 16:02:51 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "shell.h"
+#include "my.h"
 
 void	move_end(t_shell *shell)
 {
