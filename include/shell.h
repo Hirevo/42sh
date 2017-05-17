@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Wed May 17 13:05:40 2017 Nicolas Polomack
+** Last update Wed May 17 22:18:16 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -105,6 +105,7 @@ typedef struct		s_shell
   int			tty;
   int			ioctl;
   char			*cwd;
+  pid_t			pgid;
   t_alias		*alias;
   t_hist_ctrl		hist;
   t_command		*commands;
@@ -290,6 +291,7 @@ void	exec_piped_child(int, t_command *, int[2], t_shell *);
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
 void	skip_commands(t_command **, unsigned char);
+void	set_fground(t_shell *);
 
 /*
 ** globbing/globbing.c

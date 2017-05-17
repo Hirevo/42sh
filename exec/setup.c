@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 20:42:53 2017 Nicolas Polomack
-** Last update Tue May 16 02:18:13 2017 Nicolas Polomack
+** Last update Wed May 17 22:18:07 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -54,5 +54,18 @@ void	skip_commands(t_command **head, unsigned char ret)
 	ret = 1;
       if ((*head) && (*head)->link != ';')
 	skip_commands(head, ret);
+    }
+}
+
+void	set_fground(t_shell *shell)
+{
+  int	i;
+
+  if (shell->pgid)
+    {
+      i = getpid();
+      tcsetpgrp(0, i);
+      tcsetpgrp(1, i);
+      tcsetpgrp(2, i);
     }
 }

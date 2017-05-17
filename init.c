@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Wed May 17 12:59:15 2017 Nicolas Polomack
+** Last update Wed May 17 22:41:56 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -13,6 +13,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <termio.h>
+#include <stdlib.h>
 #include <sys/ioctl.h>
 #include "shell.h"
 
@@ -33,7 +34,12 @@ void	init(t_shell *shell)
   shell->tty = isatty(0);
   if (shell->tty)
     {
-      setupterm(NULL, 0, NULL);
+      if (getenv("TERM") == NULL ||
+	  setupterm(NULL, 0, NULL) == ERR)
+	{
+	  shell->ioctl = 0;
+	  return ;
+	}
       shell->ioctl = ioctl(0, TCGETA, &shell->w.oterm) + 1;
       shell->w.smkx = tigetstr("smkx");
       shell->w.clear = tigetstr("clear");
@@ -51,12 +57,15 @@ void	init(t_shell *shell)
 
 void	init_prompt(t_shell *shell)
 {
-  printf("%s", shell->w.smkx);
-  fflush(stdout);
   shell->hist.cur = NULL;
   shell->hist.cur_line = NULL;
   if (shell->tty)
     {
+      if (shell->ioctl)
+	{
+	  printf("%s", shell->w.smkx);
+	  fflush(stdout);
+	}
       get_prompt(shell);
       sauv_prompt(shell);
       print_prompt(shell);
