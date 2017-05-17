@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Wed May 17 22:21:54 2017 Nicolas Polomack
+** Last update Wed May 17 23:14:45 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -77,8 +77,8 @@ void	exec_piped_child(int ret,
 
   signal(SIGINT, SIG_DFL);
   setup_exec(head, fds, ret);
-  setpgid(0, shell->pgid);
-  set_fground(shell);
+  //setpgid(0, shell->pgid);
+  //set_fground(shell);
   args = -1 + 0 * (i = 0);
   if (head->link == '|')
     {
