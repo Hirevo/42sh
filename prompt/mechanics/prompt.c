@@ -27,6 +27,15 @@ static void	make_action(t_shell *shell, char c)
 {
   if (c == 12)
     clear_term(shell);
+  else if (c == 24)
+    {
+      block_read_zero();
+      c = get_input();
+      if (c == 5)
+	tmp_file(shell);
+      else if (c != -1)
+	insert_char(&shell->line, c);
+    }
   else if (c == 127)
     remove_char(shell);
   else if (shell->tty && c == '\t')

@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Tue May 16 14:42:10 2017 Nicolas Polomack
+** Last update Wed May 17 23:31:02 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -85,13 +85,18 @@ static char	*find_branch(char *path)
 static int	is_root(char *path)
 {
   char	*str;
+  char	*tmp;
+  char	*dir;
   int	i;
 
-  str = malloc(strlen(path) + strlen("/home") + 1);
-  strcat(strcpy(str, path), "/home");
+  tmp = strdup(path);
+  dir = dirname(tmp);
+  str = malloc(strlen(tmp) + strlen("/home") + 1);
+  strcat(strcpy(str, tmp), "/home");
   i = access(str, F_OK);
   free(str);
-  return (i);
+  free(tmp);
+  return ((i == 0) ? 1 : 0);
 }
 
 char	*show_cur_branch()
@@ -102,13 +107,13 @@ char	*show_cur_branch()
   path = my_strdup("./.git");
   while (path != NULL)
     if ((access(path, F_OK) == -1))
-      if (is_root(dirname(path)))
+      if (is_root(path))
 	{
 	  free(path);
 	  path = NULL;
 	}
       else
-	my_strcatdup("../", path);
+	path = my_strcatdup("../", path);
     else
       {
 	path = my_strcatdup(path, "/HEAD");

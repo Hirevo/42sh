@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:52:05 2017 Arthur Knoepflin
-** Last update Fri May 12 13:48:46 2017 Nicolas Polomack
+** Last update Wed May 17 21:47:14 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -15,9 +15,13 @@
 
 void	turbosh_prompt(t_shell *shell)
 {
+  char	*str;
+
+  
   my_putstr(shell->exit ? "\033[31;1m" : "\033[0m");
   my_putstr("##\033[0m");
-  my_printf("\033[32;1m%s\033[0m", getenv("LOGNAME"));
+  str = getenv("LOGNAME");
+  my_printf("\033[32;1m%s\033[0m", str ? str : "");
   my_putstr(":");
   if (shell->current)
     my_printf("\033[34;1m%s\033[0m", shell->current);

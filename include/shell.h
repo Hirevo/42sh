@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 22:22:39 2017 Nicolas Polomack
+** Last update Wed May 17 22:48:57 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -58,6 +58,7 @@ typedef struct	s_hist_ctrl
 typedef struct	s_window
 {
   struct termio	oterm;
+  char		*smkx;
   char		*clear;
   char		*end;
   char		*home;
@@ -104,6 +105,7 @@ typedef struct		s_shell
   int			tty;
   int			ioctl;
   char			*cwd;
+  pid_t			pgid;
   t_alias		*alias;
   t_hist_ctrl		hist;
   t_command		*commands;
@@ -284,11 +286,17 @@ int	father_action(t_command **, int *, int *, t_shell *);
 void	exec_piped_child(int, t_command *, int[2], t_shell *);
 
 /*
+** exec/tmp.c
+*/
+void	tmp_file(t_shell *);
+
+/*
 ** exec/setup.c
 */
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
 void	skip_commands(t_command **, unsigned char);
+void	set_fground(t_shell *);
 
 /*
 ** globbing/globbing.c
@@ -313,6 +321,7 @@ int	is_right_redirect(char *);
 int	is_left_redirect(char *);
 int	is_dir(char *);
 int	is_builtin(char *);
+int	is_to_fork(char);
 
 /*
 ** is2.c

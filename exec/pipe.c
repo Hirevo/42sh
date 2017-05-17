@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Tue May 16 02:09:27 2017 Nicolas Polomack
+** Last update Wed May 17 23:14:45 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -24,7 +24,7 @@ int		exec_branch(t_shell *shell,
 {
   int	r;
 
-  if (((*head)->link == ';' || (*head)->next == NULL) &&
+  if ((is_to_fork((*head)->link) || (*head)->next == NULL) &&
       exec_redirected_builtins(shell, fds[2], &r, fds) != 0)
     {
       if (*ret != 0)
@@ -50,6 +50,7 @@ int		exec_pipeline(t_shell *shell)
   int		r;
 
   shell->fds = NULL;
+  shell->pgid = 0;
   head = shell->commands;
   ret = 0;
   while (head)
@@ -76,6 +77,8 @@ void	exec_piped_child(int ret,
 
   signal(SIGINT, SIG_DFL);
   setup_exec(head, fds, ret);
+  //setpgid(0, shell->pgid);
+  //set_fground(shell);
   args = -1 + 0 * (i = 0);
   if (head->link == '|')
     {
@@ -127,6 +130,7 @@ int	father_action(t_command **head,
 {
   int	r;
 
+  shell->pgid = (fds[2] == -1) ? 0 : fds[2];
   if (*ret != 0)
     close(*ret);
   if ((*head)->link == '|')
@@ -141,6 +145,7 @@ int	father_action(t_command **head,
   if (!((*head)->next) || (*head)->link != '|')
     {
       r = get_return(shell);
+      shell->pgid = 0;
       fds[2] = -1;
     }
   skip_commands(head, WEXITSTATUS(r));
