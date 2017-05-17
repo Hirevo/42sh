@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 21:32:22 2017 Arthur Knoepflin
-** Last update Tue May 16 09:56:15 2017 Arthur Knoepflin
+** Last update Wed May 17 12:50:48 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -56,7 +56,7 @@ char	*encode_bs(char *str)
   return (ret);
 }
 
-int	send_env(t_socket client, char **env)
+void	send_env(t_socket client, t_config *config, char **arg)
 {
   char	*send;
   int	i;

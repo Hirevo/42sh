@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Tue May 16 19:06:28 2017 Nicolas Polomack
+## Last update Wed May 17 10:34:45 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -16,7 +16,6 @@ SRC	=	alias/alias.c				\
 		alias/unalias.c				\
 		parse/bufferize.c			\
 		builtins.c				\
-		builtins_tmp.c				\
 		builtins/alias.c			\
 		builtins/cd.c				\
 		builtins/config.c			\
@@ -26,6 +25,7 @@ SRC	=	alias/alias.c				\
 		builtins/prompt.c			\
 		builtins/setenv.c			\
 		builtins/unalias.c			\
+		builtins/unsetenv.c			\
 		cd.c					\
 		config/add_env_http.c			\
 		config/client.c				\
@@ -37,6 +37,7 @@ SRC	=	alias/alias.c				\
 		config/get_env.c			\
 		config/get_info_pc.c			\
 		config/get_file_http.c			\
+		config/get_request.c			\
 		config/init_connection.c		\
 		config/int_toc.c			\
 		config/my_split.c			\

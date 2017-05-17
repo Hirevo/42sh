@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed Apr 26 23:40:25 2017 Arthur Knoepflin
-** Last update Tue May 16 01:38:05 2017 Arthur Knoepflin
+** Last update Wed May 17 12:39:16 2017 Arthur Knoepflin
 */
 
 #include <errno.h>
@@ -30,15 +30,14 @@ char	*get_cmd_exc(char *cmd_path, char *cmd)
 
 static int	execute_http(t_socket client,
 			     char *cmd,
-			     char **cmd_p,
-			     char **env)
+			     char **cmd_p)
 {
   t_shell	shell;
   char		*cmd_exc;
   int		sauv;
   int		sauv2;
 
-  init_shell(&shell, env);
+  init_shell(&shell, environ);
   shell.line = cmd;
   if ((sauv = dup(1)) == -1)
     return (1);
@@ -72,20 +71,24 @@ static int	change_dir_http(t_socket client, char **cmd_p)
     write_client(client, "Error: precise a folder");
 }
 
-int	exec_cmd_http(t_socket client, char **arg, char ***ae)
+void	exec_cmd_http(t_socket client, t_config *config, char **arg)
 {
   char	*cmd;
   char	**cmd_p;
 
-  if ((cmd = malloc(sizeof(char) * (my_strlen(arg[3]) + 1))) == NULL)
-    return (1);
-  urldecode(arg[3], cmd);
-  if ((cmd_p = my_split_char(cmd, ' ')) == NULL)
-    return (1);
-  write_client(client, BASE_RESP);
-  if (!my_strcmp(cmd_p[0], "cd"))
-    change_dir_http(client, cmd_p);
+  if (nb_args(arg) >= 4)
+    {
+      if ((cmd = malloc(sizeof(char) * (my_strlen(arg[3]) + 1))) == NULL)
+	return ;
+      urldecode(arg[3], cmd);
+      if ((cmd_p = my_split_char(cmd, ' ')) == NULL)
+	return ;
+      write_client(client, BASE_RESP);
+      if (!my_strcmp(cmd_p[0], "cd"))
+	change_dir_http(client, cmd_p);
+      else
+	execute_http(client, cmd, cmd_p);
+    }
   else
-    execute_http(client, cmd, cmd_p, *ae);
-  return (0);
+    write_client(client, ERROR_RESP);
 }

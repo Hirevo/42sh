@@ -5,18 +5,18 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 29 22:28:04 2017 Arthur Knoepflin
-** Last update Tue May 16 11:06:33 2017 Arthur Knoepflin
+** Last update Wed May 17 12:44:55 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
 #include "server.h"
 #include "my.h"
 
-void	send_prompt_sel(t_socket client, int prompt)
+void	send_prompt_sel(t_socket client, t_config *config, char **arg)
 {
   char	*selected;
 
-  if ((selected = int_toc(prompt)) == NULL)
+  if ((selected = int_toc(config->prompt)) == NULL)
     return ;
   write_client(client, BASE_RESP);
   write_client(client, selected);

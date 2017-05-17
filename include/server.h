@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Tue May 16 10:53:53 2017 Arthur Knoepflin
+** Last update Wed May 17 12:44:36 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -79,9 +79,9 @@ Access-Control-Allow-Origin: *\r\n"
 ** add_env_http.c
 */
 
-void	add_env_http(t_socket, char **);
-void	del_env_http(t_socket, char **);
-void	update_env_http(t_socket, char **);
+void	add_env_http(t_socket, t_config *, char **);
+void	del_env_http(t_socket, t_config *, char **);
+void	update_env_http(t_socket, t_config *, char **);
 
 /*
 ** char_double.c
@@ -115,13 +115,13 @@ int	urldecode(char *, char *);
 ** exec_cmd_http.c
 */
 
-int	exec_cmd_http(t_socket, char **, char ***);
+void	exec_cmd_http(t_socket, t_config *, char **);
 
 /*
 ** exit.c
 */
 
-int	exit_config(t_socket, char **);
+void	exit_config(t_socket, t_config *, char **);
 
 /*
 ** init_connection.c
@@ -160,6 +160,14 @@ t_info_pc	*get_info();
 char	*get_file_http(char *);
 
 /*
+** get_request.c
+*/
+
+int	nb_request();
+int	indexof_request(char *);
+void	get_tab_request(void (**)(t_socket, t_config *, char **));
+
+/*
 ** my_split.c
 */
 
@@ -188,7 +196,7 @@ int	launch_nav(char *, int, char **);
 ** prompt.c
 */
 
-void	send_prompt_sel(t_socket, int);
+void	send_prompt_sel(t_socket, t_config *, char **);
 void	update_prompt_sel(t_socket, t_config *, char **);
 
 /*
@@ -201,13 +209,13 @@ int	response(t_socket, char *, t_config *);
 ** send_env.c
 */
 
-int	send_env(t_socket, char **);
+void	send_env(t_socket, t_config *, char **);
 
 /*
 ** send_info.c
 */
 
-void	send_info(t_socket);
+void	send_info(t_socket, t_config *, char **);
 
 /*
 ** send_file_http.c

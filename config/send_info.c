@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  2 18:21:00 2017 Arthur Knoepflin
-** Last update Tue May 16 11:11:21 2017 Arthur Knoepflin
+** Last update Wed May 17 11:46:16 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -32,7 +32,7 @@ static char	*get_resp(t_info_pc *info)
   return (my_fstrcat(ret, "\"}", 1));
 }
 
-void		send_info(t_socket client)
+void		send_info(t_socket client, t_config *config, char **arg)
 {
   char		*resp;
   t_info_pc	*info;

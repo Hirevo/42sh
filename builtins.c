@@ -1,114 +1,117 @@
 /*
-** builtins.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Mon Jan  9 10:55:55 2017 Nicolas Polomack
-** Last update Tue May 16 01:43:24 2017 Arthur Knoepflin
+** builtins_tmp.c for builtins in /home/arthur/delivery/PSU/PSU_2016_42sh
+** 
+** Made by Arthur Knoepflin
+** Login   <arthur.knoepflin@epitech.eu>
+** 
+** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
+** Last update Wed May 17 10:30:57 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
-#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
 #include "shell.h"
+#include "builtin.h"
 #include "my.h"
 
-int	exec_builtins4(t_shell *shell, int args, int *r, int i)
+static const char	*built_tab[] = 
+  {
+    "alias",
+    "cd",
+    "config",
+    "dualcast",
+    "echo",
+    "exit",
+    "setenv",
+    "unalias",
+    "unsetenv",
+    "builtins",
+    "prompt",
+    NULL
+  };
+
+static int	show_builtins(t_shell *shell, int args)
 {
-  if (my_strcmp(shell->cur->av[0], "echo") == 0)
+  char		*ret;
+  int		i;
+  char		*str;
+
+  i = 0;
+  ret = strdup("echo \"");
+  while (built_tab[i])
     {
-      *r = echo_term(shell->cur->av + 1);
-      i = 1;
+      ret = my_fstrcat(ret, (char *) built_tab[i], 1);
+      ret = my_fstrcat(ret, "\n", 1);
+      i += 1;
     }
-  else if (my_strcmp(shell->cur->av[0], "dualcast") == 0)
-    {
-      *r = launch_dualcast(shell, args);
-      i = 1;
-    }
-  else if (my_strcmp(shell->cur->av[0], "history") == 0)
-    {
-      *r = disp_hist(shell);
-      i = 1;
-    }
+  ret = my_fstrcat(ret, "\" | sort | column", 1);
+  quick_exec(shell, ret);
+  return (0);
+}
+
+static int	nb_built(const char **str)
+{
+  int		i;
+
+  i = 0;
+  while (built_tab[i])
+    i += 1;
   return (i);
 }
 
-int	exec_builtins3(t_shell *shell, int args, int *r, int i)
+char	**get_builtin_tab()
 {
-  if (my_strcmp(shell->cur->av[0], "alias") == 0)
+  int	i;
+  char	**ret;
+
+  if ((ret = malloc(sizeof(char *) *
+		    (nb_built(built_tab) + 1))) == NULL)
+    return (NULL);
+  i = 0;
+  while (built_tab[i])
     {
-      if (args == 1)
-        *r = disp_all_alias(shell);
-      else if (args == 2)
-        *r = disp_alias(shell, shell->cur->av[1]);
-      else if (args >= 3)
-        *r = add_alias(shell, shell->cur->av[1],
-		       construct_alias(shell->cur->av + 2));
-      i = 1;
+      ret[i] = my_strdup((char *) built_tab[i]);
+      i += 1;
     }
-  else if (my_strcmp(shell->cur->av[0], "unalias") == 0)
-    {
-      if (args >= 2)
-	*r = unalias(shell, shell->cur->av + 1);
-      else
-	*r = my_print_err("unalias: Too few arguments.\n");
-      i = 1;
-    }
-  return (exec_builtins4(shell, args, r, i));
+  return (ret);
 }
 
-int	exec_builtins2(t_shell *shell, int args, int *r, int i)
-{
-  if (my_strcmp(shell->cur->av[0], "cd") == 0)
-    {
-      *r = move_dir(shell->cur->av, args, shell);
-      i = 1;
-    }
-  else if (my_strcmp(shell->cur->av[0], "setenv") == 0 ||
-           my_strcmp(shell->cur->av[0], "unsetenv") == 0)
-    {
-      if (args == 3 && my_strcmp(shell->cur->av[0], "setenv") == 0)
-        *r = set_env(shell->cur->av[1], shell->cur->av[2]);
-      else if (args == 1 && my_strcmp(shell->cur->av[0], "setenv") == 0)
-        *r = disp_env();
-      else if (args == 2 && my_strcmp(shell->cur->av[0], "setenv") == 0)
-        *r = set_env(shell->cur->av[1], "");
-      else if (args == 1 && my_strcmp(shell->cur->av[0], "unsetenv") == 0)
-        *r = my_print_err("unsetenv: Too few arguments.\n");
-      else if (my_strcmp(shell->cur->av[0], "unsetenv") == 0)
-	*r = unset_env(shell->cur->av);
-      else
-        *r = my_print_err(shell->cur->av[0]) +
-          my_print_err(": Too many arguments.\n") - 1;
-      reload_shell(shell);
-      i = 1;
-    }
-  return (exec_builtins3(shell, args, r, i));
-}
-
-int	exec_builtins_(t_shell *shell, int args, int *r)
+int	indexof_builtin(char *cmd)
 {
   int	i;
 
   i = 0;
-  /* exec_builtins_(shell, args, r); */
-  if (!my_strcmp(shell->cur->av[0], "config"))
+  while (built_tab[i])
     {
-      *r = launch_config(shell);
-      i = 1;
+      if (!my_strcmp(cmd, (char *) built_tab[i]))
+	return (i);
+      i += 1;
     }
-  else if (my_strcmp(shell->cur->av[0], "exit") == 0)
+  return (-1);
+}
+
+int	exec_builtins(t_shell *shell, int args, int *r)
+{
+  int	(*built_fnt[nb_built(built_tab)])(t_shell *, int);
+  int	idx;
+
+  built_fnt[0] = &alias;
+  built_fnt[1] = &cd_b;
+  built_fnt[2] = &config_b;
+  built_fnt[3] = &dualcast_b;
+  built_fnt[4] = &echo_b;
+  built_fnt[5] = &exit_b;
+  built_fnt[6] = &setenv_b;
+  built_fnt[7] = &unalias_b;
+  built_fnt[8] = &unsetenv_b;
+  built_fnt[9] = &show_builtins;
+  built_fnt[10] = &prompt;
+  idx = indexof_builtin(shell->cur->av[0]);
+  if (idx >= 0 && idx < nb_built(built_tab))
     {
-      *r = check_exit(shell, args);
-      i = 1;
+      *r = built_fnt[idx](shell, args);
+      return (1);
     }
-  else if (my_strcmp(shell->cur->av[0], "env") == 0)
-    {
-      if (args == 1)
-        *r = disp_env();
-      else
-        my_print_err("env - invalid number of arguments\n");
-      i = 1;
-    }
-  return (exec_builtins2(shell, args, r, i));
+  return (0);
 }
