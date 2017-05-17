@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Tue May 16 21:15:02 2017 Nicolas Polomack
+** Last update Wed May 17 12:59:15 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -34,9 +34,8 @@ void	init(t_shell *shell)
   if (shell->tty)
     {
       setupterm(NULL, 0, NULL);
-      printf(tigetstr("smkx"));
-      fflush(stdout);
       shell->ioctl = ioctl(0, TCGETA, &shell->w.oterm) + 1;
+      shell->w.smkx = tigetstr("smkx");
       shell->w.clear = tigetstr("clear");
       shell->w.end = tigetstr("kend");
       shell->w.home = tigetstr("khome");
@@ -52,6 +51,8 @@ void	init(t_shell *shell)
 
 void	init_prompt(t_shell *shell)
 {
+  printf("%s", shell->w.smkx);
+  fflush(stdout);
   shell->hist.cur = NULL;
   shell->hist.cur_line = NULL;
   if (shell->tty)

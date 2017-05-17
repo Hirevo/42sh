@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Tue May  9 19:06:25 2017 Arthur Knoepflin
+** Last update Wed May 17 13:03:41 2017 Nicolas Polomack
 */
 
 #include <sys/stat.h>
@@ -28,4 +28,9 @@ int	is_builtin(char *str)
 	  !my_strcmp(str, "unsetenv") || !my_strcmp(str, "cd") ||
 	  !my_strcmp(str, "config") || !my_strcmp(str, "echo") ||
 	  !my_strcmp(str, "unalias") || !my_strcmp(str, "dualcast"));
+}
+
+int	is_to_fork(char c)
+{
+  return (c == ';' || c == 'e' || c == 'o');
 }

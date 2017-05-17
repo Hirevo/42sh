@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue May 16 18:37:16 2017 Nicolas Polomack
-** Last update Tue May 16 22:19:38 2017 Nicolas Polomack
+** Last update Wed May 17 13:37:57 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -43,8 +43,7 @@ void	set_hist_line(t_shell *shell)
     shell->line = NULL;
   if (shell->line)
     {
-      printf("%s", shell->line);
-      fflush(stdout);
+      my_putstr(shell->line);
       shell->w.cur = strlen(shell->line);
     }
   shell->hist.cur = NULL;

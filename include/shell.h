@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Tue May 16 22:22:39 2017 Nicolas Polomack
+** Last update Wed May 17 13:05:40 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -58,6 +58,7 @@ typedef struct	s_hist_ctrl
 typedef struct	s_window
 {
   struct termio	oterm;
+  char		*smkx;
   char		*clear;
   char		*end;
   char		*home;
@@ -313,6 +314,7 @@ int	is_right_redirect(char *);
 int	is_left_redirect(char *);
 int	is_dir(char *);
 int	is_builtin(char *);
+int	is_to_fork(char);
 
 /*
 ** is2.c
