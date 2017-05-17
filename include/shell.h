@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Wed May 17 22:18:16 2017 Nicolas Polomack
+** Last update Wed May 17 22:48:57 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -284,6 +284,11 @@ int	check_error(t_shell *);
 int	exec_pipeline(t_shell *);
 int	father_action(t_command **, int *, int *, t_shell *);
 void	exec_piped_child(int, t_command *, int[2], t_shell *);
+
+/*
+** exec/tmp.c
+*/
+void	tmp_file(t_shell *);
 
 /*
 ** exec/setup.c
