@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Thu May 18 01:34:19 2017 Nicolas Polomack
+** Last update Thu May 18 22:21:34 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -24,7 +24,7 @@ char	**bufferize(char *av, int n)
 
   args = 0;
   i = -1;
-  final = my_split(av, " ");
+  final = split_it(av, " ");
   return (final);
 }
 
