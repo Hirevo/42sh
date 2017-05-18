@@ -50,16 +50,17 @@ void		reload_shell(t_shell *shell)
   int		i;
   int		k;
   char		*path;
-
   if ((path = getenv("PATH")))
-    if (shell->path)
-      {
-	k = -1;
-	while (shell->path[++k])
-	  free(shell->path[k]);
-	free(shell->path);
-      }
-  shell->path = init_path(path);
+    {
+      if (shell->path)
+	{
+	  k = -1;
+	  while (shell->path[++k])
+	    free(shell->path[k]);
+	  free(shell->path);
+	}
+      shell->path = init_path(path);
+    }
   shell->home = getenv("HOME");
   shell->current = get_current(shell->current, shell->home);
 }
@@ -84,6 +85,7 @@ int	init_shell(t_shell *shell, char **ae)
   init_history(shell);
   init_aliases(shell);
   parse_rc(shell);
+  init_vars(shell);
   shell->path = (shell->path) ? shell->path : set_default_path();
   get_prompt(shell);
   init(shell);
@@ -120,6 +122,7 @@ static int	start_standard_shell(int ac, char **av, char **ae)
 
   exit = 0;
   signal(SIGINT, SIG_IGN);
+  signal(SIGTTOU, SIG_IGN);
   if (init_shell(&shell, ae) == -1)
     return (84);
   while (1)

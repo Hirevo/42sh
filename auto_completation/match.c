@@ -5,31 +5,85 @@
 ** Login   <arthur@epitech.net>
 **
 ** Started on  Sat Oct 15 18:43:19 2016 Arthur Knoepflin
-** Last update	Tue May 16 19:04:03 2017 Full Name
+** Last update	Thu May 18 22:57:21 2017 Full Name
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include "my.h"
 #include "auto_complete.h"
 #include "shell.h"
 
+int		for_bi(t_match **list, char *str, t_auto *t)
+{
+  char		**bi;
+  int		i;
+  char		*str2;
+
+  bi = get_builtin_tab();
+  i = 0;
+  str2 = my_strcatdup(str, "*");
+  while (bi[i])
+    {
+      if (match(bi[i], str2) == 1)
+	{
+	  if ((add_in_autolist(list, strdup(bi[i]))) == -1)
+      	    return (-1);
+	  t->is_a_dir = 0;
+	}
+      i++;
+    }
+  return (0);
+}
+
+static char	*find_occurences(t_match **list)
+{
+  int		i;
+  char		prec;
+  int		g;
+  char		*str;
+  t_match	*tmp;
+
+  g = 0;
+  str = NULL;
+  i = 0;
+  while (g == 0)
+    {
+      tmp = *list;
+      prec = tmp->cmd[i];
+      while (tmp && tmp->cmd[i] == prec)
+	tmp = tmp->next;
+      if (tmp)
+	{
+	  str = strndup(tmp->cmd, i);
+	  g = 1;
+	}
+      i++;
+    }
+  return (str);
+}
+
 void		transform(t_shell *shell, t_auto *t, t_match **list, char **s)
 {
-  shell->is_comp = 0;
-  *s ? free(shell->line) : 0;
-  shell->line = my_strcatdup(t->pre_token, (*list)->cmd);
-  shell->line = my_fstrcat(shell->line, t->post_token, 1);
-  if (t->is_a_dir)
+  char		*str;
+
+  if ((*list)->next == NULL)
     {
-      t->is_a_dir = 0;
-      shell->line = my_fstrcat(shell->line, "/", 1);
+      str = strdup((*list)->cmd);
+      shell->is_comp = 0;
     }
   else
+    str = find_occurences(list);
+  *s ? free(shell->line) : 0;
+  shell->line = my_strcatdup(t->pre_token, str);
+  shell->line = my_fstrcat(shell->line, t->post_token, 1);
+  if (!t->is_a_dir && t->pre_token[0] != 0)
     shell->line = my_fstrcat(shell->line, " ", 1);
-  (*list)->cmd = delete_str(*s, (*list)->cmd);
-  if (t->post_token)
-    *s = my_strcatdup((*list)->cmd, t->post_token);
+  str = delete_str(*s, str);
+  if (t->post_token && (*list)->next == NULL)
+    *s = my_strcatdup(str, t->post_token);
   shell->w.cur = my_strlen(shell->line);
+  t->is_a_dir = 0;
 }
 
 int	match(char *s1, char *s2)

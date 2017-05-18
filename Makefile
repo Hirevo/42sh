@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Thu May 18 22:51:25 2017 Arthur Knoepflin
+## Last update Thu May 18 22:50:50 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -33,10 +33,12 @@ SRC	=	alias/alias.c				\
 		builtins/launch_soft.c			\
 		builtins/parse_env.c			\
 		builtins/prompt.c			\
+		builtins/set.c				\
 		builtins/setenv.c			\
 		builtins/shw_env_parse.c		\
 		builtins/show_signal.c			\
 		builtins/unalias.c			\
+		builtins/unset.c			\
 		builtins/unsetenv.c			\
 		cd.c					\
 		comment.c				\
@@ -116,6 +118,7 @@ SRC	=	alias/alias.c				\
 		prompt/mechanics/cursor.c		\
 		prompt/mechanics/misc.c			\
 		prompt/get_cur_branch.c			\
+		vars.c					\
 		my_sh.c					\
 		exit.c					\
 		parse/line.c				\

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May 18 19:18:28 2017 Arthur Knoepflin
+** Last update Thu May 18 22:55:23 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -93,6 +93,7 @@ typedef struct		s_shell
   int			prompt;
   char			**path;
   char			*home;
+  char			**vars;
   char			*current;
   char			*line;
   char			**final;
@@ -166,7 +167,7 @@ void	write_alias(t_alias *, int);
 void	my_print_fd(char *, int);
 int	set_commands(t_shell *);
 int	check_access(char **, t_shell *);
-int	check_env_error(char *);
+int	check_env_error(char *, char *);
 int	check_exit(t_shell *, int);
 int	compare_stats(struct stat *);
 void	check_exec(t_shell *, int, int *);
@@ -296,7 +297,7 @@ void	tmp_file(t_shell *);
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
 void	skip_commands(t_command **, unsigned char);
-void	set_fground(t_shell *);
+void	set_fground(t_shell *, int);
 
 /*
 ** globbing/globbing.c
@@ -307,6 +308,11 @@ int	parse_vars(t_shell *);
 ** globbing/home.c
 */
 void	replace_home(t_shell *);
+
+/*
+** vars.c
+*/
+void	add_var(t_shell *, char *, char *);
 
 /*
 ** echo.c
@@ -333,6 +339,16 @@ int	is_alphanum(char);
 int	is_num(char *);
 
 /*
+** builtins/set.c
+*/
+int	set(t_shell *, int);
+
+/*
+** builtins/unset.c
+*/
+int	unset(t_shell *, int);
+
+/*
 ** char.c
 */
 void	insert_char(char **, char);
@@ -356,10 +372,16 @@ void	get_prompt(t_shell *);
 int	set_error(t_shell *, int);
 
 /*
+** vars.c
+*/
+char	*get_var(t_shell *, char *);
+void	init_vars(t_shell *);
+
+/*
 ** init.c
 */
 
-void	set_raw(struct termio *oterm);
+void	set_raw(struct termio *);
 void	init(t_shell *);
 void	init_prompt(t_shell *);
 
