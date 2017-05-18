@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Wed May 17 22:48:57 2017 Nicolas Polomack
+** Last update Thu May 18 10:30:50 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -223,12 +223,6 @@ int	close_pipes(int *);
 */
 
 int	launch_dualcast(t_shell *, int);
-
-/*
-** dualcast/connect.c
-*/
-
-t_socket	init_connect_dc(char *);
 
 /*
 ** dualcast/wait_connection.c

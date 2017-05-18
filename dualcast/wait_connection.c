@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 16:02:42 2017 Arthur Knoepflin
-** Last update Tue May  9 09:53:25 2017 Arthur Knoepflin
+** Last update Thu May 18 11:11:47 2017 Arthur Knoepflin
 */
 
 #include <sys/select.h>
@@ -28,6 +28,23 @@ static char	*read_code(t_socket client)
   return (ret);
 }
 
+static char	*send_login(t_socket sock)
+{
+  char		*login;
+  char		*str;
+
+  if ((login = getenv("LOGNAME")))
+    {
+      if ((str = my_fstrcat("OK:", login, 0)))
+	{
+	  write_socket(sock, str);
+	  free(str);
+	}
+    }
+  else
+    write_socket(sock, "OK:");
+}
+
 static int	new_client_dc(t_socket sock,
 			      fd_set *rdfs,
 			      t_socket *client,
@@ -48,7 +65,7 @@ static int	new_client_dc(t_socket sock,
   if (!my_strcmp(recv_code, passwd))
     {
       my_printf("Une personne c'est connecté\n");
-      send(*client, "OK", 2, 0);
+      send_login(*client);
       return (1);
     }
   my_printf("Une personne n'a pas réussi à se connecter\n");

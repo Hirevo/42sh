@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:03:28 2017 Arthur Knoepflin
-** Last update Mon May 15 10:17:18 2017 Arthur Knoepflin
+** Last update Thu May 18 13:08:32 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -61,7 +61,7 @@ void	prompt_serv(t_socket sock,
   if (c >= 32 && c <= 126)
     add_char_dc(prompt, c, nb_char);
   else if (c == 127)
-    del_last_char(prompt, nb_char);
+    del_last_char(25, prompt, nb_char);
   del_prompt(*nb_char);
   my_printf("\r%s", *prompt);
   write_client(sock, "OK");

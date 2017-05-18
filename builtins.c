@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Wed May 17 10:30:57 2017 Arthur Knoepflin
+** Last update Thu May 18 11:03:57 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -28,6 +28,7 @@ static const char	*built_tab[] =
     "unsetenv",
     "builtins",
     "prompt",
+    "env",
     NULL
   };
 
@@ -107,6 +108,7 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   built_fnt[8] = &unsetenv_b;
   built_fnt[9] = &show_builtins;
   built_fnt[10] = &prompt;
+  built_fnt[11] = &env_b;
   idx = indexof_builtin(shell->cur->av[0]);
   if (idx >= 0 && idx < nb_built(built_tab))
     {
