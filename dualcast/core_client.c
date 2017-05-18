@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 12:13:20 2017 Arthur Knoepflin
-** Last update Thu May 18 13:11:28 2017 Arthur Knoepflin
+** Last update Thu May 18 23:37:57 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -38,7 +38,6 @@ static void	treat_serv_resp(t_client *cli,
       write_socket(cli->sock, tmp);
       free(tmp);
       *prompt = get_prompt_cli(cli);
-      /* *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> "); */
       *nb_char = my_strlen(*prompt);
       my_putstr(*prompt);
     }
@@ -52,7 +51,6 @@ static int	read_term(t_client *cli, char **prompt, int *nb_char)
   if (c == 13)
     {
       *prompt = get_prompt_cli(cli);
-      /* *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> "); */
       *nb_char = my_strlen(*prompt);
       my_printf("\n%s", *prompt);
     }

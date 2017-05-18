@@ -18,18 +18,30 @@ SRC	=	alias/alias.c				\
 		builtins.c				\
 		builtins/alias.c			\
 		builtins/cd.c				\
+		builtins/char_double.c			\
+		builtins/check_file.c			\
+		builtins/check_file_2.c			\
 		builtins/config.c			\
 		builtins/dualcast.c			\
 		builtins/echo.c				\
 		builtins/env.c				\
+		builtins/env_checkerr.c			\
+		builtins/env_cherror_2.c		\
+		builtins/exec_arg.c			\
+		builtins/exec_arg_2.c			\
 		builtins/exit.c				\
+		builtins/launch_soft.c			\
+		builtins/parse_env.c			\
 		builtins/prompt.c			\
 		builtins/set.c				\
 		builtins/setenv.c			\
+		builtins/shw_env_parse.c		\
+		builtins/show_signal.c			\
 		builtins/unalias.c			\
 		builtins/unset.c			\
 		builtins/unsetenv.c			\
 		cd.c					\
+		comment.c				\
 		config/add_env_http.c			\
 		config/client.c				\
 		config/com_serv.c			\

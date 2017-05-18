@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Thu May 18 20:37:04 2017 Nicolas Polomack
+** Last update Fri May 19 00:02:59 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -44,6 +44,10 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
   else if (getenv(var))
     i = asprintf(&str, "%.*s%s%s", *cur, shell->line, getenv(var),
                  shell->line + *cur + strlen(var) + 1);
+  else if (shell->line[*cur + 1] >= '0' && shell->line[*cur + 1] <= '9')
+    i = asprintf(&str, "%.*s%s%s", *cur, shell->line,
+		 shell->av[my_getnbr(shell->line + *cur + 1)],
+                 shell->line + *cur + 2);
   else
     {
       dprintf(2, "%s: Undefined variable.\n", var);

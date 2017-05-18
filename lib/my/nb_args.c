@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Tue Feb 21 10:50:36 2017 
-** Last update Tue Feb 21 10:51:20 2017 
+** Last update Thu May 18 21:55:27 2017 Arthur Knoepflin
 */
 
 int	nb_args(char **tab)
@@ -13,7 +13,7 @@ int	nb_args(char **tab)
   int	i;
 
   i = 0;
-  while (tab[i])
+  while (tab && tab[i])
     i += 1;
   return (i);
 }
