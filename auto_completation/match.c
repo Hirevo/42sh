@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 **
 ** Started on  Sat Oct 15 18:43:19 2016 Arthur Knoepflin
-** Last update	Thu May 18 21:48:33 2017 Full Name
+** Last update	Thu May 18 22:57:21 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -77,7 +77,7 @@ void		transform(t_shell *shell, t_auto *t, t_match **list, char **s)
   *s ? free(shell->line) : 0;
   shell->line = my_strcatdup(t->pre_token, str);
   shell->line = my_fstrcat(shell->line, t->post_token, 1);
-  if (!t->is_a_dir)
+  if (!t->is_a_dir && t->pre_token[0] != 0)
     shell->line = my_fstrcat(shell->line, " ", 1);
   str = delete_str(*s, str);
   if (t->post_token && (*list)->next == NULL)

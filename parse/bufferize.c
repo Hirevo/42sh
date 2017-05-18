@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Thu May 18 22:21:34 2017 Nicolas Polomack
+** Last update	Thu May 18 22:55:01 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include "shell.h"
 #include "my.h"
+#include "auto_complete.h"
 #include "get_next_line.h"
 
 char	**bufferize(char *av, int n)
