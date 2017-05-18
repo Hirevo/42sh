@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 18 20:41:29 2017 Nicolas Polomack
-** Last update Thu May 18 23:08:25 2017 Nicolas Polomack
+** Last update Fri May 19 00:35:50 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -30,19 +30,25 @@ int	set(t_shell *shell, int args)
   char	*comp;
   int	i;
   int	j;
+  int	ret;
 
   if (args == 1)
     return (disp_vars(shell));
   else
     {
+      ret = 0;
       i = 0;
       while (shell->cur->av[++i])
 	{
 	  if ((str = strdup(shell->cur->av[i])) == NULL
 	      || (comp = strsep(&str, "=")) == NULL)
-	    return (1);
-	  add_var(shell, comp, str);
+	    handle_error("malloc");
+	  if (check_env_error("set", comp))
+	    ret = 1;
+	  else
+	    add_var(shell, comp, str);
 	  free(comp);
 	}
     }
+  return (ret);
 }
