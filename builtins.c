@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 **
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Thu May 18 23:38:54 2017 Nicolas Polomack
+** Last update Thu May 18 23:43:00 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -42,7 +42,7 @@ static int	show_builtins(t_shell *shell, int args)
   char		*str;
 
   i = 0;
-  ret = strdup("echo ');
+  ret = strdup("echo '");
   while (g_built_tab[i])
     {
       ret = my_fstrcat(ret, (char *) g_built_tab[i], 1);
