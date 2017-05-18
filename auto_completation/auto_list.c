@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:54:46 2017 Maxime Jenny
-** Last update	Tue May 09 22:50:42 2017 Full Name
+** Last update	Thu May 18 19:08:48 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -30,7 +30,7 @@ void		destroy_the_list(t_match **list)
   *list = NULL;
 }
 
-void		show_autolist(t_shell *shell, t_match *list, int is_dir)
+void		show_autolist(t_shell *shell, t_match *list)
 {
   t_match	*tmp;
   char		*str;

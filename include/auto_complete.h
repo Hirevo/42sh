@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 13:51:20 2017 Maxime Jenny
-** Last update	Tue May 16 19:03:52 2017 Full Name
+** Last update	Thu May 18 19:07:52 2017 Full Name
 */
 
 #ifndef AUTO_COMPLETE_H_
@@ -26,6 +26,7 @@ typedef struct		s_auto
 typedef struct		s_match
 {
   char			*cmd;
+  unsigned char		type;
   struct s_match	*next;
 }			t_match;
 
@@ -38,13 +39,15 @@ void		my_free_tab(void **tab);
 int		find_a_path(char **path, t_auto *token);
 void		transform(t_shell *shell, t_auto *t, t_match **list, char **s);
 char		*delete_str(char *to_del, char *content);
+int		for_bi(t_match **list, char *str2, t_auto *t);
+char		**get_builtin_tab();
 
 /*
 ** List
 */
 
 int		add_in_autolist(t_match **list, char *cmd);
-void		show_autolist(t_shell *, t_match *, int);
+void		show_autolist(t_shell *, t_match *);
 void		destroy_the_list(t_match **list);
 
 /*
