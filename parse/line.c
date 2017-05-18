@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Sun May  7 23:03:41 2017 Nicolas Polomack
+** Last update Thu May 18 01:52:09 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -47,8 +47,9 @@ char	*my_epurstr(char *str)
     return (NULL);
   while (str[++(i[0])])
     {
-      ret[i[1]] = str[i[0]];
-      if (!b && str[i[0]] == ' ' || str[i[0]] == '\t')
+      if (!(i[0] == 0 && (str[i[0]] == ' ' || str[i[0]] == '\t')))
+	ret[i[1]++] = ((str[i[0]] == '\t') ? ' ' : str[i[0]]);
+      if (!b && (str[i[0]] == ' ' || str[i[0]] == '\t'))
 	{
 	  while (str[i[0]] && (str[i[0]] == ' ' || str[i[0]] == '\t'))
 	    i[0] += 1;
@@ -58,7 +59,6 @@ char	*my_epurstr(char *str)
 	b = 0;
       else if (str[i[0]] == '\'' || str[i[0]] == '"' && b == 0)
 	b = str[i[0]];
-      i[1] += 1;
     }
   ret[i[1]] = 0;
   free(str);

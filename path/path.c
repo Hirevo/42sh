@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:46:13 2017 Nicolas Polomack
-** Last update Sun May  7 00:41:08 2017 Nicolas Polomack
+** Last update Thu May 18 02:26:35 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -27,7 +27,8 @@ char	*cat_path(char **path, char *final, int i)
     dir = path[i];
   else
     return (NULL);
-  str = malloc(my_strlen(dir) + my_strlen(final) + 2);
+  if ((str = malloc(my_strlen(dir) + my_strlen(final) + 2)) == NULL)
+    handle_error("malloc");
   *str = 0;
   str = my_strcat(str, dir);
   if (dir[my_strlen(dir)] != '/')
@@ -56,15 +57,10 @@ char	**init_path(char *str)
   int	arg;
   char	**path;
 
-  if (str == NULL ||
-      (path = malloc(sizeof(char *) * (count_entries(str) + 2))) == NULL)
+  if (str == NULL)
     return (NULL);
-  i = 0;
-  arg = 0;
-  while ((i = get_next_entry(str, &(path[arg++]), i)) != -2)
-    if (i == -1)
-      return (NULL);
-  path[arg] = NULL;
+  if ((path = my_split(str, ":")) == NULL)
+    handle_error("malloc");
   return (path);
 }
 
@@ -78,14 +74,14 @@ void		set_path(t_shell *shell, char *path)
   i = -1;
   obj = my_strlen_spe(path, '=');
   if ((name = malloc(obj + 1)) == NULL)
-    return ;
+    handle_error("malloc");
   while (++i < obj)
     name[i] = path[i];
   name[i] = 0;
   i = obj + 1;
   obj = my_strlen_spe(path + i , '\0');
   if ((entry = malloc(obj + 1)) == NULL)
-    return ;
+    handle_error("malloc");
   obj = i;
   i = -1;
   while ((path + obj)[++i] != 0)
@@ -101,8 +97,10 @@ void	parse_rc(t_shell *shell)
   int	fd;
   char	*path;
 
-  if ((shell->home == NULL) || (path = malloc(512)) == NULL)
+  if (shell->home == NULL)
     return ;
+  if ((path = malloc(512)) == NULL)
+    handle_error("malloc");
   path[0] = 0;
   path = my_strcat(path, shell->home);
   if (shell->home[my_strlen(shell->home)] != '/')

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 11 20:41:13 2017 Nicolas Polomack
-** Last update Mon May 15 20:57:02 2017 Nicolas Polomack
+** Last update Thu May 18 02:29:57 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -63,12 +63,13 @@ void		save_history(t_shell *shell)
   write_hist(shell, fd);
 }
 
-int		disp_hist(t_shell *shell)
+int		disp_hist(t_shell *shell, int args)
 {
   t_history	*head;
   int		i;
   int		index;
 
+  (void)args;
   if (shell->hist.first == NULL)
     return (0);
   index = 0;
@@ -90,8 +91,9 @@ void	add_hist_elem(t_shell *shell, char *line)
 {
   t_history	*elem;
 
-  elem = malloc(sizeof(t_history));
-  elem->cmd = my_split_mulchar(line, " \t");
+  if ((elem = malloc(sizeof(t_history))) == NULL ||
+      (elem->cmd = my_split_mulchar(line, " \t")) == NULL)
+    handle_error("malloc");
   elem->next = NULL;
   elem->prev = NULL;
   if (shell->hist.last)
@@ -115,8 +117,10 @@ void	init_history(t_shell *shell)
   shell->hist.cur = NULL;
   shell->hist.last = NULL;
   shell->hist.first = NULL;
-  if ((shell->home == NULL) || (line = malloc(512)) == NULL)
+  if (shell->home == NULL)
     return ;
+  if ((line = malloc(512)) == NULL)
+    handle_error("malloc");
   line[0] = 0;
   line = strcat(line, shell->home);
   if (shell->home[strlen(shell->home)] != '/')

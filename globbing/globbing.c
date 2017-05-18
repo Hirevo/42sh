@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Sat May 13 21:31:13 2017 Nicolas Polomack
+** Last update Thu May 18 09:42:16 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -57,15 +57,21 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
 int	parse_vars(t_shell *shell)
 {
   int	cur;
+  int	is_free;
   char	*var;
 
   cur = -1;
+  is_free = 1;
   while (shell->line[++cur])
     {
-      if (shell->line[cur] == '\'')
+      if (shell->line[cur] == '\'' && is_free)
 	while (shell->line[cur + 1] && shell->line[cur + 1] != '\'')
 	  cur += 1;
-      else if (shell->line[cur] == '$')
+      else if (shell->line[cur] == '"')
+	is_free = !is_free;
+      else if (shell->line[cur] == '$' && shell->line[cur + 1]
+	       && !is_separator(shell->line[cur + 1]) &&
+	       shell->line[cur + 1] != '"')
 	{
 	  if ((var = get_var(shell->line + cur + 1)) == NULL)
 	    exit(84);

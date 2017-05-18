@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Wed Oct 12 09:23:05 2016 Nicolas POLOMACK
-** Last update Sun Mar 26 18:47:14 2017 Nicolas Polomack
+** Last update Thu May 18 01:40:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -55,8 +55,10 @@ char	**my_strarrdup(char **arr)
   i = -1;
   while (arr[++i])
     {
-      if (arr[i][0] == '"' || arr[i][0] == '\'')
-	final[i] = my_strndup(arr[i] + 1, my_strstrlen(arr[i] + 1, "\"'"));
+      if (arr[i][0] == '"')
+	final[i] = my_strndup(arr[i] + 1, my_strstrlen(arr[i] + 1, "\""));
+      else if (arr[i][0] == '\'')
+	final[i] = my_strndup(arr[i] + 1, my_strstrlen(arr[i] + 1, "'"));
       else
 	final[i] = my_strdup(arr[i]);
     }

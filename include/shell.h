@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May 18 10:30:50 2017 Arthur Knoepflin
+** Last update Thu May 18 02:06:11 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -198,7 +198,7 @@ int	config_http(t_config *);
 ** history.c
 */
 void	save_history(t_shell *);
-int	disp_hist(t_shell *);
+int	disp_hist(t_shell *, int);
 void	add_hist_elem(t_shell *, char *);
 void	init_history(t_shell *);
 

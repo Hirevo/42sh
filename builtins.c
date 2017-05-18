@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Thu May 18 11:03:57 2017 Arthur Knoepflin
+** Last update Thu May 18 02:05:17 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -21,6 +21,7 @@ static const char	*built_tab[] =
     "cd",
     "config",
     "dualcast",
+    "history",
     "echo",
     "exit",
     "setenv",
@@ -101,14 +102,15 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   built_fnt[1] = &cd_b;
   built_fnt[2] = &config_b;
   built_fnt[3] = &dualcast_b;
-  built_fnt[4] = &echo_b;
-  built_fnt[5] = &exit_b;
-  built_fnt[6] = &setenv_b;
-  built_fnt[7] = &unalias_b;
-  built_fnt[8] = &unsetenv_b;
-  built_fnt[9] = &show_builtins;
-  built_fnt[10] = &prompt;
-  built_fnt[11] = &env_b;
+  built_fnt[4] = &disp_hist;
+  built_fnt[5] = &echo_b;
+  built_fnt[6] = &exit_b;
+  built_fnt[7] = &setenv_b;
+  built_fnt[8] = &unalias_b;
+  built_fnt[9] = &unsetenv_b;
+  built_fnt[10] = &show_builtins;
+  built_fnt[11] = &prompt;
+  built_fnt[12] = &env_b;
   idx = indexof_builtin(shell->cur->av[0]);
   if (idx >= 0 && idx < nb_built(built_tab))
     {

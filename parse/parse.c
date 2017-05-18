@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:50:20 2017 Nicolas Polomack
-** Last update Sun Apr  2 19:21:19 2017 Nicolas Polomack
+** Last update Thu May 18 01:41:45 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -55,8 +55,8 @@ int	get_quoted_text(char *arg, char **final, int l, char c)
     return ((c == '"') ? -3 : -4);
   if ((*final = malloc(j + 1)) == NULL)
     return (-1);
-  while (++i < j)
-    (*final)[i] = arg[i];
+  while (arg[++i + 1] != c)
+    (*final)[i] = arg[i + 1];
   (*final)[i] = 0;
   while (arg[j] && (arg[j] == ' ' || arg[j] == '\t'))
     j += 1;

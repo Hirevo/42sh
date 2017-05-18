@@ -71,7 +71,7 @@ int	init_shell(t_shell *shell, char **ae)
   shell->path = init_path(getenv("PATH"));
   shell->home = getenv("HOME");
   if ((shell->current = malloc(512)) == NULL)
-    return (-1);
+    handle_error("malloc");
   shell->current[0] = 0;
   shell->current = get_current(shell->current, shell->home);
   shell->exit = 0;

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Sun May 14 18:52:02 2017 Nicolas Polomack
+** Last update Thu May 18 01:44:52 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -87,8 +87,8 @@ unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
   if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 || 
       parse_vars(shell) == -1 ||
-      (shell->line = my_epurstr(shell->line)) == NULL ||
-      (shell->line = my_epurcommand(shell->line)) == NULL)
+      (shell->line = my_epurcommand(shell->line)) == NULL ||
+      (shell->line = my_epurstr(shell->line)) == NULL)
     return (set_error(shell, 1));
   replace_home(shell);
   free(shell->last);
