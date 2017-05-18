@@ -115,43 +115,47 @@ int	execute(t_shell *shell)
     }
 }
 
-static int	start_standard_shell(int ac, char **av, char **ae)
+static int	start_standard_shell(int ac,
+				     char **av,
+				     char **ae,
+				     t_shell *shell)
 {
   int		exit;
-  t_shell	shell;
 
   exit = 0;
   signal(SIGINT, SIG_IGN);
   signal(SIGTTOU, SIG_IGN);
-  if (init_shell(&shell, ae) == -1)
-    return (84);
   while (1)
     {
-      shell.line = NULL;
-      shell.w.cur = 0;
-      init_prompt(&shell);
-      execute(&shell);
+      shell->line = NULL;
+      shell->w.cur = 0;
+      init_prompt(shell);
+      execute(shell);
     }
-  if (shell.tty)
+  if (shell->tty)
     {
       write(1, "exit\n", 5);
-      if (shell.ioctl)
+      if (shell->ioctl)
 	{
-	  ioctl(0, TCSETA, &shell.w.oterm) == -1;
+	  ioctl(0, TCSETA, &shell->w.oterm) == -1;
 	  printf(tigetstr("rmkx"));
 	  fflush(stdout);
 	}
     }
-  return (shell.exit);
+  return (shell->exit);
 }
 
-int	main(int ac, char **av, char **ae)
+int		main(int ac, char **av, char **ae)
 {
-  int	fd;
+  t_shell	shell;
+  int		fd;
 
   setenv("SHELL", av[0], 1);
+  if (init_shell(&shell, ae) == -1)
+    return (84);
+  shell.av = av;
   if (ac == 1)
-    start_standard_shell(ac, av, ae);
+    return (start_standard_shell(ac, av, ae, &shell));
   else
     {
       if ((fd = open(av[1], O_RDONLY)) == -1)
@@ -162,6 +166,6 @@ int	main(int ac, char **av, char **ae)
 	}
       if (dup2(fd, 0) == -1)
 	return (1);
-      start_standard_shell(ac, av, ae);
+      return (start_standard_shell(ac, av, ae, &shell));
     }
 }

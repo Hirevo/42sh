@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May 18 22:55:23 2017 Nicolas Polomack
+** Last update Thu May 18 23:52:06 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -74,6 +74,7 @@ typedef struct	s_window
 /*
 ** This is the main structure that binds the shell together
 **
+** av: av give in the main (for var $0, $1, ...)
 ** env: the environement
 ** path: the current path
 ** home: the current home, for prompt & cd builtin
@@ -90,6 +91,7 @@ typedef struct	s_window
 */
 typedef struct		s_shell
 {
+  char			**av;
   int			prompt;
   char			**path;
   char			*home;
