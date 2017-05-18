@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Wed May 17 15:47:48 2017 Nicolas Polomack
-** Last update Wed May 17 16:17:11 2017 Nicolas Polomack
+** Last update Thu May 18 10:02:53 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -18,12 +18,14 @@
 void	tmp_file(t_shell *shell)
 {
   char	*name;
+  char	*edit;
   char	*exec;
   int	fd;
 
-  if ((name = strdup("/tmp/42sh-tmpXXXXXX")) == NULL ||
+  if ((edit = getenv("EDITOR")) == NULL ||
+      (name = strdup("/tmp/42sh-tmpXXXXXX")) == NULL ||
       (fd = mkstemp(name)) == -1 ||
-      asprintf(&exec, "%s %s", "/usr/bin/nano", name) == -1)
+      asprintf(&exec, "%s %s", edit, name) == -1)
     return ;
   if (shell->line)
     dprintf(fd, "%s", shell->line);
