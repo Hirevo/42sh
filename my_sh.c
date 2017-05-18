@@ -153,7 +153,7 @@ int		main(int ac, char **av, char **ae)
   setenv("SHELL", av[0], 1);
   if (init_shell(&shell, ae) == -1)
     return (84);
-  shell.av = av;
+  shell.av = av + ((ac == 1) ? 0 : 1);
   if (ac == 1)
     return (start_standard_shell(ac, av, ae, &shell));
   else
@@ -166,6 +166,9 @@ int		main(int ac, char **av, char **ae)
 	}
       if (dup2(fd, 0) == -1)
 	return (1);
+      shell.tty = 0;
+      shell.ioctl = 0;
       return (start_standard_shell(ac, av, ae, &shell));
     }
+  return (0);
 }

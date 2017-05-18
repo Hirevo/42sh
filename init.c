@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Wed May 17 22:41:56 2017 Nicolas Polomack
+** Last update Fri May 19 01:15:42 2017 Arthur Knoepflin
 */
 
 #include <curses.h>

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Thu Oct 13 10:04:36 2016 Nicolas POLOMACK
-** Last update Tue May 16 09:48:12 2017 Arthur Knoepflin
+** Last update Fri May 19 00:25:05 2017 Arthur Knoepflin
 */
 
 #ifndef MY_H_
@@ -90,5 +90,6 @@ void	display_number(t_flags *, va_list, char *, int *);
 char	*complete_str(char *, t_flags *, int *, int);
 char	*convert_base(char *, char *, char *);
 char	*check_parse(char *, t_flags *, int *);
+int	size_nb(int);
 
 #endif /* MY_H_ */

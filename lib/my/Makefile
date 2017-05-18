@@ -5,7 +5,7 @@
 ## Login   <nicolas@epitech.net>
 ##
 ## Started on  Tue Nov  1 12:04:24 2016 Nicolas POLOMACK
-## Last update Tue May 16 09:47:44 2017 Arthur Knoepflin
+## Last update Fri May 19 00:24:54 2017 Arthur Knoepflin
 ##
 
 SRC	=	is_a_num.c		\
@@ -51,6 +51,7 @@ SRC	=	is_a_num.c		\
 		my_strdup.c		\
 		nb_args.c		\
 		convert_base.c		\
+		size_nb.c		\
 		my_int_to_char.c
 
 OBJ	=	$(SRC:.c=.o)

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Fri May 19 00:02:59 2017 Arthur Knoepflin
+** Last update Fri May 19 01:12:06 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -15,6 +15,28 @@
 #include "shell.h"
 #include "my.h"
 #include "get_next_line.h"
+
+static int	get_arg(t_shell *shell,
+			 char **str,
+			 int *cur,
+			 char *var)
+{
+  int		nb;
+  int		len;
+  int		i;
+
+  nb = my_getnbr(shell->line + *cur + 1);
+  len = 0;
+  while (shell->line[*cur + 1 + len] &&
+  	 shell->line[*cur + 1 + len] >= '0' &&
+  	 shell->line[*cur + 1 + len] <= '9')
+    len += 1;
+  i = asprintf(str, "%.*s%s%s", *cur, shell->line,
+	       (shell->av && nb < nb_args(shell->av)) ?
+	       shell->av[nb] : "",
+	       shell->line + *cur + len + 1);
+  return (i);
+}
 
 static char	*get_gvar(char *str)
 {
@@ -45,9 +67,7 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
     i = asprintf(&str, "%.*s%s%s", *cur, shell->line, getenv(var),
                  shell->line + *cur + strlen(var) + 1);
   else if (shell->line[*cur + 1] >= '0' && shell->line[*cur + 1] <= '9')
-    i = asprintf(&str, "%.*s%s%s", *cur, shell->line,
-		 shell->av[my_getnbr(shell->line + *cur + 1)],
-                 shell->line + *cur + 2);
+    i = get_arg(shell, &str, cur, var);
   else
     {
       dprintf(2, "%s: Undefined variable.\n", var);
