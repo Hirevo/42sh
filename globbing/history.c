@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Apr  6 13:59:24 2017 Nicolas Polomack
-** Last update Tue May 16 02:30:07 2017 Nicolas Polomack
+** Last update Thu May 18 02:08:11 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -112,8 +112,7 @@ int	parse_history(t_shell *shell, int save)
 
   i = -1;
   last = shell->line;
-  while (shell->hist.last && shell->hist.last->prev
-	 && shell->line[++i])
+  while (shell->hist.last && shell->line[++i])
     if (my_strncmp(shell->line + i, "!!", 2) == 0)
       {
 	if (insert_full_hist(shell, i) == -1)

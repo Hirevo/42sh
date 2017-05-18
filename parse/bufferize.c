@@ -5,10 +5,11 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Mon May 15 08:37:24 2017 Nicolas Polomack
+** Last update Thu May 18 01:34:19 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include "shell.h"
 #include "my.h"
@@ -19,22 +20,11 @@ char	**bufferize(char *av, int n)
   int	i;
   int	args;
   char	**final;
+  char	*str;
 
   args = 0;
-  i = 0;
-  if ((final = malloc(sizeof(char *) * (n + 1))) == NULL)
-    return (NULL);
-  while ((i = get_next_arg(av, &(final[args]), i)) != -2)
-    {
-      if (i == -3)
-        my_print_err("Unmatched \"\n");
-      if (i == -4)
-	my_print_err("Unmatched '\n");
-      if (i == -1 || i == -3 || i == -4)
-        return (NULL);
-      args += 1;
-    }
-  final[args + 1] = NULL;
+  i = -1;
+  final = my_split(av, " ");
   return (final);
 }
 
