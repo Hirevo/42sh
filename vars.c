@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 18 17:26:01 2017 Nicolas Polomack
-** Last update Thu May 18 22:00:12 2017 Nicolas Polomack
+** Last update Fri May 19 00:34:14 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -41,12 +41,9 @@ void	add_var(t_shell *shell, char *name, char *value)
   if (name == NULL ||
       (tmp = my_strcatdup(name, "\t")) == NULL)
     handle_error("malloc");
-  if (value)
-    {
-      if ((str = my_strcatdup(tmp, value)) == NULL)
-	handle_error("malloc");
-    }
-  else
+  if (value && ((str = my_strcatdup(tmp, value)) == NULL))
+    handle_error("malloc");
+  else if (!value)
     str = tmp;
   i = -1;
   while (shell->vars && shell->vars[++i])
@@ -54,10 +51,10 @@ void	add_var(t_shell *shell, char *name, char *value)
 	shell->vars[i][strlen(name)] == '\t')
       {
 	free(shell->vars[i]);
-	shell->vars[i] = str;
+	shell->vars[i] = (str == tmp) ? strdup(str) : str;
 	return ;
       }
-  insert_line(&shell->vars, str);
+  insert_line(&shell->vars, (str == tmp) ? strdup(str) : str);
   free(tmp);
 }
 
