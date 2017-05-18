@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May 18 02:06:11 2017 Nicolas Polomack
+** Last update Thu May 18 13:03:03 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -296,7 +296,7 @@ void	tmp_file(t_shell *);
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
 void	skip_commands(t_command **, unsigned char);
-void	set_fground(t_shell *);
+void	set_fground(t_shell *, int);
 
 /*
 ** globbing/globbing.c
