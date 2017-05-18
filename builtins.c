@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Thu May 18 02:05:17 2017 Nicolas Polomack
+** Last update Thu May 18 23:09:05 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -30,6 +30,8 @@ static const char	*built_tab[] =
     "builtins",
     "prompt",
     "env",
+    "set",
+    "unset",
     NULL
   };
 
@@ -40,14 +42,14 @@ static int	show_builtins(t_shell *shell, int args)
   char		*str;
 
   i = 0;
-  ret = strdup("echo \"");
+  ret = strdup("echo '");
   while (built_tab[i])
     {
       ret = my_fstrcat(ret, (char *) built_tab[i], 1);
       ret = my_fstrcat(ret, "\n", 1);
       i += 1;
     }
-  ret = my_fstrcat(ret, "\" | sort | column", 1);
+  ret = my_fstrcat(ret, "' | sort | column", 1);
   quick_exec(shell, ret);
   return (0);
 }
@@ -111,6 +113,8 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   built_fnt[10] = &show_builtins;
   built_fnt[11] = &prompt;
   built_fnt[12] = &env_b;
+  built_fnt[13] = &set;
+  built_fnt[14] = &unset;
   idx = indexof_builtin(shell->cur->av[0]);
   if (idx >= 0 && idx < nb_built(built_tab))
     {

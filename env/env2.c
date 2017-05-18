@@ -5,10 +5,11 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:01:50 2017 Nicolas Polomack
-** Last update Fri May 12 22:58:57 2017 Arthur Knoepflin
+** Last update Thu May 18 20:56:33 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 #include "shell.h"
 #include "my.h"
@@ -24,14 +25,14 @@ int	disp_env()
   return (0);
 }
 
-int	check_env_error(char *name)
+int	check_env_error(char *mod, char *name)
 {
   if (name[0] == 0 || ((name[0] < 'a' || name[0] > 'z') &&
                        (name[0] < 'A' || name[0] > 'Z')))
-    return (my_print_err("setenv: Variable name must \
-begin with a letter.\n"));
+    return (dprintf(2, "%s: Variable name must \
+begin with a letter.\n", mod));
   if (!is_char_alpha(name))
-    return (my_print_err("setenv: Variable name must") - 1 +
-	    my_print_err(" contain alphanumeric characters.\n"));
+    return (dprintf(2, "%s: Variable name must \
+contain alphanumeric characters.\n", mod));
   return (0);
 }

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May 18 13:03:03 2017 Nicolas Polomack
+** Last update Thu May 18 22:55:23 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -93,6 +93,7 @@ typedef struct		s_shell
   int			prompt;
   char			**path;
   char			*home;
+  char			**vars;
   char			*current;
   char			*line;
   char			**final;
@@ -166,7 +167,7 @@ void	write_alias(t_alias *, int);
 void	my_print_fd(char *, int);
 int	set_commands(t_shell *);
 int	check_access(char **, t_shell *);
-int	check_env_error(char *);
+int	check_env_error(char *, char *);
 int	check_exit(t_shell *, int);
 int	compare_stats(struct stat *);
 void	check_exec(t_shell *, int, int *);
@@ -303,6 +304,11 @@ int	parse_vars(t_shell *);
 void	replace_home(t_shell *);
 
 /*
+** vars.c
+*/
+void	add_var(t_shell *, char *, char *);
+
+/*
 ** echo.c
 */
 int	echo_term(char **);
@@ -325,6 +331,16 @@ int	is_space(char);
 int	is_delimiter(char);
 int	is_alphanum(char);
 int	is_num(char *);
+
+/*
+** builtins/set.c
+*/
+int	set(t_shell *, int);
+
+/*
+** builtins/unset.c
+*/
+int	unset(t_shell *, int);
 
 /*
 ** char.c
@@ -350,10 +366,16 @@ void	get_prompt(t_shell *);
 int	set_error(t_shell *, int);
 
 /*
+** vars.c
+*/
+char	*get_var(t_shell *, char *);
+void	init_vars(t_shell *);
+
+/*
 ** init.c
 */
 
-void	set_raw(struct termio *oterm);
+void	set_raw(struct termio *);
 void	init(t_shell *);
 void	init_prompt(t_shell *);
 

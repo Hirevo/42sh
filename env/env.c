@@ -16,7 +16,7 @@
 
 int	set_env(char *name, char *value)
 {
-  if (check_env_error(name))
+  if (check_env_error("setenv", name))
     return (1);
   return ((!setenv(name, value, 1)) ? 0 : -1);
 }

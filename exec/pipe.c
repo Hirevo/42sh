@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Thu May 18 14:00:43 2017 Nicolas Polomack
+** Last update Thu May 18 23:36:33 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -29,7 +29,9 @@ int		exec_branch(t_shell *shell,
     {
       if (*ret != 0)
 	close(*ret);
-      (*head) = (*head)->next;
+      skip_commands(head, r);
+      if (*head)
+	(*head) = (*head)->next;
       return (r);
     }
   if ((*head)->l_type)
@@ -76,10 +78,11 @@ void	exec_piped_child(int ret,
   int	args;
 
   signal(SIGINT, SIG_DFL);
-  signal(SIGTTOU, SIG_DFL);
+  setpgid(0, shell->pgid);
+  if (shell->pgid == 0)
+    set_fground(shell, getpid());
   setup_exec(head, fds, ret);
-  /* setpgid(0, shell->pgid); */
-  /* set_fground(shell, getpid()); */
+  //signal(SIGTTOU, SIG_DFL);
   args = -1 + 0 * (i = 0);
   if (head->link == '|')
     {
@@ -131,9 +134,8 @@ int	father_action(t_command **head,
 {
   int	r;
 
-  if (shell->pgid = 0)
+  if (shell->pgid == 0)
     shell->pgid = fds[2];
-  /* setpgid(fds[2], shell->pgid); */
   if (*ret != 0)
     close(*ret);
   if ((*head)->link == '|')
@@ -149,7 +151,7 @@ int	father_action(t_command **head,
     {
       r = get_return(shell);
       shell->pgid = 0 + (fds[2] = -1) * 0;
-      /* set_fground(shell, getpid()); */
+      set_fground(shell, getpid());
     }
   skip_commands(head, WEXITSTATUS(r));
   if (*head)

@@ -85,6 +85,7 @@ int	init_shell(t_shell *shell, char **ae)
   init_history(shell);
   init_aliases(shell);
   parse_rc(shell);
+  init_vars(shell);
   shell->path = (shell->path) ? shell->path : set_default_path();
   get_prompt(shell);
   init(shell);

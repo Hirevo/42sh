@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Thu May 18 09:42:16 2017 Nicolas Polomack
+** Last update Thu May 18 20:37:04 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -16,7 +16,7 @@
 #include "my.h"
 #include "get_next_line.h"
 
-static char	*get_var(char *str)
+static char	*get_gvar(char *str)
 {
   int	i;
 
@@ -38,14 +38,17 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
   else if (!strncmp(shell->line + *cur, "$$", 2))
     i = asprintf(&str, "%.*s%d%s", *cur, shell->line, getpid(),
 		 shell->line + *cur + 2);
-  else if (!getenv(var))
+  else if (get_var(shell, var))
+    i = asprintf(&str, "%.*s%s%s", *cur, shell->line, get_var(shell, var),
+                 shell->line + *cur + strlen(var) + 1);
+  else if (getenv(var))
+    i = asprintf(&str, "%.*s%s%s", *cur, shell->line, getenv(var),
+                 shell->line + *cur + strlen(var) + 1);
+  else
     {
       dprintf(2, "%s: Undefined variable.\n", var);
       return (-1);
     }
-  else
-    i = asprintf(&str, "%.*s%s%s", *cur, shell->line, getenv(var),
-		 shell->line + *cur + strlen(var) + 1);
   if (i == -1 || str == NULL)
     handle_error("malloc");
   *cur += (strlen(str) - strlen(shell->line)) + 1;
@@ -73,7 +76,7 @@ int	parse_vars(t_shell *shell)
 	       && !is_separator(shell->line[cur + 1]) &&
 	       shell->line[cur + 1] != '"')
 	{
-	  if ((var = get_var(shell->line + cur + 1)) == NULL)
+	  if ((var = get_gvar(shell->line + cur + 1)) == NULL)
 	    exit(84);
 	  if (replace_var(shell, &cur, var) == -1)
 	    return (-1);
