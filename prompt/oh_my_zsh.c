@@ -5,9 +5,10 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 12 18:42:45 2017 Arthur Knoepflin
-** Last update Wed May 17 19:26:23 2017 Arthur Knoepflin
+** Last update Thu May 18 17:12:21 2017 Arthur Knoepflin
 */
 
+#include <stdlib.h>
 #include <libgen.h>
 #include "shell.h"
 #include "my.h"
@@ -25,6 +26,9 @@ void	oh_my_zsh(t_shell *shell)
   my_printf("\033[36;1m%s\033[0m ", basename(shell->current));
   git = show_cur_branch();
   if (git)
-    my_printf("\033[34;1mgit:(\033[0m\033[31;1m\
+    {
+      my_printf("\033[34;1mgit:(\033[0m\033[31;1m\
 %s\033[0m\033[34;1m)\033[0m ", git);
+      free(git);
+    }
 }

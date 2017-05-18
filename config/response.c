@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Wed May 17 12:51:48 2017 Arthur Knoepflin
+** Last update Thu May 18 23:38:22 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -58,7 +58,6 @@ static int	parse_arg(t_socket client, char **arg, t_config *config)
   void		(*request_tab[nb_request()])(t_socket, t_config *, char **);
   int		idx;
 
-  
   idx = indexof_request(arg[1]);
   get_tab_request(request_tab);
   if (idx >= 0 && idx < nb_request())

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Thu May 18 02:06:11 2017 Nicolas Polomack
+** Last update Thu May 18 19:18:28 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -187,6 +187,12 @@ int	parse_alias(t_shell *);
 ** alias/unalias.c
 */
 int	unalias(t_shell *, char **);
+
+/*
+** comment.c
+*/
+
+int	clear_comment(t_shell *);
 
 /*
 ** config.c

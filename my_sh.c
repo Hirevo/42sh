@@ -102,6 +102,7 @@ int	execute(t_shell *shell)
     write(1, "\n", 1);
   if (!shell->line)
     shell->line = strdup("exit");
+  clear_comment(shell);
   if (!is_line_empty(shell))
     {
       if (str = get_alias_cmd(shell, "postcmd"))
@@ -112,7 +113,7 @@ int	execute(t_shell *shell)
     }
 }
 
-int		main(int ac, char **av, char **ae)
+static int	start_standard_shell(int ac, char **av, char **ae)
 {
   int		exit;
   t_shell	shell;
@@ -139,4 +140,25 @@ int		main(int ac, char **av, char **ae)
 	}
     }
   return (shell.exit);
+}
+
+int	main(int ac, char **av, char **ae)
+{
+  int	fd;
+
+  setenv("SHELL", av[0], 1);
+  if (ac == 1)
+    start_standard_shell(ac, av, ae);
+  else
+    {
+      if ((fd = open(av[1], O_RDONLY)) == -1)
+	{
+	  my_puterror(av[1]);
+	  my_puterror(": No such file or directory\n");
+	  return (1);
+	}
+      if (dup2(fd, 0) == -1)
+	return (1);
+      start_standard_shell(ac, av, ae);
+    }
 }

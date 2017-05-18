@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Thu May 18 12:54:13 2017 Arthur Knoepflin
+## Last update Thu May 18 22:51:25 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -18,16 +18,28 @@ SRC	=	alias/alias.c				\
 		builtins.c				\
 		builtins/alias.c			\
 		builtins/cd.c				\
+		builtins/char_double.c			\
+		builtins/check_file.c			\
+		builtins/check_file_2.c			\
 		builtins/config.c			\
 		builtins/dualcast.c			\
 		builtins/echo.c				\
 		builtins/env.c				\
+		builtins/env_checkerr.c			\
+		builtins/env_cherror_2.c		\
+		builtins/exec_arg.c			\
+		builtins/exec_arg_2.c			\
 		builtins/exit.c				\
+		builtins/launch_soft.c			\
+		builtins/parse_env.c			\
 		builtins/prompt.c			\
 		builtins/setenv.c			\
+		builtins/shw_env_parse.c		\
+		builtins/show_signal.c			\
 		builtins/unalias.c			\
 		builtins/unsetenv.c			\
 		cd.c					\
+		comment.c				\
 		config/add_env_http.c			\
 		config/client.c				\
 		config/com_serv.c			\
