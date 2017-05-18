@@ -166,6 +166,8 @@ int		main(int ac, char **av, char **ae)
 	}
       if (dup2(fd, 0) == -1)
 	return (1);
+      shell.tty = 0;
+      shell.ioctl = 0;
       return (start_standard_shell(ac, av, ae, &shell));
     }
 }
