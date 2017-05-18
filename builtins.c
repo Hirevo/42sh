@@ -1,11 +1,11 @@
 /*
 ** builtins_tmp.c for builtins in /home/arthur/delivery/PSU/PSU_2016_42sh
-** 
+**
 ** Made by Arthur Knoepflin
 ** Login   <arthur.knoepflin@epitech.eu>
-** 
+**
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Thu May 18 02:05:17 2017 Nicolas Polomack
+** Last update	Thu May 18 14:44:13 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -15,7 +15,7 @@
 #include "builtin.h"
 #include "my.h"
 
-static const char	*built_tab[] = 
+static const char	*built_tab[] =
   {
     "alias",
     "cd",
@@ -76,6 +76,7 @@ char	**get_builtin_tab()
       ret[i] = my_strdup((char *) built_tab[i]);
       i += 1;
     }
+  ret[i] = NULL;
   return (ret);
 }
 
