@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 11:39:08 2017 Arthur Knoepflin
-** Last update Tue May  9 16:32:29 2017 Arthur Knoepflin
+** Last update Thu May 18 11:51:25 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -38,12 +38,15 @@ int		launch_dc_server(t_shell *shell)
 
 static int	launch_dc_client(t_shell *shell, char *addr)
 {
-  t_socket	com;
+  t_client	client;
 
-  if ((com = init_connect_dc(addr)) == -1)
+  if (init_connect_dc(addr, &client))
     return (1);
-  core_client_dc(com);
-  close(com);
+  if (my_strlen(client.name) == 0)
+    client.name = NULL;
+  core_client_dc(&client);
+  close(client.sock);
+  free(client.name);
   return (0);
 }
 

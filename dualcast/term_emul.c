@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 18:23:09 2017 Arthur Knoepflin
-** Last update Mon May 15 10:18:52 2017 Arthur Knoepflin
+** Last update Thu May 18 13:08:59 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -13,10 +13,10 @@
 #include "shell.h"
 #include "my.h"
 
-void	del_last_char(char **prompt, int *len)
+void	del_last_char(int len_prompt, char **prompt, int *len)
 {
   *len = my_strlen(*prompt) - 11;
-  if (my_strlen(*prompt) > 25)
+  if (my_strlen(*prompt) > len_prompt)
     *prompt = my_strndup(*prompt, my_strlen(*prompt) - 1);
 }
 

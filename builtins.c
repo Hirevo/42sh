@@ -29,6 +29,7 @@ static const char	*built_tab[] =
     "unsetenv",
     "builtins",
     "prompt",
+    "env",
     NULL
   };
 
@@ -109,6 +110,7 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   built_fnt[9] = &unsetenv_b;
   built_fnt[10] = &show_builtins;
   built_fnt[11] = &prompt;
+  built_fnt[12] = &env_b;
   idx = indexof_builtin(shell->cur->av[0]);
   if (idx >= 0 && idx < nb_built(built_tab))
     {

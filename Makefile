@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Wed May 17 15:55:04 2017 Nicolas Polomack
+## Last update Thu May 18 12:54:13 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -21,6 +21,7 @@ SRC	=	alias/alias.c				\
 		builtins/config.c			\
 		builtins/dualcast.c			\
 		builtins/echo.c				\
+		builtins/env.c				\
 		builtins/exit.c				\
 		builtins/prompt.c			\
 		builtins/setenv.c			\
@@ -65,6 +66,7 @@ SRC	=	alias/alias.c				\
 		dualcast/core_client.c			\
 		dualcast/get_password.c			\
 		dualcast/init_dualcast.c		\
+		dualcast/prompt_client.c		\
 		dualcast/prompt_serv.c			\
 		dualcast/termio.c			\
 		dualcast/term_emul.c			\

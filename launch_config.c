@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 20:40:56 2017 Arthur Knoepflin
-** Last update Thu May 18 00:12:31 2017 Arthur Knoepflin
+** Last update Thu May 18 10:53:01 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -21,6 +21,11 @@ int		launch_config(t_shell *shell)
   char		*prompt;
   t_config	config;
 
+  if (!isatty(0))
+    {
+      my_puterror("You can't launch the configuration.\n");
+      return (1);
+    }
   config.env = environ;
   config.prompt = shell->prompt;
   ret = config_http(&config);

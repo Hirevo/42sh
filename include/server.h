@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 20:06:39 2016 Arthur Knoepflin
-** Last update Thu May 18 00:12:07 2017 Arthur Knoepflin
+** Last update Thu May 18 13:07:33 2017 Arthur Knoepflin
 */
 
 #ifndef SERVER_H_
@@ -43,6 +43,13 @@ typedef struct	s_config
   char		**env;
   int		prompt;
 }		t_config;
+
+typedef struct	s_client
+{
+  t_socket	sock;
+  int		len_prompt;
+  char		*name;
+}		t_client;
 
 # define	MIMETYPE	"mimetype"
 # define	CRLF		"\r\n"
@@ -234,10 +241,16 @@ void	send_mime(t_socket, char *);
 */
 
 /*
+** connect.c
+*/
+
+t_socket	init_connect_dc(char *, t_client *);
+
+/*
 ** core_client.c
 */
 
-int	core_client_dc(t_socket);
+int	core_client_dc(t_client *);
 
 /*
 ** core_server.c
@@ -251,6 +264,12 @@ int	core_server_dc(t_socket, t_socket, fd_set *);
 
 int	read_socket(t_socket, char **);
 void	write_socket(t_socket, char *);
+
+/*
+** prompt_client.c
+*/
+
+char	*get_prompt_cli(t_client *);
 
 /*
 ** prompt_serv.c
@@ -277,7 +296,7 @@ int	getch_c();
 ** term_emul.c
 */
 
-void	del_last_char(char **, int *);
+void	del_last_char(int, char **, int *);
 void	add_char_dc(char **, char, int *);
 void	del_prompt(int);
 void	send_char(t_socket, char);

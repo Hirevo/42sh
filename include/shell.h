@@ -225,12 +225,6 @@ int	close_pipes(int *);
 int	launch_dualcast(t_shell *, int);
 
 /*
-** dualcast/connect.c
-*/
-
-t_socket	init_connect_dc(char *);
-
-/*
 ** dualcast/wait_connection.c
 */
 
