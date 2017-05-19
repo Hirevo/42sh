@@ -65,33 +65,6 @@ void		reload_shell(t_shell *shell)
   shell->current = get_current(shell->current, shell->home);
 }
 
-int	init_shell(t_shell *shell, char **ae)
-{
-  srand(getpid() * time(NULL));
-  shell->exit = 0;
-  shell->path = init_path(getenv("PATH"));
-  shell->home = getenv("HOME");
-  if ((shell->current = malloc(512)) == NULL)
-    handle_error("malloc");
-  shell->current[0] = 0;
-  shell->current = get_current(shell->current, shell->home);
-  shell->exit = 0;
-  shell->is_comp = 0;
-  shell->last = NULL;
-  shell->prev = NULL;
-  shell->exit_str = NULL;
-  shell->fds = NULL;
-  shell->is_done = 0;
-  init_history(shell);
-  init_aliases(shell);
-  parse_rc(shell);
-  init_vars(shell);
-  shell->path = (shell->path) ? shell->path : set_default_path();
-  get_prompt(shell);
-  init(shell);
-  return (0);
-}
-
 int	execute(t_shell *shell)
 {
   char	*str;

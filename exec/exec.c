@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri May 19 10:56:10 2017 Arthur Knoepflin
+** Last update Fri May 19 19:08:40 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -85,8 +85,8 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
 
 unsigned int	exec_line(t_shell *shell, unsigned int args)
 {
-  if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 || 
-      parse_vars(shell) == -1 || 
+  if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 ||
+      parse_vars(shell) == -1 ||
       (shell->line = my_epurcommand(shell->line)) == NULL ||
       parse_stars(shell) == 1 ||
       (shell->line = my_epurstr(shell->line)) == NULL)

@@ -5,12 +5,13 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Fri May 19 01:15:42 2017 Arthur Knoepflin
+** Last update Fri May 19 19:20:52 2017 Nicolas Polomack
 */
 
 #include <curses.h>
 #include <term.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <termio.h>
 #include <stdlib.h>
@@ -27,6 +28,33 @@ void		set_raw(struct termio *oterm)
   nterm.c_cc[VMIN] = 0;
   if (ioctl(0, TCSETA, &nterm) == -1)
     handle_error("ioctl");
+}
+
+int	init_shell(t_shell *shell, char **ae)
+{
+  srand(getpid() * time(NULL));
+  shell->exit = 0;
+  shell->path = init_path(getenv("PATH"));
+  shell->home = getenv("HOME");
+  if ((shell->current = malloc(512)) == NULL)
+    handle_error("malloc");
+  shell->current[0] = 0;
+  shell->current = get_current(shell->current, shell->home);
+  shell->exit = 0;
+  shell->is_comp = 0;
+  shell->last = NULL;
+  shell->prev = NULL;
+  shell->exit_str = NULL;
+  shell->fds = NULL;
+  shell->is_done = 0;
+  init_history(shell);
+  init_aliases(shell);
+  parse_rc(shell);
+  init_vars(shell);
+  shell->path = (shell->path) ? shell->path : set_default_path();
+  get_prompt(shell);
+  init(shell);
+  return (0);
 }
 
 void	init(t_shell *shell)
