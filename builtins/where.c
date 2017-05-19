@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May 19 23:21:05 2017 Nicolas Polomack
-** Last update Sat May 20 00:05:15 2017 Nicolas Polomack
+** Last update Sat May 20 00:19:31 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -48,6 +48,11 @@ static int	search(t_shell *shell, int i)
   int	ret;
 
   ret = 1;
+  if (indexof_builtin(shell->cur->av[i]) != -1)
+    {
+      printf("%s is a shell built-in\n");
+      ret = 0;
+    }
   if ((str = get_alias_cmd(shell, shell->cur->av[i])))
     {
       printf("%s is aliased to %s\n", shell->cur->av[i], str);
