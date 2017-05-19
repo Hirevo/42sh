@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Thu May 18 21:41:52 2017 Full Name
+** Last update	Fri May 19 12:49:31 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -29,7 +29,7 @@ static int	find_matches(t_match **list, char *path, char *str, t_auto *t)
   char		*name;
   char		*str2;
 
-  if ((size = scandir(path, &namelist, NULL, NULL)) <= 0)
+  if ((size = scandir(path, &namelist, &filter, NULL)) <= 0)
     return (0);
   if (size == 1 && strcmp(namelist[0]->d_name, str) == 0)
     return (-1);
