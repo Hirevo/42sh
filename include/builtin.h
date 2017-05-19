@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May 19 19:22:19 2017 Nicolas Polomack
-** Last update Fri May 19 23:50:24 2017 Nicolas Polomack
+** Last update Sat May 20 00:37:43 2017 Nicolas Polomack
 */
 
 #ifndef BUILTIN_H_
@@ -102,5 +102,11 @@ int	show_signal(int);
 */
 
 int	where(t_shell *, int);
+
+/*
+** which.c
+*/
+
+int	which(t_shell *, int);
 
 #endif /* !BUILTIN_H_ */

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 **
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Fri May 19 23:56:21 2017 Nicolas Polomack
+** Last update Sat May 20 00:37:11 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -33,6 +33,7 @@ static const char	*g_built_tab[] =
     "set",
     "unset",
     "where",
+    "which",
     NULL
   };
 
@@ -74,6 +75,7 @@ static void	init_fnt_builtin(int (*built_fnt[nb_built(g_built_tab)])
   built_fnt[13] = &set;
   built_fnt[14] = &unset;
   built_fnt[15] = &where;
+  built_fnt[16] = &which;
 }
 
 char	**get_builtin_tab()
