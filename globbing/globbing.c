@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Fri May 19 10:54:48 2017 Arthur Knoepflin
+** Last update Fri May 19 10:42:28 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -48,6 +48,15 @@ static char	*get_gvar(char *str)
   return (strndup(str, i));
 }
 
+static void	final_checks(t_shell *shell, char *str, int *cur, int i)
+{
+  if (i == -1 || str == NULL)
+    handle_error("malloc");
+  *cur += (strlen(str) - strlen(shell->line)) + 1;
+  free(shell->line);
+  shell->line = str;
+}
+
 static int	replace_var(t_shell *shell, int *cur, char *var)
 {
   char	*str;
@@ -73,11 +82,7 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
       dprintf(2, "%s: Undefined variable.\n", var);
       return (-1);
     }
-  if (i == -1 || str == NULL)
-    handle_error("malloc");
-  *cur += (strlen(str) - strlen(shell->line)) + 1;
-  free(shell->line);
-  shell->line = str;
+  final_checks(shell, str, cur, i);
   return (0);
 }
 
