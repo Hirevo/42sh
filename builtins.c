@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 **
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Fri May 19 19:06:41 2017 Nicolas Polomack
+** Last update Fri May 19 23:56:21 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -32,6 +32,7 @@ static const char	*g_built_tab[] =
     "env",
     "set",
     "unset",
+    "where",
     NULL
   };
 
@@ -54,14 +55,25 @@ static int	show_builtins(t_shell *shell, int args)
   return (0);
 }
 
-static int	nb_built(const char **str)
+static void	init_fnt_builtin(int (*built_fnt[nb_built(g_built_tab)])
+				 (t_shell *, int))
 {
-  int		i;
-
-  i = 0;
-  while (g_built_tab[i])
-    i += 1;
-  return (i);
+  built_fnt[0] = &alias;
+  built_fnt[1] = &cd_b;
+  built_fnt[2] = &config_b;
+  built_fnt[3] = &dualcast_b;
+  built_fnt[4] = &disp_hist;
+  built_fnt[5] = &echo_b;
+  built_fnt[6] = &exit_b;
+  built_fnt[7] = &setenv_b;
+  built_fnt[8] = &unalias_b;
+  built_fnt[9] = &unsetenv_b;
+  built_fnt[10] = &show_builtins;
+  built_fnt[11] = &prompt;
+  built_fnt[12] = &env_b;
+  built_fnt[13] = &set;
+  built_fnt[14] = &unset;
+  built_fnt[15] = &where;
 }
 
 char	**get_builtin_tab()
@@ -101,21 +113,7 @@ int	exec_builtins(t_shell *shell, int args, int *r)
   int	(*built_fnt[nb_built(g_built_tab)])(t_shell *, int);
   int	idx;
 
-  built_fnt[0] = &alias;
-  built_fnt[1] = &cd_b;
-  built_fnt[2] = &config_b;
-  built_fnt[3] = &dualcast_b;
-  built_fnt[4] = &disp_hist;
-  built_fnt[5] = &echo_b;
-  built_fnt[6] = &exit_b;
-  built_fnt[7] = &setenv_b;
-  built_fnt[8] = &unalias_b;
-  built_fnt[9] = &unsetenv_b;
-  built_fnt[10] = &show_builtins;
-  built_fnt[11] = &prompt;
-  built_fnt[12] = &env_b;
-  built_fnt[13] = &set;
-  built_fnt[14] = &unset;
+  init_fnt_builtin(built_fnt);
   idx = indexof_builtin(shell->cur->av[0]);
   if (idx >= 0 && idx < nb_built(g_built_tab))
     {

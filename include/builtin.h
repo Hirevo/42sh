@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May 19 19:22:19 2017 Nicolas Polomack
-** Last update Fri May 19 19:22:20 2017 Nicolas Polomack
+** Last update Fri May 19 23:50:24 2017 Nicolas Polomack
 */
 
 #ifndef BUILTIN_H_
@@ -96,5 +96,11 @@ void	show_env_parse(t_parse_env *);
 */
 
 int	show_signal(int);
+
+/*
+** where.c
+*/
+
+int	where(t_shell *, int);
 
 #endif /* !BUILTIN_H_ */

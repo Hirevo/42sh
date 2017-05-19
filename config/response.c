@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 14:33:57 2017 Arthur Knoepflin
-** Last update Thu May 18 23:38:22 2017 Arthur Knoepflin
+** Last update Fri May 19 19:42:34 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -78,18 +78,19 @@ int	response(t_socket client, char *buf, t_config *config)
 
   if ((file = get_file_http(buf)) == NULL)
     return (1);
+  r_arg = getenv("CFG_PATH");
   if (!my_strncmp(file + 1, MAGIC, my_strlen(MAGIC)))
     {
       if ((r_arg = get_arg(buf)) && (arg = my_split_mulchar(r_arg, "&=")))
-	  if (!my_strcmp(arg[0], "arg"))
-	    {
-	      free(r_arg);
-	      free(file);
-	      return (parse_arg(client, arg, config));
-	    }
+	if (!my_strcmp(arg[0], "arg"))
+	  {
+	    free(r_arg);
+	    free(file);
+	    return (parse_arg(client, arg, config));
+	  }
     }
   else
-    send_file_http(client, my_fstrcat(PATH_DOC, get_file_http(buf), 3));
+    send_file_http(client, my_fstrcat(r_arg ? r_arg : PATH_DOC, file, 0));
   free(file);
   return (0);
 }

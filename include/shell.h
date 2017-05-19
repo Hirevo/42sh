@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 19 19:11:38 2017 Nicolas Polomack
+** Last update Fri May 19 23:56:04 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -351,6 +351,11 @@ int	is_num(char *);
 ** builtins/set.c
 */
 int	set(t_shell *, int);
+
+/*
+** builtins_init.c
+*/
+int	nb_built(const char **);
 
 /*
 ** builtins/unset.c
