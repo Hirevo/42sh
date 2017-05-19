@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 13:51:20 2017 Maxime Jenny
-** Last update	Thu May 18 19:07:52 2017 Full Name
+** Last update	Fri May 19 12:51:13 2017 Full Name
 */
 
 #ifndef AUTO_COMPLETE_H_
@@ -41,6 +41,7 @@ void		transform(t_shell *shell, t_auto *t, t_match **list, char **s);
 char		*delete_str(char *to_del, char *content);
 int		for_bi(t_match **list, char *str2, t_auto *t);
 char		**get_builtin_tab();
+int		filter(const struct dirent *l);
 
 /*
 ** List
