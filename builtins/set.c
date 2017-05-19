@@ -5,13 +5,14 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 18 20:41:29 2017 Nicolas Polomack
-** Last update Fri May 19 00:35:50 2017 Nicolas Polomack
+** Last update Fri May 19 10:43:08 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "shell.h"
+#include "my.h"
 
 int	disp_vars(t_shell *shell)
 {
@@ -20,7 +21,10 @@ int	disp_vars(t_shell *shell)
   i = -1;
   if (shell->vars)
     while (shell->vars[++i])
-      printf("%s\n", shell->vars[i]);
+      {
+	my_putstr(shell->vars[i]);
+	my_putchar(0xa);
+      }
   return (0);
 }
 
