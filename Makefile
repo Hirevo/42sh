@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Thu May 18 22:50:50 2017 Nicolas Polomack
+## Last update Fri May 19 10:03:15 2017 Arthur Knoepflin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -91,6 +91,7 @@ SRC	=	alias/alias.c				\
 		globbing/globbing.c			\
 		globbing/history.c			\
 		globbing/home.c				\
+		globbing/stars.c			\
 		history.c				\
 		home.c					\
 		misc.c					\

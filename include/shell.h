@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 19 00:42:36 2017 Arthur Knoepflin
+** Last update Fri May 19 10:04:54 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -312,6 +312,11 @@ int	parse_vars(t_shell *);
 ** globbing/home.c
 */
 void	replace_home(t_shell *);
+
+/*
+** globbing/stars.c
+*/
+int	parse_stars(t_shell *);
 
 /*
 ** vars.c
