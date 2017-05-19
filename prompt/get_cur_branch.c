@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Wed May 17 23:31:02 2017 Nicolas Polomack
+** Last update Fri May 19 13:10:10 2017 Arthur Knoepflin
 */
 
 #include <unistd.h>
@@ -113,10 +113,10 @@ char	*show_cur_branch()
 	  path = NULL;
 	}
       else
-	path = my_strcatdup("../", path);
+	path = my_fstrcat("../", path, 3);
     else
       {
-	path = my_strcatdup(path, "/HEAD");
+	path = my_fstrcat(path, "/HEAD", 1);
 	if ((branch = find_branch(path)) == NULL)
 	  {
 	    free(path);

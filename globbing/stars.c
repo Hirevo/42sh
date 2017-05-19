@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 19 09:59:04 2017 Arthur Knoepflin
-** Last update Fri May 19 11:34:01 2017 Arthur Knoepflin
+** Last update Fri May 19 13:01:53 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -20,22 +20,45 @@ static void	skip_to_next(char *str, int *i)
     *i += 1;
 }
 
+static void	update_glob(t_shell *shell,
+			    char *arg,
+			    int *i,
+			    glob_t list)
+{
+  char		*tmp;
+  char		*file;
+
+  file = construct_alias(list.gl_pathv);
+  asprintf(&tmp, "%.*s%s%s",
+	   *i, shell->line, file,
+	   shell->line + *i + my_strlen(arg));
+  free(shell->line);
+  shell->line = tmp;
+  *i += my_strlen(file);
+  free(file);
+  free(arg);
+  free_tab(list.gl_pathv);
+}
+
 static void	glob_stars(t_shell *shell, char *arg, int *i)
 {
-  char		*file;
   glob_t	list;
 
+  if (!arg)
+    {
+      *i += 1;
+      return ;
+    }  
   list.gl_offs = 1;
   glob(arg, GLOB_TILDE | GLOB_BRACE, NULL, &list);
   if (list.gl_pathc == 0)
-    *i += my_strlen(arg);
+    {
+      *i += my_strlen(arg);
+      free(arg);
+    }
   else
     {
-      file = construct_alias(list.gl_pathv);
-      asprintf(&(shell->line), "%.*s%s%s",
-	       *i, shell->line, file,
-	       shell->line + *i + my_strlen(arg));
-      *i += my_strlen(file);
+      update_glob(shell, arg, i, list);
     }
 }
 
