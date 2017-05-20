@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 **
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Thu May 18 23:43:00 2017 Arthur Knoepflin
+** Last update Fri May 19 14:21:15 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -15,7 +15,7 @@
 #include "builtin.h"
 #include "my.h"
 
-static const char	*g_built_tab[] = 
+static const char	*g_built_tab[] =
   {
     "alias",
     "cd",

@@ -1,12 +1,11 @@
 /*
-** builtin.h for builtin in /home/arthur/delivery/PSU/PSU_2016_42sh
+** builtin.h for builtins in /home/arthur/delivery/PSU/PSU_2016_42sh
 ** 
 ** Made by Arthur Knoepflin
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
-** Started on  Mon May 15 13:38:58 2017 Arthur Knoepflin
-** Last update Thu May 18 21:10:14 2017 Nicolas Polomack
-** Last update Thu May 18 23:08:14 2017 Arthur Knoepflin
+** Started on  Fri May 19 14:20:11 2017 Arthur Knoepflin
+** Last update Fri May 19 14:20:12 2017 Arthur Knoepflin
 */
 
 #ifndef BUILTIN_H_
