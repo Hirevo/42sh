@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 **
 ** Started on  Sat Oct 15 18:43:19 2016 Arthur Knoepflin
-** Last update	Fri May 19 12:51:37 2017 Full Name
+** Last update	Sat May 20 19:02:21 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -23,13 +23,14 @@ int		for_bi(t_match **list, char *str, t_auto *t)
   bi = get_builtin_tab();
   i = 0;
   str2 = my_strcatdup(str, "*");
+  if (t->is_a_dir == 1 || t->pre_token[my_strlen(t->pre_token) - 1] == '/')
+    return (0);
   while (bi[i])
     {
       if (match(bi[i], str2) == 1)
 	{
 	  if ((add_in_autolist(list, strdup(bi[i]))) == -1)
       	    return (-1);
-	  t->is_a_dir = 0;
 	}
       i++;
     }
