@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 12 22:55:57 2017 Arthur Knoepflin
-** Last update Fri May 12 22:56:31 2017 Arthur Knoepflin
+** Last update Sat May 20 19:37:20 2017 Arthur Knoepflin
 */
 
 #ifndef MY_PRTF_H_
@@ -22,18 +22,18 @@ void	my_putstr_pf(char *str, int *count);
 void	my_putstr_oct_pf(char *str, int *count);
 void	my_put_nbr_pf(int nb, int *count);
 void	my_put_nbr_u_pf(unsigned int nb, int *count);
-void    my_put_nbr_long_pf(long nb, int *count);
-void    my_putchar2_pf(char c);
-void    my_putstr2_pf(char *str);
+void	my_put_nbr_long_pf(long nb, int *count);
+void	my_putchar2_pf(char c);
+void	my_putstr2_pf(char *str);
 int	my_po_pf(int nb, int i);
 void	my_putnbr_base_pf(unsigned int nbr, char *base, int *count);
-void    my_base_long_pf(unsigned long long int nbr, char *base, int *count);
-void    my_pointer_adress_pf(void *ptr, int *count);
-void    put_type_pf(va_list ap, char *str, int *i);
-void    put_flag_pf(char *str, int *i);
+void	my_base_long_pf(unsigned long long int nbr, char *base, int *count);
+void	my_pointer_adress_pf(void *ptr, int *count);
+void	put_type_pf(va_list ap, char *str, int *i);
+void	put_flag_pf(char *str, int *i);
 char	*tab_flag_pf();
-void    tab_fonc_pf(int i, va_list ap, int *count);
-void    check_mallc_pf(char *str);
+void	tab_fonc_pf(int i, va_list ap, int *count);
+void	check_mallc_pf(char *str);
 int	check_flag_pf(char *str, int i);
 int	check_type_pf(char *str, int i);
 int	check_int_pf(char c);

@@ -5,7 +5,7 @@
 ** Login   <benjamin.solca@epitech.eu>
 **
 ** Started on  Sun Apr  2 19:17:22 2017 Benjamin
-** Last update Mon May  1 12:19:17 2017 Benjamin
+** Last update Sat May 20 19:37:40 2017 Arthur Knoepflin
 */
 
 #ifndef BS_H_
@@ -41,7 +41,7 @@ void	my_put_error(char *str);
 void	my_convertnbr_base_rec(int nbr, char* base, int base_len, char* str);
 void	my_putnbr_base(int nb, char *base);
 void	my_putptr_base(void* ptr, char* base);
-void    my_put_nbr(int nb);
+void	my_put_nbr(int nb);
 void	my_putchar(char c);
 int	my_putstr(char *str);
 char	*my_revstr(char *str);
