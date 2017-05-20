@@ -33,7 +33,8 @@ int		find_a_path(char **path, t_auto *token)
       new = my_strdup(str + i + 1);
       token->token = new;
       *path = my_strndup(str, i + 1);
-      token->pre_token = my_strcatdup(token->pre_token, my_strndup(str, i + 1));
+      token->pre_token = my_strcatdup(token->pre_token,
+				      my_strndup(str, i + 1));
       free(str);
       token->is_path = 1;
     }
