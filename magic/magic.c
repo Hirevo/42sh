@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 20 02:34:26 2017 Nicolas Polomack
-** Last update Sat May 20 19:19:38 2017 Nicolas Polomack
+** Last update Sat May 20 23:12:25 2017 Arthur Knoepflin
 */
 
 #include <string.h>
@@ -23,7 +23,7 @@ static int	get_len(t_shell *shell, int i)
       dprintf(2, "Unmatched '`'.\n");
       return (-1);
     }
-    str -= ((long int)shell->line) + i + 1;
+  str -= ((long int)shell->line) + i + 1;
   return ((int)str);
 }
 
@@ -103,7 +103,7 @@ int		magic(t_shell *shell)
 	  i += 1;
       }
     else if (shell->line[i] == '`')
-      if ((len = get_len(shell, i)) > 0)
+      if ((len = get_len(shell, i)) >= 0)
 	{
 	  line = strndup(shell->line + i + 1, len);
 	  exec_magic(shell, line, i, len);
