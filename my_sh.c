@@ -50,6 +50,7 @@ void		reload_shell(t_shell *shell)
   int		i;
   int		k;
   char		*path;
+
   if ((path = getenv("PATH")))
     {
       if (shell->path)
@@ -78,7 +79,7 @@ int	execute(t_shell *shell)
   if (!shell->line)
     shell->line = strdup("exit");
   clear_comment(shell);
-  if (!is_line_empty(shell))
+  if (!is_line_empty(shell->line))
     {
       if (str = get_alias_cmd(shell, "postcmd"))
 	quick_exec(shell, str);
