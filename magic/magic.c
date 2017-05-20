@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 20 02:34:26 2017 Nicolas Polomack
-** Last update Sat May 20 03:55:08 2017 Nicolas Polomack
+** Last update Sat May 20 19:19:38 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -31,11 +31,15 @@ static void	insert_inline(t_shell *shell, char **buffer, int i, int len)
 {
   char		*result;
   char		*ret;
+  int		l;
 
   if (buffer)
     {
       result = construct_alias(buffer);
-      if ((asprintf(&ret, "%.*s%s%s", i, shell->line, result,
+      l = -1;
+      while (result[++l])
+	result[l] = (result[l] == '\'') ? '"' : result[l];
+      if ((asprintf(&ret, "%.*s'%s'%s", i, shell->line, result,
 		    shell->line + i + len + 2)) == -1)
 	handle_error("malloc");
     }
