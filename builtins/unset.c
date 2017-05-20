@@ -5,9 +5,10 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 18 22:02:32 2017 Nicolas Polomack
-** Last update Thu May 18 23:29:22 2017 Nicolas Polomack
+** Last update Fri May 19 18:24:57 2017 Nicolas Polomack
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "shell.h"
@@ -54,6 +55,11 @@ int	unset(t_shell *shell, int args)
   int	j;
 
   i = 0;
+  if (args == 1)
+    {
+      dprintf(2, "unset: Too few arguments.\n");
+      return (1);
+    }
   while (shell->cur->av[++i])
     {
       if (!shell->vars)

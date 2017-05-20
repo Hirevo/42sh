@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Thu May  4 23:33:54 2017 Arthur Knoepflin
-** Last update Tue May 16 15:04:42 2017 Nicolas Polomack
+** Last update Fri May 19 19:06:23 2017 Nicolas Polomack
 */
 
 #include <sys/stat.h>
@@ -44,7 +44,6 @@ void	print_prompt(t_shell *shell)
 {
   void	(*tab_prompt[7])(t_shell *);
 
-  
   get_tab_prompt(tab_prompt);
   if (shell->prompt >= 0 && shell->prompt < 7)
     tab_prompt[shell->prompt](shell);

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:07:58 2017 Nicolas Polomack
-** Last update Sun Jan 22 01:16:46 2017 Nicolas Polomack
+** Last update Sat May 20 03:32:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -50,15 +50,15 @@ unsigned int	get_unsigned_int(char *final)
   return (result);
 }
 
-int	is_line_empty(t_shell *shell)
+int	is_line_empty(char *line)
 {
   int	i;
 
   i = -1;
-  while (shell->line[++i] != 0)
-    if (shell->line[i] != ' ' && shell->line[i] != '\t')
+  while (line[++i] != 0)
+    if (line[i] != ' ' && line[i] != '\t')
       return (0);
-  free(shell->line);
+  free(line);
   return (1);
 }
 

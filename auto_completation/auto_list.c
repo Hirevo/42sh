@@ -39,7 +39,7 @@ void		show_autolist(t_shell *shell, t_match *list)
   if (!list)
     return ;
   tmp = list;
-  str = strdup("echo ");
+  str = strdup("echo '");
   printf("\n");
   while (tmp)
     {
@@ -52,7 +52,7 @@ void		show_autolist(t_shell *shell, t_match *list)
 	}
       tmp = tmp->next;
     }
-  if (asprintf(&cmd, "%s | sort | column", str) == -1)
+  if (asprintf(&cmd, "%s' | sort | column", str) == -1)
     handle_error("malloc");
   free(str);
   str = cmd;

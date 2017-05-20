@@ -68,7 +68,7 @@ void	prompt_line(t_shell *shell)
       if (c == 10 || c == 0 || c == 4 ||
           (c == -2 && !shell->tty))
         break;
-      make_action(shell, c);      
+      make_action(shell, c);
     }
   if (shell->tty &&
       ioctl(0, TCSETA, &shell->w.oterm) == -1)

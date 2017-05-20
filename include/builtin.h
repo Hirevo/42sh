@@ -1,11 +1,11 @@
 /*
-** builtin.h for builtins in /home/arthur/delivery/PSU/PSU_2016_42sh
+** builtin.h for 42sh in /home/nicolaspolomack/TurboSh
 ** 
-** Made by Arthur Knoepflin
-** Login   <arthur.knoepflin@epitech.eu>
+** Made by Nicolas Polomack
+** Login   <nicolas.polomack@epitech.eu>
 ** 
-** Started on  Fri May 19 14:20:11 2017 Arthur Knoepflin
-** Last update Fri May 19 14:20:12 2017 Arthur Knoepflin
+** Started on  Fri May 19 19:22:19 2017 Nicolas Polomack
+** Last update Sat May 20 00:37:43 2017 Nicolas Polomack
 */
 
 #ifndef BUILTIN_H_
@@ -96,5 +96,17 @@ void	show_env_parse(t_parse_env *);
 */
 
 int	show_signal(int);
+
+/*
+** where.c
+*/
+
+int	where(t_shell *, int);
+
+/*
+** which.c
+*/
+
+int	which(t_shell *, int);
 
 #endif /* !BUILTIN_H_ */

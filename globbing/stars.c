@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 19 09:59:04 2017 Arthur Knoepflin
-** Last update Fri May 19 13:01:53 2017 Arthur Knoepflin
+** Last update Fri May 19 19:03:11 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -48,7 +48,7 @@ static void	glob_stars(t_shell *shell, char *arg, int *i)
     {
       *i += 1;
       return ;
-    }  
+    }
   list.gl_offs = 1;
   glob(arg, GLOB_TILDE | GLOB_BRACE, NULL, &list);
   if (list.gl_pathc == 0)

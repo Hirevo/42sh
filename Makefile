@@ -5,17 +5,19 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Fri May 19 10:03:15 2017 Arthur Knoepflin
+## Last update Sat May 20 02:40:45 2017 Nicolas Polomack
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
 
-SRC	=	alias/alias.c				\
+SRC	=	magic/magic.c				\
+		alias/alias.c				\
 		alias/edit.c				\
 		alias/parse.c				\
 		alias/unalias.c				\
 		parse/bufferize.c			\
 		builtins.c				\
+		builtins_init.c				\
 		builtins/alias.c			\
 		builtins/cd.c				\
 		builtins/char_double.c			\
@@ -40,6 +42,8 @@ SRC	=	alias/alias.c				\
 		builtins/unalias.c			\
 		builtins/unset.c			\
 		builtins/unsetenv.c			\
+		builtins/where.c			\
+		builtins/which.c			\
 		cd.c					\
 		comment.c				\
 		config/add_env_http.c			\

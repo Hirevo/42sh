@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Fri May 19 10:04:54 2017 Arthur Knoepflin
+** Last update Sat May 20 03:33:48 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -155,7 +155,7 @@ int	indexof_builtin(char *);
 int	exec_builtins(t_shell *, int, int *);
 int	exec_builtins2(t_shell *, int, int *, int);
 unsigned int	get_unsigned_int(char *);
-int	is_line_empty(t_shell *);
+int	is_line_empty(char *);
 int	init_shell(t_shell *, char **);
 int	my_strlen_spe(char *, char);
 void	init_aliases(t_shell *);
@@ -217,6 +217,11 @@ void	init_history(t_shell *);
 ** history2.c
 */
 int	parse_history(t_shell *, int);
+
+/*
+** magic.c
+*/
+int	magic(t_shell *);
 
 /*
 ** exec/exec2.c
@@ -301,7 +306,7 @@ void	tmp_file(t_shell *);
 void	init_redirect(t_command *, int *, int *, int *);
 void	setup_exec(t_command *, int *, int);
 void	skip_commands(t_command **, unsigned char);
-void	set_fground(t_shell *, int);
+void	set_fground(t_shell *);
 
 /*
 ** globbing/globbing.c
@@ -351,6 +356,11 @@ int	is_num(char *);
 ** builtins/set.c
 */
 int	set(t_shell *, int);
+
+/*
+** builtins_init.c
+*/
+int	nb_built(const char **);
 
 /*
 ** builtins/unset.c

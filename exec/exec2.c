@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Thu Jan 19 12:54:48 2017 Nicolas Polomack
-** Last update Thu May 18 22:24:58 2017 Nicolas Polomack
+** Last update Sat May 20 03:31:30 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -59,6 +59,8 @@ void		quick_exec(t_shell *shell, char *str)
   char		**final;
   t_command	*cmds;
 
+  if (is_line_empty(str))
+    return ;
   save = shell->line;
   final = shell->final;
   cmds = shell->commands;

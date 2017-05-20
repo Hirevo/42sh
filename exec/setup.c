@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 20:42:53 2017 Nicolas Polomack
-** Last update Thu May 18 13:42:22 2017 Nicolas Polomack
+** Last update Fri May 19 19:10:42 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -57,7 +57,9 @@ void	skip_commands(t_command **head, unsigned char ret)
     }
 }
 
-void	set_fground(t_shell *shell, int pid)
+void	set_fground(t_shell *shell)
 {
-  tcsetpgrp(0, pid);
+  setpgid(0, shell->pgid);
+  if (shell->pgid == 0)
+    tcsetpgrp(0, getpid());
 }
