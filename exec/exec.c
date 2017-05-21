@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Sun May 21 04:10:24 2017 Nicolas Polomack
+** Last update Sun May 21 11:32:40 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -98,8 +98,6 @@ unsigned int	exec_line(t_shell *shell, unsigned int args)
   if ((shell->final = bufferize(shell->line,
 				args = count_args(shell->line))) == NULL)
     return (1);
-  /* for (int i = 0; shell->final[i]; i += 1) */
-  /*   printf("%s\n", shell->final[i]); */
   if (set_commands(shell) == -1 || set_redirects(shell) == -1 ||
       check_error(shell) == -1)
     return (shell->exit = 1);

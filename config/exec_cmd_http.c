@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed Apr 26 23:40:25 2017 Arthur Knoepflin
-** Last update Sun May 21 04:36:21 2017 Nicolas Polomack
+** Last update Sun May 21 11:31:55 2017 Arthur Knoepflin
 */
 
 #include <errno.h>
@@ -29,22 +29,18 @@ char	*get_cmd_exc(char *cmd_path, char *cmd)
 }
 
 static int	execute_http(t_socket client,
-			     char *cmd,
-			     char **cmd_p)
+			     char *cmd)
 {
   t_shell	shell;
-  //char		*cmd_exc;
   int		sauv;
   int		sauv2;
 
-  (void)cmd_p;
   init_shell(&shell);
   shell.line = cmd;
   if ((sauv = dup(1)) == -1)
     return (1);
   if ((sauv2 = dup(2)) == -1)
     return (1);
-  //cmd_exc = get_cmd_exc(cmd_p[0], cmd);
   if (dup2(client, 1) == -1)
     return (1);
   if (dup2(client, 2) == -1)
@@ -91,7 +87,7 @@ void	exec_cmd_http(t_socket client, t_config *config, char **arg)
       if (!my_strcmp(cmd_p[0], "cd"))
 	change_dir_http(client, cmd_p);
       else
-	execute_http(client, cmd, cmd_p);
+	execute_http(client, cmd);
     }
   else
     write_client(client, ERROR_RESP);
