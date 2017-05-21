@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Sun May 21 11:32:40 2017 Arthur Knoepflin
+** Last update Sun May 21 20:18:18 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -92,6 +92,8 @@ unsigned int	exec_line(t_shell *shell, unsigned int args)
       parse_stars(shell) == 1 ||
       (shell->line = my_epurstr(shell->line)) == NULL)
     return (set_error(shell, 1));
+  if (is_line_empty(shell->line))
+    return (0);
   replace_home(shell);
   free(shell->last);
   shell->last = NULL;
