@@ -5,7 +5,7 @@
 ** Login   <benjamin.solca@epitech.eu>
 **
 ** Started on  Sun May 21 16:21:35 2017 Benjamin
-** Last update Sun May 21 16:43:31 2017 Nicolas Polomack
+** Last update Sun May 21 17:02:15 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -22,7 +22,7 @@ int	call_parser_ll(t_shell *shell, int args)
   shell = shell;
   args = args;
   my_putstr("Type a CMD and see the tree: ");
-  str = get_next_line(0)
+  str = get_next_line(0);
   if (!parser_ll(str))
     {
       free(str);
