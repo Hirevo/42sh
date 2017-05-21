@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:42:33 2017 Nicolas Polomack
-** Last update Tue May 16 15:16:40 2017 Nicolas Polomack
+** Last update Sun May 21 16:31:00 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -51,7 +51,8 @@ int		disp_all_alias(t_shell *shell)
   head = shell->alias;
   while (head != NULL)
     {
-      printf("alias %s='%s'\n", head->alias, head->command);
+      my_printf("alias %s='%s'\n",
+		head->alias, head->command);
       head = head->next;
     }
   return (0);
