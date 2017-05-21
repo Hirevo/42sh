@@ -5,7 +5,7 @@
 ** Login   <benjamin.solca@epitech.eu>
 **
 ** Started on  Thu May 11 15:54:46 2017 Benjamin
-** Last update Sun May 21 15:46:09 2017 Benjamin
+** Last update Sun May 21 15:55:47 2017 Benjamin
 */
 
 #include <stdlib.h>
@@ -44,7 +44,7 @@ static int	count_level_ast(t_ast *ast, int lvl_new)
   return (count);
 }
 
-static t_ast	*set_ast_level(t_ast *ast, t_ast *new, t_token *token)
+static t_ast	*set_ast_level(t_ast *ast, t_ast *new)
 {
   int		lvl_new;
   int		count_ast;
@@ -76,5 +76,5 @@ t_ast	*ast_level(t_ast *ast, t_token *token)
       new->left = ast;
       return (set_ast(new, token));
     }
-  return (set_ast_level(ast, new, token));
+  return (set_ast_level(ast, new));
 }

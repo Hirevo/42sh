@@ -5,7 +5,7 @@
 ** Login   <benjamin.solca@epitech.eu>
 **
 ** Started on  Sun Apr  2 19:17:22 2017 Benjamin
-** Last update Sat May 20 19:37:40 2017 Arthur Knoepflin
+** Last update Sun May 21 15:57:55 2017 Benjamin
 */
 
 #ifndef BS_H_
@@ -51,9 +51,9 @@ void	my_showstr(char *str);
 void	my_sort_int_tab(int* tab, int size);
 void	my_sort_wordtab(char **tab);
 int	my_square_root(int nb);
-char	**my_str_to_wordtab(char *str, char *to_parse);
+char	**bs_str_to_wordtab(char *str, char *to_parse);
 char	*my_strcapitalize(char *str);
-char	*my_strcat(char *dest, char *src);
+char	*bs_strcat(char *dest, char *src);
 int	my_strcmp(char *s1, char *s2);
 char	*my_strcpy(char *dest, char *src);
 char	*my_strdup(char *str);

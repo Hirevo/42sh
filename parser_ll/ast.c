@@ -5,7 +5,7 @@
 ** Login   <benjamin.solca@epitech.eu>
 **
 ** Started on  Wed May 10 11:22:56 2017 Benjamin
-** Last update Sun May 21 15:46:03 2017 Benjamin
+** Last update Sun May 21 15:56:55 2017 Benjamin
 */
 
 #include <stdlib.h>
@@ -14,7 +14,6 @@
 
 static t_ast	*set_ast_right(t_ast *ast, char *type, char *value)
 {
-  t_ast		*tmp;
   t_ast		*new;
 
   if (!(new = malloc(sizeof(t_ast))))
@@ -25,25 +24,6 @@ static t_ast	*set_ast_right(t_ast *ast, char *type, char *value)
   new->type = my_strdup(type);
   new->value = my_strdup(value);
   return (ast);
-}
-
-static t_ast	*set_ast_left(t_ast *ast, char *type, char *value)
-{
-  t_ast		*tmp;
-  t_ast		*new;
-
-  if (!(new = malloc(sizeof(t_ast))))
-    return (NULL);
-  my_memset(new, 0, sizeof(t_ast));
-  ast = ast ? ast : new;
-  tmp = ast;
-  while (tmp->left)
-    tmp = tmp->left;
-  tmp->left = (tmp == new) ? 0 : new;
-  new->father = (tmp == new) ? 0 : tmp;
-  new->type = my_strdup(type);
-  new->value = my_strdup(value);
-  return (new);
 }
 
 static t_ast	*ast_rec(t_ast *ast, t_token *token)
