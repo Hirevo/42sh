@@ -24,7 +24,7 @@ char	**bufferize(char *av, int n)
 
   args = 0;
   i = 0;
-  if ((final = malloc(sizeof(char *) * (n + 1))) == NULL)
+  if ((final = malloc(sizeof(char *) * (n + 2))) == NULL)
     return (NULL);
   while ((i = get_next_arg(av, &(final[args]), i)) != -2)
     {

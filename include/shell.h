@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sat May 20 03:33:48 2017 Nicolas Polomack
+** Last update Sun May 21 02:07:25 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -39,6 +39,12 @@ typedef struct		s_alias
   char			*command;
   struct s_alias	*next;
 }			t_alias;
+
+typedef struct		s_subst
+{
+  int			idx;
+  char			**list;
+}			t_subst;
 
 typedef struct		s_history
 {
@@ -112,6 +118,7 @@ typedef struct		s_shell
   char			*cwd;
   pid_t			pgid;
   t_alias		*alias;
+  t_subst		subst;
   t_hist_ctrl		hist;
   t_command		*commands;
   t_command		*cur;
@@ -192,6 +199,13 @@ int	parse_alias(t_shell *);
 ** alias/unalias.c
 */
 int	unalias(t_shell *, char **);
+
+/*
+** alias/loop.c
+*/
+void	free_subst(t_shell *);
+int	detect_loop(t_shell *, char *, int);
+
 
 /*
 ** comment.c

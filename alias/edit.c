@@ -5,20 +5,22 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Mar 25 20:19:50 2017 Nicolas Polomack
-** Last update Sat May 20 22:20:18 2017 Nicolas Polomack
+** Last update Sun May 21 02:07:45 2017 Nicolas Polomack
 */
 
+#include <string.h>
 #include <stdlib.h>
 #include "my.h"
 #include "shell.h"
 
-int	insert_alias(t_shell *shell, t_alias *e, int *len, int i)
+int	insert_alias(t_shell *shell, t_alias *e,
+		     int *len, int i)
 {
   char	*replace;
 
   len[1] = my_strlen(shell->line) - len[0] + my_strlen(e->command);
   if ((replace = malloc(len[1] + 1)) == NULL)
-    return (-1);
+    handle_error("malloc");
   my_strncpy(replace, shell->line, i);
   my_strcat(replace, e->command);
   my_strcat(replace, shell->line + i + len[0]);
@@ -27,7 +29,8 @@ int	insert_alias(t_shell *shell, t_alias *e, int *len, int i)
   return (0);
 }
 
-int	replace(char *last, int len[2], char *line, int *i)
+static int	replace(char *last, int len[2],
+			char *line, int *i)
 {
   free(last);
   *i += (len[0] - 1);
@@ -35,7 +38,8 @@ int	replace(char *last, int len[2], char *line, int *i)
   return (0);
 }
 
-int	check_alias(t_shell *shell, t_alias *e, int *i, char *last)
+int	check_alias(t_shell *shell, t_alias *e,
+		    int *i, char *last)
 {
   int		len[2];
   char		*line;
@@ -47,7 +51,8 @@ int	check_alias(t_shell *shell, t_alias *e, int *i, char *last)
     {
       if (my_strcmp(line, e->alias) == 0)
 	{
-	  if (insert_alias(shell, e, len, *i) == -1)
+	  if (detect_loop(shell, line, *i) == -1 ||
+	      insert_alias(shell, e, len, *i) == -1)
 	    return (-1);
 	  free(last);
 	  last = line;
@@ -73,7 +78,8 @@ int		parse_alias(t_shell *shell)
   i = -1;
   last = NULL;
   c = 1;
-  while (shell->tty && shell->line[++i])
+  memset((&shell->subst), 0, sizeof(t_subst));
+  while (shell->line[++i])
     if (is_space(shell->line[i]) || is_separator(shell->line[i]))
       {
 	while (shell->line[i] &&
@@ -82,11 +88,9 @@ int		parse_alias(t_shell *shell)
 	    c = 1;
 	i -= 1;
       }
-    else if (c)
-      {
-	if (check_alias(shell, e, &i, last) == -1)
-	  return (-1);
-	c = 0;
-      }
+    else if (c && !(c = 0))
+      if (check_alias(shell, e, &i, last) == -1)
+	return (-1);
+  free_subst(shell);
   return (0);
 }

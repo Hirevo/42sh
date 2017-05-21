@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:50:20 2017 Nicolas Polomack
-** Last update Thu May 18 01:41:45 2017 Nicolas Polomack
+** Last update Sun May 21 00:04:14 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -33,13 +33,13 @@ unsigned int	count_args(char *str)
 	    return (-1);
 	  args += 1;
 	}
-      if (i == 0 && str[i] != ' ' && str[i] != '\t')
+      else if (i == 0 && str[i] != ' ' && str[i] != '\t')
         args += 1;
       else if ((str[i] != ' ' && str[i] != '\t') &&
 	       (str[i - 1] == ' ' || str[i - 1] == '\t'))
         args += 1;
     }
-  return (args);
+  return (args + 1);
 }
 
 int	get_quoted_text(char *arg, char **final, int l, char c)
@@ -77,8 +77,10 @@ int	get_next_arg(char *arg, char **final, int l)
     arg += 1;
   if (*arg == '"' || *arg == '\'')
     return (get_quoted_text(arg, final, l, *arg));
-  while (arg[j] != ' ' && arg[j] != '\t' && arg[j] != 0)
-  	j += 1;
+  while (arg[j] != ' ' && arg[j] != '\t' &&
+	 arg[j] != '\'' && arg[j] != '"' &&
+	 arg[j] != 0)
+    j += 1;
   if ((*final = malloc(j + 1)) == NULL)
     return (-1);
   while (++i < j)
