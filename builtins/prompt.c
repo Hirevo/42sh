@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 17:52:03 2017 Arthur Knoepflin
-** Last update Sun May 21 03:50:47 2017 Nicolas Polomack
+** Last update Sun May 21 23:37:52 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -52,7 +52,7 @@ int	prompt(t_shell *shell, int args)
 	  free(choice);
 	  return (0);
 	}
-      my_printf("Vous etes con ou quoi\n");
+      my_printf("Nope\n");
       free(choice);
     }
   return (0);
