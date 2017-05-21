@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:42:33 2017 Nicolas Polomack
-** Last update Sun May 21 16:31:00 2017 Nicolas Polomack
+** Last update Sun May 21 17:26:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -45,13 +45,20 @@ int		add_alias(t_shell *shell, char *alias,
 int		disp_all_alias(t_shell *shell)
 {
   t_alias	*head;
+  int		mode;
+  int		i;
 
   if (shell->alias == NULL)
     return (0);
   head = shell->alias;
   while (head != NULL)
     {
-      my_printf("alias %s='%s'\n",
+      mode = 0;
+      i = -1;
+      while (head->command[++i])
+	if (head->command[i] == ' ')
+	  mode = 1;
+      my_printf(mode ? "%s\t(%s)\n" : "%s\t%s\n",
 		head->alias, head->command);
       head = head->next;
     }
