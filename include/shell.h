@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May 21 05:06:30 2017 Nicolas Polomack
+** Last update Sun May 21 11:22:24 2017 Arthur Knoepflin
 */
 
 #ifndef SHELL_H_
@@ -205,7 +205,6 @@ int	unalias(t_shell *, char **);
 */
 void	free_subst(t_shell *);
 int	detect_loop(t_shell *, char *, int);
-
 
 /*
 ** comment.c

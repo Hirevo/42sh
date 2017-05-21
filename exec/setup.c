@@ -1,11 +1,11 @@
 /*
-1;4803;0c** setup.c for minishell2 in /home/nicolaspolomack/shell2
+** setup.c for minishell2 in /home/nicolaspolomack/shell2
 ** 
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 20:42:53 2017 Nicolas Polomack
-** Last update Sun May 21 04:12:36 2017 Nicolas Polomack
+** Last update Sun May 21 11:35:11 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>

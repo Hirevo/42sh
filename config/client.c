@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sun Apr 23 12:05:25 2017 Arthur Knoepflin
-** Last update Sun May 21 04:01:08 2017 Nicolas Polomack
+** Last update Sun May 21 11:27:36 2017 Arthur Knoepflin
 */
 
 #include <stdio.h>
@@ -25,8 +25,8 @@ static int	limit_client(int actual, t_socket csock)
 {
   if (actual >= MAX_CLIENTS)
     {
-      my_putstr("Trop de clients connecté en même\
- temps: Deconnexion automatique\n");
+      my_putstr("Too many clients in the same time\
+: Automatic deconnexion\n");
       close(csock);
       return (1);
     }
