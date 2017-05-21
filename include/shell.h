@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May 21 04:35:40 2017 Nicolas Polomack
+** Last update Sun May 21 05:06:30 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -233,9 +233,14 @@ void	init_history(t_shell *);
 int	parse_history(t_shell *, int);
 
 /*
-** magic.c
+** magic/magic.c
 */
 int	magic(t_shell *);
+
+/*
+** magic/construct.c
+*/
+char	*construct_magic(char **);
 
 /*
 ** exec/exec2.c
