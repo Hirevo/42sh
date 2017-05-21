@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 20 02:34:26 2017 Nicolas Polomack
-** Last update Sun May 21 04:23:31 2017 Nicolas Polomack
+** Last update Sun May 21 04:52:57 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -27,19 +27,46 @@ static int	get_len(t_shell *shell, int i)
   return ((int)str);
 }
 
+static char	*construct_magic(char **tab)
+{
+  int		i;
+  int		len;
+  char		*ret;
+
+  len = 0;
+  i = -1;
+  while (tab[++i])
+    len += ((!!i) + strlen(tab[i]) + 2);
+  if ((ret = malloc(len + 1)) == NULL)
+    handle_error("malloc");
+  *ret = 0;
+  i = -1;
+  while (tab[++i])
+    sprintf(ret, "%s '%s'", ret, tab[i]);
+  //strcat(i ? strcat(ret, " ") : ret, tab[i]);
+  return (ret);
+}
+
 static void	insert_inline(t_shell *shell, char **buffer, int i, int len)
 {
   char		*result;
   char		*ret;
   int		l;
+  int		e;
 
   if (buffer)
     {
-      result = construct_alias(buffer);
+      e = -1;
+      while (buffer[++e])
+	{
+	  l = -1;
+	  while (buffer[e][++l])
+	    buffer[e][l] = (buffer[e][l] == '\'') ?
+	      '"' : buffer[e][l];
+	}
+      result = construct_magic(buffer);
       l = -1;
-      while (result[++l])
-	result[l] = (result[l] == '\'') ? '"' : result[l];
-      if ((asprintf(&ret, "%.*s'%s'%s", i, shell->line, result,
+      if ((asprintf(&ret, "%.*s%s%s", i, shell->line, result,
 		    shell->line + i + len + 2)) == -1)
 	handle_error("malloc");
     }
