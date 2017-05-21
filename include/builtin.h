@@ -1,11 +1,11 @@
 /*
 ** builtin.h for 42sh in /home/nicolaspolomack/TurboSh
-** 
+**
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
-** 
+**
 ** Started on  Fri May 19 19:22:19 2017 Nicolas Polomack
-** Last update Sat May 20 00:37:43 2017 Nicolas Polomack
+** Last update Sun May 21 16:31:40 2017 Benjamin
 */
 
 #ifndef BUILTIN_H_
@@ -31,6 +31,7 @@ int		unalias_b(t_shell *, int);
 int		unsetenv_b(t_shell *, int);
 int		prompt(t_shell *, int);
 int		env_b(t_shell *, int);
+int		call_parser_ll(t_shell *, int);
 t_parse_env	*parse_env(char **);
 
 /*
