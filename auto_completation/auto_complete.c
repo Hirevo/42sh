@@ -5,7 +5,7 @@
 ** Login   <maxime.jenny@epitech.eu>
 **
 ** Started on  Tue May  9 20:38:46 2017 Maxime Jenny
-** Last update	Sat May 20 18:58:52 2017 Full Name
+** Last update	Sun May 21 11:34:56 2017 Full Name
 */
 
 #include <stdlib.h>
@@ -21,8 +21,7 @@
 #include "my.h"
 #include "prompt.h"
 
-static int	find_matches(t_match **list, char *path, char *str,
-			     t_auto *t)
+static int	find_matches(t_match **list, char *path, char *str, t_auto *t)
 {
   struct dirent	**namelist;
   int		n;
@@ -134,9 +133,10 @@ int		auto_complete(t_shell *shell, char *path)
   i = 0;
   err = 0;
   while (parsed[i] && err != 1)
-    if ((err = find_matches(&list, parsed[i++], token.token, &token)) == -1
-	|| (for_bi(&list, token.token, &token)) == -1)
+    if ((err = find_matches(&list, parsed[i++], token.token, &token)) == -1)
       return (-1);
+  if ((for_bi(&list, token.token, &token)) == -1)
+    return (-1);
   reprint_and_free(shell, &list, &token);
   my_free_tab((void **)parsed);
   free(token.pre_token);
