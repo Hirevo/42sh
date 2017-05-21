@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:38:06 2017 Nicolas Polomack
-** Last update Sun May  7 00:55:03 2017 Nicolas Polomack
+** Last update Sun May 21 19:50:02 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -52,7 +52,8 @@ void		save_alias(t_shell *shell)
   int		fd;
   char		*path;
 
-  if ((shell->home == NULL) || (path = malloc(512)) == NULL)
+  if (!(shell->tty)|| (shell->home == NULL) ||
+      (path = malloc(512)) == NULL)
     return ;
   path[0] = 0;
   path = my_strcat(path, shell->home);
@@ -60,8 +61,8 @@ void		save_alias(t_shell *shell)
     path[my_strlen(shell->home)] = '/';
   path[my_strlen(shell->home) + 1] = 0;
   path = my_strcat(path, ALIAS_FILE);
-  if ((fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR |
-                 S_IRGRP | S_IROTH)) == -1)
+  if ((fd = open(path, O_WRONLY | O_CREAT | O_TRUNC,
+		 0644)) == -1)
     return ;
   head = shell->alias;
   while (head != NULL)
