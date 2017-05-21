@@ -22,6 +22,7 @@
 #include <curses.h>
 #include "my.h"
 #include "get_next_line.h"
+#include "parser_ll.h"
 #include "shell.h"
 
 void	diagnose_status(unsigned int status)

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 **
 ** Started on  Mon May 15 10:51:54 2017 Arthur Knoepflin
-** Last update Sun May 21 16:29:21 2017 Nicolas Polomack
+** Last update Sun May 21 16:38:57 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -34,6 +34,7 @@ static const char	*g_built_tab[] =
     "unset",
     "where",
     "which",
+    "parserll",
     NULL
   };
 
@@ -85,6 +86,7 @@ static void	init_fnt_builtin(int (*built_fnt[nb_built(g_built_tab)])
   built_fnt[14] = &unset;
   built_fnt[15] = &where;
   built_fnt[16] = &which;
+  built_fnt[17] = &call_parser_ll;
 }
 
 char	**get_builtin_tab()

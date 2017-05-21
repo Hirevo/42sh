@@ -5,7 +5,7 @@
 ## Login   <nicolas.polomack@epitech.eu>
 ##
 ## Started on  Tue Nov 15 09:05:43 2016 Nicolas Polomack
-## Last update Sun May 21 05:05:40 2017 Nicolas Polomack
+## Last update Sun May 21 16:33:22 2017 Benjamin
 ##
 
 MAKE1	=	make -sC lib/my --no-print-directory
@@ -34,6 +34,7 @@ SRC	=	alias/alias.c				\
 		builtins/exit.c				\
 		builtins/launch_soft.c			\
 		builtins/parse_env.c			\
+		builtins/parserll.c			\
 		builtins/prompt.c			\
 		builtins/set.c				\
 		builtins/setenv.c			\
@@ -103,6 +104,19 @@ SRC	=	alias/alias.c				\
 		misc.c					\
 		parse/parse.c				\
 		parse/error.c				\
+		parser_ll/ast_arg.c			\
+		parser_ll/ast_lvl_build_branch.c	\
+		parser_ll/ast_lvl.c			\
+		parser_ll/ast.c				\
+		parser_ll/parse.c			\
+		parser_ll/print_ast.c			\
+		parser_ll/token.c			\
+		parser_ll/set/arg.c			\
+		parser_ll/set/op_high.c			\
+		parser_ll/set/op_low.c			\
+		parser_ll/set/redir.c			\
+		parser_ll/lib/my_str_to_wordtab.c	\
+		parser_ll/lib/my_strcat.c		\
 		path/path.c				\
 		path/path2.c				\
 		print.c					\
