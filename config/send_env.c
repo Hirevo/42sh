@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 21:32:22 2017 Arthur Knoepflin
-** Last update Wed May 17 12:50:48 2017 Arthur Knoepflin
+** Last update Sun May 21 04:08:48 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -61,6 +61,8 @@ void	send_env(t_socket client, t_config *config, char **arg)
   char	*send;
   int	i;
 
+  (void)config;
+  (void)arg;
   i = 0;
   send = my_strdup("[");
   while (environ[i])

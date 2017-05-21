@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 18 20:41:29 2017 Nicolas Polomack
-** Last update Fri May 19 10:43:08 2017 Nicolas Polomack
+** Last update Sun May 21 03:56:05 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -33,7 +33,6 @@ int	set(t_shell *shell, int args)
   char	*str;
   char	*comp;
   int	i;
-  int	j;
   int	ret;
 
   if (args == 1)

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat May  6 22:51:45 2017 Arthur Knoepflin
-** Last update Tue May  9 16:31:53 2017 Arthur Knoepflin
+** Last update Sun May 21 04:15:44 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -43,6 +43,7 @@ int		new_client_dc(t_socket sock)
       return (1);
     }
   close(csock);
+  return (0);
 }
 
 static int	client_talk_dc(t_socket client,
@@ -50,7 +51,6 @@ static int	client_talk_dc(t_socket client,
 			       char **prompt,
 			       int *nb_char)
 {
-  int		ret;
   int		len;
   char		*buf;
 
@@ -90,4 +90,5 @@ int	core_server_dc(t_socket sock, t_socket client, fd_set *rdfs)
     }
   if (FD_ISSET(STDIN_FILENO, rdfs))
     free(get_next_line(0));
+  return (0);
 }

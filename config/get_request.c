@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed May 17 10:28:17 2017 Arthur Knoepflin
-** Last update Wed May 17 12:48:57 2017 Arthur Knoepflin
+** Last update Sun May 21 04:07:08 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -32,7 +32,7 @@ int	nb_request()
   int	i;
 
   i = 0;
-  while (request_tab && request_tab[i])
+  while (request_tab[i])
     i += 1;
   return (i);
 }

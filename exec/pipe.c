@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Sat Jan 14 18:04:39 2017 Nicolas Polomack
-** Last update Sat May 20 19:28:12 2017 Nicolas Polomack
+** Last update Sun May 21 04:12:04 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -75,28 +75,29 @@ void	exec_piped_child(int ret,
 			 t_shell *shell)
 {
   int	i;
-  int	args;
 
   signal(SIGINT, SIG_DFL);
   set_fground(shell);
   setup_exec(head, fds, ret);
-  args = -1 + 0 * (i = 0);
+  ret = -1 + 0 * (i = 0);
   if (head->link == '|')
     {
       close(fds[0]);
       close(fds[1]);
     }
-  while (head->av[++args]);
-  if (is_path(shell->cur->av[0]) || exec_builtins(shell, args, &i) == 0)
-    if ((i = check_access(shell->cur->av, shell)) >= 0)
-      exec_child(shell, i);
-    else
-      {
-        my_print_err(shell->cur->av[0]);
-        my_print_err((i == -1) ? ": Command not found.\n" :
-		     ": Permission denied.\n");
-        i = 1;
-      }
+  while (head->av[++ret]);
+  if (is_path(shell->cur->av[0]) || exec_builtins(shell, ret, &i) == 0)
+    {
+      if ((i = check_access(shell->cur->av, shell)) >= 0)
+	exec_child(shell, i);
+      else
+	{
+	  my_print_err(shell->cur->av[0]);
+	  my_print_err((i == -1) ? ": Command not found.\n" :
+		       ": Permission denied.\n");
+	  i = 1;
+	}
+    }
   exit(i);
 }
 

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 00:50:04 2017 Arthur Knoepflin
-** Last update Fri May  5 01:39:52 2017 Nicolas Polomack
+** Last update Sun May 21 04:25:33 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -17,6 +17,7 @@ void	minimalist_prompt(t_shell *shell)
 {
   char	*user;
 
+  (void)shell;
   if ((user = getenv("LOGNAME")))
     my_printf("%s) ", user);
   else

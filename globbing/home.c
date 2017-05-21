@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 13 21:14:22 2017 Nicolas Polomack
-** Last update Sat May 20 21:47:32 2017 Nicolas Polomack
+** Last update Sun May 21 04:21:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -18,15 +18,6 @@ static int	skip_spaces(t_shell *shell, int *i)
     *i += 1;
   *i -= 1;
   return (1);
-}
-
-static void	other_case(t_shell *shell, int *i, int *can_edit)
-{
-  while (shell->line[*i] && !is_separator(shell->line[*i]) &&
-         !is_space(shell->line[*i]))
-    *i += 1;
-  *i -= 1;
-  *can_edit = 1;
 }
 
 static void	insert_home(t_shell *shell, int i)

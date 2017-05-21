@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 17:04:32 2017 Nicolas Polomack
-** Last update Tue May 16 22:21:04 2017 Nicolas Polomack
+** Last update Sun May 21 04:29:07 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -46,7 +46,7 @@ void	buffer_seq(t_shell *shell, char **str, int *dir, char c)
 void	move_forw(t_shell *shell)
 {
   if (shell->line &&
-      shell->w.cur < strlen(shell->line))
+      shell->w.cur < ((int)strlen(shell->line)))
     {
       shell->w.cur += 1;
       write(1, shell->w.forw, strlen(shell->w.forw));

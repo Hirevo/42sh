@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sun Apr 23 12:05:25 2017 Arthur Knoepflin
-** Last update Mon May  8 10:58:27 2017 Arthur Knoepflin
+** Last update Sun May 21 04:01:08 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -42,7 +42,6 @@ int		new_client(t_socket *clients,
   t_sockaddr_in	csin;
   socklen_t	sinsize;
   t_socket	csock;
-  char		buffer[BUF_SIZE];
 
   sinsize = sizeof(csin);
   if ((csock = accept(sock, (t_sockaddr *)&csin, &sinsize)) == SOCKET_ERROR)
@@ -55,6 +54,7 @@ int		new_client(t_socket *clients,
   FD_SET(csock, rdfs);
   clients[*actual] = csock;
   *actual += 1;
+  return (0);
 }
 
 static void	client_disconnect(t_socket *clients, int *actual, int i)

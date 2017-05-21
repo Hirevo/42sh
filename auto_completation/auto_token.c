@@ -16,7 +16,6 @@
 int		find_a_path(char **path, t_auto *token)
 {
   int		i;
-  int		g;
   char		*str;
   char		*new;
 

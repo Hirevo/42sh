@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Thu Jan 19 12:39:44 2017 Nicolas Polomack
-** Last update Sun Apr  2 20:46:20 2017 Nicolas Polomack
+** Last update Sun May 21 04:33:14 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -14,8 +14,6 @@
 
 int	check_exit(t_shell *shell, int args)
 {
-  int	i;
-
   if (args > 2 || (args == 2 &&
 		   (shell->cur->av[1][0] < '0' || shell->cur->av[1][0] > '9') &&
 		   shell->cur->av[1][0] != '-'))

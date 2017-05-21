@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May  8 12:13:20 2017 Arthur Knoepflin
-** Last update Thu May 18 23:37:57 2017 Arthur Knoepflin
+** Last update Sun May 21 04:16:39 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -108,4 +108,5 @@ int			core_client_dc(t_client *cli)
       else if (FD_ISSET(cli->sock, &rdfs))
 	stop = read_sock(cli, &prompt, &nb_char);
     }
+  return (0);
 }

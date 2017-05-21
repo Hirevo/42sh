@@ -47,7 +47,6 @@ void	diagnose_status(unsigned int status)
 
 void		reload_shell(t_shell *shell)
 {
-  int		i;
   int		k;
   char		*path;
 
@@ -66,7 +65,7 @@ void		reload_shell(t_shell *shell)
   shell->current = get_current(shell->current, shell->home);
 }
 
-int	execute(t_shell *shell)
+void	execute(t_shell *shell)
 {
   char	*str;
 
@@ -81,22 +80,16 @@ int	execute(t_shell *shell)
   clear_comment(shell);
   if (!is_line_empty(shell->line))
     {
-      if (str = get_alias_cmd(shell, "postcmd"))
+      if ((str = get_alias_cmd(shell, "postcmd")))
 	quick_exec(shell, str);
       shell->exit = exec_line(shell, shell->tty);
-      if (str = get_alias_cmd(shell, "precmd"))
+      if ((str = get_alias_cmd(shell, "precmd")))
 	quick_exec(shell, str);
     }
 }
 
-static int	start_standard_shell(int ac,
-				     char **av,
-				     char **ae,
-				     t_shell *shell)
+static int	start_standard_shell(t_shell *shell)
 {
-  int		exit;
-
-  exit = 0;
   signal(SIGINT, SIG_IGN);
   signal(SIGTTOU, SIG_IGN);
   while (1)
@@ -111,7 +104,7 @@ static int	start_standard_shell(int ac,
       write(1, "exit\n", 5);
       if (shell->ioctl)
 	{
-	  ioctl(0, TCSETA, &shell->w.oterm) == -1;
+	  ioctl(0, TCSETA, &shell->w.oterm);
 	  printf(tigetstr("rmkx"));
 	  fflush(stdout);
 	}
@@ -119,17 +112,17 @@ static int	start_standard_shell(int ac,
   return (shell->exit);
 }
 
-int		main(int ac, char **av, char **ae)
+int		main(int ac, char **av)
 {
   t_shell	shell;
   int		fd;
 
   setenv("SHELL", av[0], 1);
-  if (init_shell(&shell, ae) == -1)
+  if (init_shell(&shell) == -1)
     return (84);
   shell.av = av + ((ac == 1) ? 0 : 1);
   if (ac == 1)
-    return (start_standard_shell(ac, av, ae, &shell));
+    return (start_standard_shell(&shell));
   else
     {
       if ((fd = open(av[1], O_RDONLY)) == -1)
@@ -142,7 +135,7 @@ int		main(int ac, char **av, char **ae)
 	return (1);
       shell.tty = 0;
       shell.ioctl = 0;
-      return (start_standard_shell(ac, av, ae, &shell));
+      return (start_standard_shell(&shell));
     }
   return (0);
 }

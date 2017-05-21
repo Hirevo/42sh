@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 19:00:07 2017 Nicolas Polomack
-** Last update Wed May 17 15:18:01 2017 Nicolas Polomack
+** Last update Sun May 21 04:28:32 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -16,8 +16,6 @@
 
 void	remove_char(t_shell *shell)
 {
-  int	c;
-
   if (!shell->line || !strlen(shell->line)
       || !shell->w.cur)
     return ;

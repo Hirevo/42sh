@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Wed May 17 15:47:48 2017 Nicolas Polomack
-** Last update Thu May 18 10:02:53 2017 Nicolas Polomack
+** Last update Sun May 21 04:26:13 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -35,7 +35,7 @@ void	tmp_file(t_shell *shell)
   if (shell->exit == 1)
     return ;
   lseek(fd, SEEK_SET, 0);
-  while (shell->line = get_next_line(fd))
+  while ((shell->line = get_next_line(fd)))
     {
       my_printf("%s\n", shell->line);
       exec_line(shell, 1);

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Tue Jan  3 19:13:06 2017 Nicolas Polomack
-** Last update Sun May 21 02:07:25 2017 Nicolas Polomack
+** Last update Sun May 21 04:35:40 2017 Nicolas Polomack
 */
 
 #ifndef SHELL_H_
@@ -163,7 +163,7 @@ int	exec_builtins(t_shell *, int, int *);
 int	exec_builtins2(t_shell *, int, int *, int);
 unsigned int	get_unsigned_int(char *);
 int	is_line_empty(char *);
-int	init_shell(t_shell *, char **);
+int	init_shell(t_shell *);
 int	my_strlen_spe(char *, char);
 void	init_aliases(t_shell *);
 void	set_alias(t_shell *, char *);

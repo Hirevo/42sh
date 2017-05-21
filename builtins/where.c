@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Fri May 19 23:21:05 2017 Nicolas Polomack
-** Last update Sat May 20 00:23:32 2017 Nicolas Polomack
+** Last update Sun May 21 03:57:12 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -56,7 +56,7 @@ static int	search(t_shell *shell, int i)
     }
   if (indexof_builtin(shell->cur->av[i]) != -1)
     {
-      printf("%s is a shell built-in\n");
+      printf("%s is a shell built-in\n", shell->cur->av[i]);
       ret = 0;
     }
   if (shell->path)
@@ -70,6 +70,7 @@ int	where(t_shell *shell, int args)
   int	i;
   int	ret;
 
+  (void)args;
   i = 0;
   ret = 0;
   while (shell->cur->av[++i])

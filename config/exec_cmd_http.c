@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Wed Apr 26 23:40:25 2017 Arthur Knoepflin
-** Last update Thu May 18 00:12:53 2017 Arthur Knoepflin
+** Last update Sun May 21 04:36:21 2017 Nicolas Polomack
 */
 
 #include <errno.h>
@@ -33,17 +33,18 @@ static int	execute_http(t_socket client,
 			     char **cmd_p)
 {
   t_shell	shell;
-  char		*cmd_exc;
+  //char		*cmd_exc;
   int		sauv;
   int		sauv2;
 
-  init_shell(&shell, environ);
+  (void)cmd_p;
+  init_shell(&shell);
   shell.line = cmd;
   if ((sauv = dup(1)) == -1)
     return (1);
   if ((sauv2 = dup(2)) == -1)
     return (1);
-  cmd_exc = get_cmd_exc(cmd_p[0], cmd);
+  //cmd_exc = get_cmd_exc(cmd_p[0], cmd);
   if (dup2(client, 1) == -1)
     return (1);
   if (dup2(client, 2) == -1)
@@ -53,6 +54,7 @@ static int	execute_http(t_socket client,
   dup2(sauv2, 2);
   close(sauv);
   close(sauv2);
+  return (0);
 }
 
 static int	change_dir_http(t_socket client, char **cmd_p)
@@ -69,6 +71,7 @@ static int	change_dir_http(t_socket client, char **cmd_p)
     }
   else
     write_client(client, "Error: precise a folder");
+  return (0);
 }
 
 void	exec_cmd_http(t_socket client, t_config *config, char **arg)
@@ -76,6 +79,7 @@ void	exec_cmd_http(t_socket client, t_config *config, char **arg)
   char	*cmd;
   char	**cmd_p;
 
+  (void)config;
   if (nb_args(arg) >= 4)
     {
       if ((cmd = malloc(sizeof(char) * (my_strlen(arg[3]) + 1))) == NULL)

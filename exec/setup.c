@@ -1,11 +1,11 @@
 /*
-** setup.c for minishell2 in /home/nicolaspolomack/shell2
+1;4803;0c** setup.c for minishell2 in /home/nicolaspolomack/shell2
 ** 
 ** Made by Nicolas Polomack
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sun Apr  2 20:42:53 2017 Nicolas Polomack
-** Last update Fri May 19 19:10:42 2017 Nicolas Polomack
+** Last update Sun May 21 04:12:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -26,8 +26,6 @@ void	init_redirect(t_command *head, int *r,
 
 void	setup_exec(t_command *head, int *fds, int ret)
 {
-  int	i;
-
   dup2(ret, 0);
   if (ret != 0)
     close(ret);

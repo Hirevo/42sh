@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Mon May 15 13:30:51 2017 Arthur Knoepflin
-** Last update Mon May 15 13:43:22 2017 Arthur Knoepflin
+** Last update Sun May 21 03:48:57 2017 Nicolas Polomack
 */
 
 #include "shell.h"
@@ -19,4 +19,5 @@ int	alias(t_shell *shell, int args)
   else if (args >= 3)
     return (add_alias(shell, shell->cur->av[1],
 		      construct_alias(shell->cur->av + 2)));
+  return (1);
 }

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 20 02:34:26 2017 Nicolas Polomack
-** Last update Sat May 20 23:12:25 2017 Arthur Knoepflin
+** Last update Sun May 21 04:23:31 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -103,13 +103,15 @@ int		magic(t_shell *shell)
 	  i += 1;
       }
     else if (shell->line[i] == '`')
-      if ((len = get_len(shell, i)) >= 0)
-	{
-	  line = strndup(shell->line + i + 1, len);
-	  exec_magic(shell, line, i, len);
-	  i = -1;
-	}
-      else if (len == -1)
-	return (-1);
+      {
+	if ((len = get_len(shell, i)) >= 0)
+	  {
+	    line = strndup(shell->line + i + 1, len);
+	    exec_magic(shell, line, i, len);
+	    i = -1;
+	  }
+	else if (len == -1)
+	  return (-1);
+      }
   return (0);
 }

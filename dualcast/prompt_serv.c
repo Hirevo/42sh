@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 13:03:28 2017 Arthur Knoepflin
-** Last update Thu May 18 13:08:32 2017 Arthur Knoepflin
+** Last update Sun May 21 04:36:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -13,23 +13,14 @@
 #include "shell.h"
 #include "my.h"
 
-static void	treat_client_resp(char *str, char **prompt, int *nb_char)
-{
-  if (str)
-    {
-      my_printf("\r%s", str + 4);
-      free(str);
-    }
-}
-
 static void	exc_cmd(t_socket sock, char **str, int *nb_char)
 {
-  char		*buf;
   int		sauv;
   int		sauv2;
   t_shell	shell;
 
-  init_shell(&shell, NULL);
+  (void)nb_char;
+  init_shell(&shell);
   shell.line = my_strdup(*str + 25);
   if ((sauv = dup(1)) == -1)
     return ;

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 01:44:21 2017 Arthur Knoepflin
-** Last update Tue May 16 15:20:24 2017 Nicolas Polomack
+** Last update Sun May 21 03:49:25 2017 Nicolas Polomack
 */
 
 #include "shell.h"
@@ -16,7 +16,7 @@ int	cd_b(t_shell *shell, int args)
   int	i;
 
   i = move_dir(shell->cur->av, args, shell);
-  if (str = get_alias_cmd(shell, "cwdcmd"))
+  if ((str = get_alias_cmd(shell, "cwdcmd")))
     quick_exec(shell, str);
   return (i);
 }

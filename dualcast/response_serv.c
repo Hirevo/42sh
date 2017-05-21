@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  9 11:31:56 2017 Arthur Knoepflin
-** Last update Tue May  9 20:30:11 2017 Arthur Knoepflin
+** Last update Sun May 21 04:18:53 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -31,4 +31,5 @@ int	response_serv(t_socket sock,
   if (!my_strncmp(buf, "cmd:", 4))
     print_cmd(buf, prompt, nb_char);
   free(buf);
+  return (0);
 }

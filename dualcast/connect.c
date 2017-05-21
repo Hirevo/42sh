@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat May  6 16:37:18 2017 Arthur Knoepflin
-** Last update Thu May 18 11:33:19 2017 Arthur Knoepflin
+** Last update Sun May 21 04:14:57 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -34,7 +34,6 @@ static int	is_valid_code(char *code)
 static int	check_correct_passwd(t_client *cli)
 {
   char		*ret;
-  int		len;
 
   read_socket(cli->sock, &ret);
   if (!my_strncmp(ret, "OK:", 3))
@@ -49,7 +48,6 @@ static int	check_correct_passwd(t_client *cli)
 
 static int	send_passwd(t_client *cli)
 {
-  char		*resp;
   char		*code;
 
   my_printf("Entrer le code de session: ");

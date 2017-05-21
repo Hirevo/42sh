@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 15:20:13 2017 Arthur Knoepflin
-** Last update Tue May 16 11:10:12 2017 Arthur Knoepflin
+** Last update Sun May 21 04:07:39 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -93,6 +93,7 @@ static int	dup_child(void)
   dup2(fd, 1);
   dup2(fd, 2);
   close(fd);
+  return (0);
 }
 
 int	launch_nav(char *path, int port, char **ae)

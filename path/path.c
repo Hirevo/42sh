@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:46:13 2017 Nicolas Polomack
-** Last update Thu May 18 02:26:35 2017 Nicolas Polomack
+** Last update Sun May 21 04:24:59 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -53,8 +53,6 @@ int	is_path(char *str)
 
 char	**init_path(char *str)
 {
-  int	i;
-  int	arg;
   char	**path;
 
   if (str == NULL)
@@ -71,6 +69,7 @@ void		set_path(t_shell *shell, char *path)
   char		*name;
   char		*entry;
 
+  (void)shell;
   i = -1;
   obj = my_strlen_spe(path, '=');
   if ((name = malloc(obj + 1)) == NULL)

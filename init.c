@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Tue Apr 18 18:57:40 2017 Nicolas Polomack
-** Last update Fri May 19 19:20:52 2017 Nicolas Polomack
+** Last update Sun May 21 04:35:26 2017 Nicolas Polomack
 */
 
 #include <curses.h>
@@ -30,7 +30,7 @@ void		set_raw(struct termio *oterm)
     handle_error("ioctl");
 }
 
-int	init_shell(t_shell *shell, char **ae)
+int	init_shell(t_shell *shell)
 {
   srand(getpid() * time(NULL));
   shell->exit = 0;

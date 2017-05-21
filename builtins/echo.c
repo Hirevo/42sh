@@ -5,13 +5,13 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 01:56:34 2017 Arthur Knoepflin
-** Last update Tue May 16 01:57:46 2017 Arthur Knoepflin
+** Last update Sun May 21 03:49:49 2017 Nicolas Polomack
 */
 
 #include "shell.h"
 
 int	echo_b(t_shell *shell, int args)
 {
-  (void) args;
-  echo_term(shell->cur->av + 1);
+  (void)args;
+  return (echo_term(shell->cur->av + 1));
 }

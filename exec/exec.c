@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Sun May 21 00:03:46 2017 Nicolas Polomack
+** Last update Sun May 21 04:10:24 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -64,6 +64,7 @@ unsigned int	exec_action(t_shell *shell, unsigned int args)
   unsigned int	r;
   int		i;
 
+  (void)args;
   r = exec_pipeline(shell);
   i = -1;
   if (shell->is_done)

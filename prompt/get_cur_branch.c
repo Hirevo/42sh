@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Fri May 19 13:10:10 2017 Arthur Knoepflin
+** Last update Sun May 21 04:29:48 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -64,11 +64,9 @@ static int	is_sha1(char *str)
 
 static char	*find_branch(char *path)
 {
-  int		i;
   int		fd;
   char		*tmp;
 
-  i = 0;
   if ((fd = open(path, O_RDONLY)) == -1)
     return (NULL);
   if ((tmp = get_next_line(fd)) == NULL)
@@ -86,11 +84,9 @@ static int	is_root(char *path)
 {
   char	*str;
   char	*tmp;
-  char	*dir;
   int	i;
 
   tmp = strdup(path);
-  dir = dirname(tmp);
   str = malloc(strlen(tmp) + strlen("/home") + 1);
   strcat(strcpy(str, tmp), "/home");
   i = access(str, F_OK);

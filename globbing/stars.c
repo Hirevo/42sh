@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May 19 09:59:04 2017 Arthur Knoepflin
-** Last update Sat May 20 23:28:48 2017 Nicolas Polomack
+** Last update Sun May 21 04:21:52 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -64,7 +64,6 @@ static void	glob_stars(t_shell *shell, char *arg, int *i)
 
 int	parse_stars(t_shell *shell)
 {
-  char	*str;
   int	i;
   int	start;
   int	len;

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat Mar 25 20:19:50 2017 Nicolas Polomack
-** Last update Sun May 21 02:07:45 2017 Nicolas Polomack
+** Last update Sun May 21 03:47:36 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -78,6 +78,7 @@ int		parse_alias(t_shell *shell)
   i = -1;
   last = NULL;
   c = 1;
+  e = NULL;
   memset((&shell->subst), 0, sizeof(t_subst));
   while (shell->line[++i])
     if (is_space(shell->line[i]) || is_separator(shell->line[i]))

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 10:57:32 2017 Nicolas Polomack
-** Last update Fri May 19 10:42:28 2017 Nicolas Polomack
+** Last update Sun May 21 04:21:23 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -18,8 +18,7 @@
 
 static int	get_arg(t_shell *shell,
 			 char **str,
-			 int *cur,
-			 char *var)
+			 int *cur)
 {
   int		nb;
   int		len;
@@ -76,7 +75,7 @@ static int	replace_var(t_shell *shell, int *cur, char *var)
     i = asprintf(&str, "%.*s%s%s", *cur, shell->line, getenv(var),
                  shell->line + *cur + strlen(var) + 1);
   else if (shell->line[*cur + 1] >= '0' && shell->line[*cur + 1] <= '9')
-    i = get_arg(shell, &str, cur, var);
+    i = get_arg(shell, &str, cur);
   else
     {
       dprintf(2, "%s: Undefined variable.\n", var);
@@ -111,4 +110,5 @@ int	parse_vars(t_shell *shell)
 	    return (-1);
 	}
     }
+  return (0);
 }

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 11:39:08 2017 Arthur Knoepflin
-** Last update Sat May 20 17:00:42 2017 Arthur Knoepflin
+** Last update Sun May 21 04:14:36 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -14,7 +14,7 @@
 #include "shell.h"
 #include "my.h"
 
-int		launch_dc_server(t_shell *shell)
+int		launch_dc_server()
 {
   fd_set	rdfs;
   t_socket	socket;
@@ -36,7 +36,7 @@ int		launch_dc_server(t_shell *shell)
   return (0);
 }
 
-static int	launch_dc_client(t_shell *shell, char *addr)
+static int	launch_dc_client(char *addr)
 {
   t_client	client;
 
@@ -53,9 +53,9 @@ static int	launch_dc_client(t_shell *shell, char *addr)
 int	launch_dualcast(t_shell *shell, int args)
 {
   if (args >= 2 && !my_strcmp(shell->cur->av[1], "start"))
-    launch_dc_server(shell);
+    launch_dc_server();
   else if (args >= 3 && !my_strcmp(shell->cur->av[1], "connect"))
-    launch_dc_client(shell, shell->cur->av[2]);
+    launch_dc_client(shell->cur->av[2]);
   else
     my_printf("Usage : dualcast [start | connect addr_ip]\n");
   return (0);

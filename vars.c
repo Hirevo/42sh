@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu May 18 17:26:01 2017 Nicolas Polomack
-** Last update Fri May 19 00:34:14 2017 Nicolas Polomack
+** Last update Sun May 21 04:30:06 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -60,7 +60,6 @@ void	add_var(t_shell *shell, char *name, char *value)
 
 char	*get_var(t_shell *shell, char *name)
 {
-  char	str;
   int	i;
   int	size;
 

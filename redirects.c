@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Mar 20 19:57:11 2017 Nicolas Polomack
-** Last update Sun May  7 22:59:09 2017 Nicolas Polomack
+** Last update Sun May 21 04:35:07 2017 Nicolas Polomack
 */
 
 #include <fcntl.h>
@@ -20,15 +20,18 @@ int	setup_right_redirect(t_command *head, int *fds, int i)
 {
   int	fd;
 
+  (void)fds;
   if ((fd = open(head->r_name, O_WRONLY | O_CREAT |
                  (i ? O_TRUNC : O_APPEND), 0644)) == -1)
-    if (errno = EISDIR)
-      {
-	my_print_err(head->r_name);
-	return (my_print_ret(": Is a directory.\n", -1));
-      }
-    else
-      return (-1);
+    {
+      if (errno == EISDIR)
+	{
+	  my_print_err(head->r_name);
+	  return (my_print_ret(": Is a directory.\n", -1));
+	}
+      else
+	return (-1);
+    }
   dup2(fd, 1);
   return (fd);
 }
@@ -37,8 +40,6 @@ int	setup_left_redirect(char *name, int type)
 {
   int	fd;
   int	i[2];
-  char	c;
-  char	*str;
 
   if (!type)
     {
@@ -66,6 +67,7 @@ int	prepare_redirect(t_command *head, char **type, char **name, int i)
   head->av[i - 1] = NULL;
   if (i == 1)
     return (my_print_ret("Invalid null command.\n", -1));
+  return (0);
 }
 
 int	check_redirects(t_command *head, t_command *last)

@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 17:52:03 2017 Arthur Knoepflin
-** Last update Tue May 16 20:44:34 2017 Arthur Knoepflin
+** Last update Sun May 21 03:50:47 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -37,6 +37,7 @@ int	prompt(t_shell *shell, int args)
   int	stop;
   char	*choice;
 
+  (void)args;
   show_prompt(shell);
   stop = 0;
   while (!stop)

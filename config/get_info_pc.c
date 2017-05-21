@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May  2 17:20:13 2017 Arthur Knoepflin
-** Last update Tue May 16 10:48:52 2017 Arthur Knoepflin
+** Last update Sun May 21 04:06:26 2017 Nicolas Polomack
 */
 
 #include <sys/types.h>
@@ -31,11 +31,11 @@ int	parse_info_version(t_info_pc *ret, int fd)
 	ret->version = my_strndup(tmp + 9, my_strlen(tmp) - 10);
       free(tmp);
     }
+  return (0);
 }
 
 int	parse_version(t_info_pc *ret)
 {
-  char	*str;
   int	fd;
 
   if ((fd = open("/etc/os-release", O_RDONLY)) == -1)

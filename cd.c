@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 **
 ** Started on  Mon Jan  9 11:06:20 2017 Nicolas Polomack
-** Last update Sun Apr  2 19:42:19 2017 Nicolas Polomack
+** Last update Sun May 21 03:58:03 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -56,8 +56,6 @@ int	move_dir2(char **final, int ac, t_shell *shell)
 
 int	move_dir(char **final, int ac, t_shell *shell)
 {
-  int	i;
-
   if (ac > 3 || (ac == 3 && my_strcmp(final[1], "--")))
     {
       my_print_err("cd: Too many arguments.\n");

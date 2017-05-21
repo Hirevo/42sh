@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Thu Mar 30 01:22:31 2017 Nicolas Polomack
-** Last update Mon May 15 08:35:11 2017 Nicolas Polomack
+** Last update Sun May 21 04:24:08 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -15,10 +15,8 @@
 int		check_error(t_shell *shell)
 {
   t_command	*head;
-  char		last;
 
   head = shell->commands;
-  last = ';';
   while (head)
     {
       if (((head->av == NULL || head->av[0] == NULL) &&
@@ -32,7 +30,6 @@ int		check_error(t_shell *shell)
 	  my_printf("Invalid null command.\n");
 	  return (-1);
 	}
-      last = head->link;
       head = head->next;
     }
   return (0);

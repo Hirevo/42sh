@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Tue May 16 10:50:36 2017 Arthur Knoepflin
-** Last update Wed May 17 11:21:42 2017 Arthur Knoepflin
+** Last update Sun May 21 04:05:43 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -17,6 +17,8 @@ void	exit_config(t_socket client, t_config *config, char **arg)
 {
   char	*str;
 
+  (void)config;
+  (void)arg;
   my_putstr("Configuration terminé\n");
   str = my_strcatdup(BASE_RESP, "quit");
   write_client(client, str);

@@ -53,16 +53,17 @@ void	prompt_line(t_shell *shell)
 
   if (shell->tty)
     set_raw(&shell->w.oterm);
-  shell->hist.cur = NULL;
-  c = -1;
+  shell->hist.cur = NULL + (c = -1) * 0;
   while (c != 10)
     {
       block_read_zero();
       if ((c = get_input()) == -1)
-        if (shell->tty)
-          continue ;
-        else
-          return ;
+	{
+	  if (shell->tty)
+	    continue ;
+	  else
+	    return ;
+	}
       if (c == 10 && !shell->line)
         shell->line = strdup("");
       if (c == 10 || c == 0 || c == 4 ||

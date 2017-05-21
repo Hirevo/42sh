@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 29 22:28:04 2017 Arthur Knoepflin
-** Last update Wed May 17 12:44:55 2017 Arthur Knoepflin
+** Last update Sun May 21 04:08:08 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -16,6 +16,7 @@ void	send_prompt_sel(t_socket client, t_config *config, char **arg)
 {
   char	*selected;
 
+  (void)arg;
   if ((selected = int_toc(config->prompt)) == NULL)
     return ;
   write_client(client, BASE_RESP);

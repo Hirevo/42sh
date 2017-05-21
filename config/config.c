@@ -5,7 +5,7 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Wed Dec 21 21:16:01 2016 Arthur Knoepflin
-** Last update Thu May 18 18:43:44 2017 Arthur Knoepflin
+** Last update Sun May 21 04:02:30 2017 Nicolas Polomack
 */
 
 #include <stdio.h>
@@ -53,7 +53,6 @@ static void	clear_clients(t_socket *clients, int actual)
 
 static int	core(t_socket sock, t_config *config, int actual)
 {
-  int		i;
   int		stop;
   t_socket	clients[MAX_CLIENTS];
   fd_set	rdfs;
@@ -74,6 +73,7 @@ static int	core(t_socket sock, t_config *config, int actual)
   my_putstr("Server closed\n");
   clear_clients(clients, actual);
   closesocket(sock);
+  return (0);
 }
 
 int		config_http(t_config *config)

@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Thu May 18 01:52:09 2017 Nicolas Polomack
+** Last update Sun May 21 04:33:47 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -57,7 +57,7 @@ char	*my_epurstr(char *str)
 	}
       else if (str[i[0]] == b && b != 0)
 	b = 0;
-      else if (str[i[0]] == '\'' || str[i[0]] == '"' && b == 0)
+      else if ((str[i[0]] == '\'' || str[i[0]] == '"') && b == 0)
 	b = str[i[0]];
     }
   ret[i[1]] = 0;

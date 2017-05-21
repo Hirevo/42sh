@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Fri May  5 16:02:42 2017 Arthur Knoepflin
-** Last update Thu May 18 11:11:47 2017 Arthur Knoepflin
+** Last update Sun May 21 04:20:01 2017 Nicolas Polomack
 */
 
 #include <sys/select.h>
@@ -28,7 +28,7 @@ static char	*read_code(t_socket client)
   return (ret);
 }
 
-static char	*send_login(t_socket sock)
+static void	send_login(t_socket sock)
 {
   char		*login;
   char		*str;
