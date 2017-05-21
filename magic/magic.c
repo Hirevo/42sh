@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.eu>
 ** 
 ** Started on  Sat May 20 02:34:26 2017 Nicolas Polomack
-** Last update Sun May 21 05:05:04 2017 Nicolas Polomack
+** Last update Sun May 21 15:24:50 2017 Nicolas Polomack
 */
 
 #include <string.h>
@@ -101,10 +101,11 @@ int		magic(t_shell *shell)
 
   i = -1;
   while (shell->line[++i])
-    if (shell->line[i] == '\'')
+    if (shell->line[i] == '\'' || shell->line[i] == '"')
       {
+	len = shell->line[i];
 	i += 1;
-	while (shell->line && shell->line[i] != '\'')
+	while (shell->line && shell->line[i] != len)
 	  i += 1;
       }
     else if (shell->line[i] == '`')
