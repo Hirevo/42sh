@@ -5,7 +5,7 @@
 ** Login   <leuzzi_l@epitech.net>
 ** 
 ** Started on  Fri May 12 18:11:29 2017 ludovic leuzzi
-** Last update Sun May 21 04:29:48 2017 Nicolas Polomack
+** Last update Sun May 21 17:13:23 2017 Nicolas Polomack
 */
 
 #include <unistd.h>
@@ -16,6 +16,7 @@
 #include <libgen.h>
 #include <string.h>
 #include "get_next_line.h"
+#include "shell.h"
 #include "my.h"
 
 static char	*cut_path(char *tmp)
@@ -84,11 +85,16 @@ static int	is_root(char *path)
 {
   char	*str;
   char	*tmp;
+  char	*dir;
   int	i;
 
-  tmp = strdup(path);
-  str = malloc(strlen(tmp) + strlen("/home") + 1);
-  strcat(strcpy(str, tmp), "/home");
+  if ((tmp = strdup(path)) == NULL)
+    handle_error("malloc");
+  dir = dirname(tmp);
+  if ((str = malloc(strlen(dir) + strlen("/home") +
+		   1)) == NULL)
+    handle_error("malloc");
+  strcat(strcpy(str, dir), "/home");
   i = access(str, F_OK);
   free(str);
   free(tmp);
