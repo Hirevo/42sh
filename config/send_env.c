@@ -5,7 +5,7 @@
 ** Login   <arthur.knoepflin@epitech.eu>
 ** 
 ** Started on  Sat Apr 22 21:32:22 2017 Arthur Knoepflin
-** Last update Sun May 21 04:08:48 2017 Nicolas Polomack
+** Last update Sun May 21 21:12:23 2017 Arthur Knoepflin
 */
 
 #include <stdlib.h>
@@ -23,7 +23,7 @@ static int	get_len(char *str)
   while (str[i])
     {
       if (str[i] == '\\')
-	ret += 1;
+      	ret += 1;
       ret += 1;
       i += 1;
     }

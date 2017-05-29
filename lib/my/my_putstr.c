@@ -5,7 +5,7 @@
 ** Login   <nicolas.polomack@epitech.net>
 **
 ** Started on  Thu Oct  6 09:53:18 2016 Nicolas POLOMACK
-** Last update Sun Feb 12 18:33:30 2017 Nicolas Polomack
+** Last update Tue May 23 14:54:45 2017 Nicolas Polomack
 */
 
 #include <stdlib.h>
@@ -81,7 +81,8 @@ void	display_pointer(t_flags *flags, va_list ap, int *count)
 
   str = convert_base(my_int_to_char(va_arg(ap, int)), "0123456789",
 		     "0123456789abcdef");
-  final = malloc(sizeof(str) + 4);
+  if ((final = malloc(sizeof(str) + 4)) == NULL)
+    return ;
   final[0] = 0;
   final[1] = '0';
   final[2] = 'x';

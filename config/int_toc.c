@@ -5,9 +5,10 @@
 ** Login   <arthur@epitech.net>
 ** 
 ** Started on  Tue Oct 25 22:43:58 2016 Arthur Knoepflin
-** Last update Tue May  2 16:27:17 2017 Arthur Knoepflin
+** Last update Tue May 23 14:55:09 2017 Nicolas Polomack
 */
 #include <stdlib.h>
+#include "shell.h"
 #include "my.h"
 
 int	size_int(int nb)
@@ -31,13 +32,17 @@ char	*toc_alloc(int nb)
 
   if (nb < 0)
     {
-      ret = malloc(sizeof(char) * (size_int(nb) + 2));
+      if ((ret = malloc(sizeof(char) *
+			(size_int(nb) + 2))) == NULL)
+	handle_error("malloc");
       ret[0] = '-';
       nb *= (-1);
     }
   else
     {
-      ret = malloc(sizeof(char) * (size_int(nb) + 1));
+      if ((ret = malloc(sizeof(char) *
+			(size_int(nb) + 1))) == NULL)
+	handle_error("malloc");
     }
   return (ret);
 }

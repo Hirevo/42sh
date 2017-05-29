@@ -5,7 +5,7 @@
 ** Login   <benjamin.solca@epitech.eu>
 **
 ** Started on  Fri May 12 10:13:21 2017 Benjamin
-** Last update Sun May 21 15:47:03 2017 Benjamin
+** Last update Sun May 21 17:58:32 2017 Arthur Knoepflin
 */
 
 #include "parser_ll.h"
@@ -14,7 +14,7 @@
 t_ast	*rebuild_branch(t_ast *ast, t_ast *new, int count_ast)
 {
   t_ast	*tmp;
-  t_ast *father;
+  t_ast	*father;
 
   tmp = ast;
   while (tmp->father && count_ast > 0)
@@ -58,7 +58,7 @@ t_ast	*create_simple_branch(t_ast *ast, t_ast *new)
   return (ast);
 }
 
-t_ast *rebuild_branch_start(t_ast *ast, t_ast *new)
+t_ast	*rebuild_branch_start(t_ast *ast, t_ast *new)
 {
   new->left = ast;
   ast->father = new;

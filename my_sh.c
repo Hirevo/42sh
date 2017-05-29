@@ -106,7 +106,7 @@ static int	start_standard_shell(t_shell *shell)
       if (shell->ioctl)
 	{
 	  ioctl(0, TCSETA, &shell->w.oterm);
-	  printf(tigetstr("rmkx"));
+	  my_putstr(tigetstr("rmkx"));
 	  fflush(stdout);
 	}
     }

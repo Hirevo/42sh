@@ -26,7 +26,7 @@ int	call_parser_ll(t_shell *shell, int args)
   if (!parser_ll(str))
     {
       free(str);
-      return (84);
+      return (1);
     }
   free(str);
   return (0);
