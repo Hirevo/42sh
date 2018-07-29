@@ -36,7 +36,6 @@ static void	copy_data(char *dest, char *s1, char *s2)
 char	*my_fstrcat(char *s1, char *s2, int mode)
 {
   int	i;
-  int	j;
   char	*dest;
   int	len;
 

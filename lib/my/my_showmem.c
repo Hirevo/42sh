@@ -10,5 +10,7 @@
 
 int	showmem(char *str, int size)
 {
+  (void)(str);
+  (void)(size);
   return (0);
 }

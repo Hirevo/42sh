@@ -48,7 +48,6 @@ char	**my_strarrdup(char **arr)
 {
   char	**final;
   int	i;
-  int	j;
 
   i = -1;
   while (arr[++i]);

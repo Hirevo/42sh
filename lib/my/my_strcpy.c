@@ -8,16 +8,6 @@
 ** Last update Tue Feb 21 20:32:06 2017 
 */
 
-char	*my_memset(char *buffer, char c, int size)
-{
-  int	i;
-
-  i = -1;
-  while (++i < size)
-    buffer[i] = c;
-  return (buffer);
-}
-
 char	*my_strcpy(char *dest, char *src)
 {
   int	count;

@@ -11,7 +11,7 @@
 #ifndef SHELL_H_
 # define SHELL_H_
 
-# include <termio.h>
+# include <termios.h>
 # include <sys/stat.h>
 # include "server.h"
 # define RC_FILE ".42shrc"
@@ -63,18 +63,18 @@ typedef struct	s_hist_ctrl
 
 typedef struct	s_window
 {
-  struct termio	oterm;
-  char		*smkx;
-  char		*clear;
-  char		*end;
-  char		*home;
-  char		*forw;
-  char		*backw;
-  char		*upw;
-  char		*downw;
-  char		*left;
-  char		*right;
-  int		cur;
+  struct termios	oterm;
+  char			*smkx;
+  char			*clear;
+  char			*end;
+  char			*home;
+  char			*forw;
+  char			*backw;
+  char			*upw;
+  char			*downw;
+  char			*left;
+  char			*right;
+  int			cur;
 }		t_window;
 
 /*
@@ -241,7 +241,7 @@ int	magic(t_shell *);
 /*
 ** magic/construct.c
 */
-char	*sanitize(char *);
+char	*sanitize(char *, int);
 char	*construct_magic(char **);
 
 /*
@@ -422,7 +422,7 @@ void	init_vars(t_shell *);
 ** init.c
 */
 
-void	set_raw(struct termio *);
+void	set_raw(struct termios *);
 void	init(t_shell *);
 void	init_prompt(t_shell *);
 

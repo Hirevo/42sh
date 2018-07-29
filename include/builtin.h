@@ -11,6 +11,9 @@
 #ifndef BUILTIN_H_
 # define BUILTIN_H_
 
+# include "shell.h"
+# include <stdio.h>
+
 typedef struct	s_parse_env
 {
   int		ignore;

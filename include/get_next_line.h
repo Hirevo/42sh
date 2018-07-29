@@ -12,7 +12,7 @@
 # define GET_NEXT_LINE_H_
 
 #ifndef READ_SIZE
-# define READ_SIZE 10
+# define READ_SIZE 4096
 #endif /* !READ_SIZE */
 
 char	*get_next_line(const int);

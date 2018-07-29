@@ -10,5 +10,6 @@
 
 int	showstr(char *str)
 {
+  (void)(str);
   return (0);
 }

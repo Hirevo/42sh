@@ -10,8 +10,10 @@
 
 #include "my.h"
 
-int	my_find_prime_sub(int nb)
+int	my_find_prime_sub(int n)
 {
+  long nb = n;
+
   if (nb <= 0)
     return (2);
   while (my_is_prime(nb) != 1 && nb < 2147483648)

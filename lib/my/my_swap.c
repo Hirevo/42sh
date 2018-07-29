@@ -8,7 +8,7 @@
 ** Last update Thu Oct  6 09:42:12 2016 Nicolas POLOMACK
 */
 
-int	my_swap(int *a, int *b)
+void	my_swap(int *a, int *b)
 {
   int	temp;
 

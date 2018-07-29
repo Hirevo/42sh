@@ -11,15 +11,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
+#include <unistd.h>
 #include "my.h"
 
 void	my_putstr(char *str)
 {
-  int	count;
-
-  count = 0;
-  while (*(str + count) != 0)
-    my_putchar(*(str + count++));
+	write(1, str, my_strlen(str));
 }
 
 void	my_putstr_printf(char *in, int *c, t_flags *flags, int isnbr)
@@ -88,7 +85,7 @@ void	display_pointer(t_flags *flags, va_list ap, int *count)
   final[2] = 'x';
   final[3] = 0;
   if (flags->hold == '+' || flags->hold == 32)
-    final[0] == flags->hold;
+    final[0] = flags->hold;
   flags->precision = -1;
   my_putstr_printf(my_strcat((final[0] == 0) ? final + 1 : final, str),
 		   count, flags, 1);
