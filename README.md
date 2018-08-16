@@ -1,6 +1,6 @@
 # 42sh
 
-A shell written in C, the third and final shell project from EPITECH, after [**minishell1**](https://github.com/Hirevo/minishell1) and [**minishell2**](https://github.com/Hirevo/minishell2).
+A shell written in C, the third and final shell project from EPITECH, after **minishell1** and **minishell2**.
 
 ## Introduction
 
