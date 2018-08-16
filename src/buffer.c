@@ -1,40 +1,35 @@
 /*
-** buffer.c for minishell2 in /home/nicolaspolomack/psu/2/PSU_2016_minishell2
-** 
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-** 
-** Started on  Sun Mar 26 18:28:03 2017 Nicolas Polomack
-** Last update Sat Nov 17 07:46:29 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** buffer
 */
 
-#include <unistd.h>
-#include <stdlib.h>
 #include "get_next_line.h"
-#include "shell.h"
 #include "my.h"
+#include "shell.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-int	buffer_input(char *name, int i[2])
+int buffer_input(char *name, int i[2])
 {
-  char	*str;
-  char	c;
+    char *str;
+    char c;
 
-  str = NULL;
-  c = 10;
-  while ((str = get_next_line(0)))
-    if (str && my_strcmp(str, name) == 0)
-      {
-	free(str);
-	close(i[1]);
-	return (i[0]);
-      }
-    else
-      {
-	write(i[1], str, my_strlen(str));
-	write(i[1], &c, 1);
-	free(str);
-	my_putstr(isatty(0) ? "> " : "");
-      }
-  close(i[1]);
-  return (i[0]);
+    str = NULL;
+    c = 10;
+    while ((str = get_next_line(0)))
+        if (str && strcmp(str, name) == 0) {
+            free(str);
+            close(i[1]);
+            return i[0];
+        }
+        else {
+            write(i[1], str, strlen(str));
+            write(i[1], &c, 1);
+            free(str);
+            my_putstr(isatty(0) ? "> " : "");
+        }
+    close(i[1]);
+    return i[0];
 }

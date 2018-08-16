@@ -1,126 +1,117 @@
 /*
-** alias.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Mon Jan  9 10:38:06 2017 Nicolas Polomack
-** Last update Sun May 21 19:50:02 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** parse
 */
 
 #include "get_next_line.h"
 #include "my.h"
 #include "shell.h"
 #include <fcntl.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
 
 int is_valid_alias(char *path)
 {
-	int i;
+    int i = 0;
 
-	i = 0;
-	if (path[i++] != 'a' || path[i++] != 'l' || path[i++] != 'i' ||
-		path[i++] != 'a' || path[i++] != 's' || path[i++] != ' ')
-		return (0);
-	while (path[i] != '=')
-		if (path[i++] == 0)
-			return (0);
-	if (path[++i] != '\'')
-		return (0);
-	while (path[++i] != '\'')
-		if (path[i] == 0)
-			return (0);
-	if (path[++i] == 0)
-		return (1);
-	return (0);
+    if (path[i++] != 'a' || path[i++] != 'l' || path[i++] != 'i' ||
+        path[i++] != 'a' || path[i++] != 's' || path[i++] != ' ')
+        return 0;
+    while (path[i] != '=')
+        if (path[i++] == 0)
+            return 0;
+    if (path[++i] != '\'')
+        return 0;
+    while (path[++i] != '\'')
+        if (path[i] == 0)
+            return 0;
+    if (path[++i] == 0)
+        return 1;
+    return 0;
 }
 
-void write_alias(t_alias *head, int fd)
+void write_alias(int *fd, char *name, char *command)
 {
-	my_print_fd("alias ", fd);
-	my_print_fd(head->alias, fd);
-	my_print_fd("='", fd);
-	my_print_fd(head->command, fd);
-	my_print_fd("'\n", fd);
+    dprintf(*fd, "alias %s='%s'\n", name, command);
 }
 
-void save_alias(t_shell *shell)
+void save_alias(shell_t *shell)
 {
-	t_alias *head;
-	int fd;
-	char *path;
+    int fd;
+    char *path = calloc(512, sizeof(char));
 
-	if (!(shell->tty) || (shell->home == NULL) ||
-		(path = malloc(512)) == NULL)
-		return;
-	path[0] = 0;
-	path = my_strcat(path, shell->home);
-	if (shell->home[my_strlen(shell->home)] != '/')
-		path[my_strlen(shell->home)] = '/';
-	path[my_strlen(shell->home) + 1] = 0;
-	path = my_strcat(path, ALIAS_FILE);
-	if ((fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644)) == -1)
-		return;
-	head = shell->alias;
-	while (head != NULL) {
-		write_alias(head, fd);
-		head = head->next;
-	}
-	free(path);
-	close(fd);
+    if (shell->tty == 0 || shell->home == NULL || path == NULL)
+        return;
+    path[0] = 0;
+    path = strcat(path, shell->home);
+    if (shell->home[strlen(shell->home)] != '/')
+        path[strlen(shell->home)] = '/';
+    path[strlen(shell->home) + 1] = 0;
+    path = strcat(path, ALIAS_FILE);
+    fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd == -1)
+        return;
+    lhmap_for_each(
+        shell->alias, (void (*)(void *, char *, void *))(write_alias), &fd);
+    free(path);
+    close(fd);
 }
 
-void set_alias(t_shell *shell, char *path)
+void set_alias(shell_t *shell, char *path)
 {
-	t_alias *alias;
-	int i;
-	int obj;
+    alias_t alias;
+    int i = -1;
+    int obj = my_strlen_spe(path + 6, '=');
 
-	if ((alias = malloc(sizeof(t_alias))) == NULL)
-		return;
-	i = -1;
-	obj = my_strlen_spe(path + 6, '=');
-	if ((alias->alias = malloc(obj + 1)) == NULL)
-		return;
-	while (++i < obj)
-		alias->alias[i] = (path + 6)[i];
-	alias->alias[i] = 0;
-	i = obj + 7;
-	obj = my_strlen_spe(path + i + 1, '\'');
-	if ((alias->command = malloc(obj + 1)) == NULL)
-		return;
-	obj = i;
-	i = -1;
-	while ((path + obj + 1)[++i] != '\'')
-		alias->command[i] = (path + obj + 1)[i];
-	alias->command[i] = 0;
-	alias->next = shell->alias;
-	shell->alias = alias;
+    alias.alias = calloc(obj + 1, sizeof(char));
+    if (alias.alias == NULL)
+        return;
+    while (++i < obj)
+        alias.alias[i] = (path + 6)[i];
+    alias.alias[i] = 0;
+    i = obj + 7;
+    obj = my_strlen_spe(path + i + 1, '\'');
+    alias.command = calloc(obj + 1, sizeof(char));
+    if (alias.command == NULL)
+        return;
+    obj = i;
+    i = -1;
+    while ((path + obj + 1)[++i] != '\'')
+        alias.command[i] = (path + obj + 1)[i];
+    alias.command[i] = 0;
+    add_alias(shell, alias.alias, alias.command);
+    free(alias.alias);
+    free(alias.command);
 }
 
-void init_aliases(t_shell *shell)
+void init_aliases(shell_t *shell)
 {
-	int fd;
-	char *path;
+    int fd;
+    char *path = calloc(512, sizeof(char));
 
-	shell->alias = NULL;
-	if ((shell->home == NULL) || (path = malloc(512)) == NULL)
-		return;
-	path[0] = 0;
-	path = my_strcat(path, shell->home);
-	if (shell->home[my_strlen(shell->home)] != '/')
-		path[my_strlen(shell->home)] = '/';
-	path[my_strlen(shell->home) + 1] = 0;
-	path = my_strcat(path, ALIAS_FILE);
-	if ((fd = open(path, O_RDONLY)) == -1)
-		return;
-	free(path);
-	while ((path = get_next_line(fd)) != NULL) {
-		if (is_valid_alias(path))
-			set_alias(shell, path);
-		free(path);
-	}
-	close(fd);
+    shell->alias = lhmap_new();
+    if (shell->alias == NULL || shell->home == NULL || path == NULL)
+        return;
+    path[0] = 0;
+    path = strcat(path, shell->home);
+    if (shell->home[strlen(shell->home)] != '/')
+        path[strlen(shell->home)] = '/';
+    path[strlen(shell->home) + 1] = 0;
+    path = strcat(path, ALIAS_FILE);
+    fd = open(path, O_RDONLY);
+    if (fd == -1)
+        return;
+    free(path);
+    path = get_next_line(fd);
+    while (path) {
+        if (is_valid_alias(path))
+            set_alias(shell, path);
+        free(path);
+        path = get_next_line(fd);
+    }
+    close(fd);
 }

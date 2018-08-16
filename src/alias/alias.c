@@ -1,11 +1,8 @@
 /*
-** alias2.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Mon Jan  9 10:42:33 2017 Nicolas Polomack
-** Last update Tue Jun 20 19:36:14 2017 nicolaspolomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** alias
 */
 
 #include "my.h"
@@ -15,97 +12,68 @@
 #include <string.h>
 #include <unistd.h>
 
-int add_alias(t_shell *shell, char *alias, char *command)
+int add_alias(shell_t *shell, char *alias, char *command)
 {
-	t_alias *elem;
-
-	elem = shell->alias;
-	while (elem != NULL) {
-		if (my_strcmp(elem->alias, alias) == 0) {
-			free(elem->command);
-			elem->command = my_strdup(command);
-			return (0);
-		}
-		elem = elem->next;
-	}
-	if ((elem = malloc(sizeof(t_alias))) == NULL)
-		handle_error("malloc");
-	elem->alias = strdup(alias);
-	elem->command = strdup(command);
-	if (elem->alias == NULL || elem->command == NULL)
-		handle_error("malloc");
-	elem->next = shell->alias;
-	shell->alias = elem;
-	return (0);
+    free(lhmap_get(shell->alias, alias));
+    lhmap_set(shell->alias, alias, strdup(command));
+    return 0;
 }
 
-int disp_all_alias(t_shell *shell)
+int disp_all_alias(shell_t *shell)
 {
-	t_alias *head;
-	int mode;
-	int i;
+    vec_t *keys;
+    vec_t *vals;
 
-	if (shell->alias == NULL)
-		return (0);
-	head = shell->alias;
-	while (head != NULL) {
-		mode = 0;
-		i = -1;
-		while (head->command[++i])
-			if (head->command[i] == ' ')
-				mode = 1;
-		printf(mode ? "alias %s='%s'\n" : "alias %s=%s\n", head->alias,
-			head->command);
-		head = head->next;
-	}
-	return (0);
+    if (shell->alias == NULL)
+        return 0;
+    keys = shell->alias->key_table;
+    vals = shell->alias->value_table;
+    for (size_t i = 0; i < shell->alias->size; i++) {
+        const char *name = keys->arr[i];
+        const char *command = vals->arr[i];
+        printf("alias %s='%s'\n", name, command);
+    }
+    return 0;
 }
 
-int disp_alias(t_shell *shell, char *alias)
+int disp_alias(shell_t *shell, char *alias)
 {
-	t_alias *head;
+    char *found;
 
-	if (shell->alias == NULL)
-		return (0);
-	head = shell->alias;
-	while (head != NULL) {
-		if (my_strcmp(head->alias, alias) == 0)
-			printf("alias %s='%s'\n", head->alias, head->command);
-		head = head->next;
-	}
-	return (0);
+    if (shell->alias == NULL)
+        return 0;
+    found = lhmap_get(shell->alias, alias);
+    if (found)
+        printf("alias %s='%s'\n", alias, found);
+    return 0;
 }
 
 char *construct_alias(char **tab)
 {
-	int i;
-	int len;
-	char *ret;
+    int i = -1;
+    int len = 0;
+    char *ret;
 
-	len = 0;
-	i = -1;
-	while (tab[++i])
-		len += ((!!i) + strlen(tab[i]));
-	if ((ret = malloc(len + 1)) == NULL)
-		handle_error("malloc");
-	*ret = 0;
-	i = -1;
-	while (tab[++i])
-		strcat(i ? strcat(ret, " ") : ret, tab[i]);
-	return (ret);
+    while (tab[++i])
+        len += ((!!i) + strlen(tab[i]));
+    ret = calloc(len + 1, sizeof(char));
+    if (ret == NULL)
+        handle_error("calloc");
+    *ret = 0;
+    i = -1;
+    while (tab[++i])
+        strcat(i ? strcat(ret, " ") : ret, tab[i]);
+    return ret;
 }
 
-char *get_alias_cmd(t_shell *shell, char *name)
+char *get_alias_cmd(shell_t *shell, char *name)
 {
-	t_alias *head;
+    char *found;
 
-	if (name == NULL)
-		return (NULL);
-	head = shell->alias;
-	while (head) {
-		if (!strcmp(head->alias, name))
-			return (strdup(head->command));
-		head = head->next;
-	}
-	return (NULL);
+    if (shell->alias == 0 || name == 0)
+        return 0;
+    found = lhmap_get(shell->alias, name);
+    if (found)
+        return strdup(found);
+    return 0;
 }

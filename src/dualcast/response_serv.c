@@ -1,36 +1,30 @@
 /*
-** response_serv.c for response_serv in /home/arthur/delivery/PSU/PSU_2016_42sh
-** 
-** Made by Arthur Knoepflin
-** Login   <arthur.knoepflin@epitech.eu>
-** 
-** Started on  Tue May  9 11:31:56 2017 Arthur Knoepflin
-** Last update Sun May 21 04:18:53 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** response_serv
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include "shell.h"
 #include "my.h"
+#include "shell.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-static void	print_cmd(char *buf, char **prompt, int *nb_char)
+static void print_cmd(char *buf, char **prompt, int *nb_char)
 {
-  del_prompt(*nb_char);
-  printf("\r%s", buf + 4);
-  *prompt = my_strdup("(\033[32;1mDualCast\033[0m) $> ");
-  *nb_char = my_strlen(*prompt);
-  printf("%s", *prompt);
+    del_prompt(*nb_char);
+    printf("\r%s", buf + 4);
+    *prompt = strdup("(\033[32;1mDualCast\033[0m) $> ");
+    *nb_char = strlen(*prompt);
+    printf("%s", *prompt);
 }
 
-int	response_serv(t_socket sock,
-		      char *buf,
-		      char **prompt,
-		      int *nb_char)
+int response_serv(t_socket sock, char *buf, char **prompt, int *nb_char)
 {
-  if (!my_strncmp(buf, "char:", 5))
-    prompt_serv(sock, buf[5], prompt, nb_char);
-  if (!my_strncmp(buf, "cmd:", 4))
-    print_cmd(buf, prompt, nb_char);
-  free(buf);
-  return (0);
+    if (!my_strncmp(buf, "char:", 5))
+        prompt_serv(sock, buf[5], prompt, nb_char);
+    if (!my_strncmp(buf, "cmd:", 4))
+        print_cmd(buf, prompt, nb_char);
+    free(buf);
+    return 0;
 }

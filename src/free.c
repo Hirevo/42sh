@@ -1,114 +1,102 @@
 /*
-** free.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Mon Jan  9 11:12:24 2017 Nicolas Polomack
-** Last update Tue May 16 20:59:46 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** free
 */
 
+#include "get_next_line.h"
+#include "my.h"
+#include "shell.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
-#include "shell.h"
-#include "my.h"
-#include "get_next_line.h"
 
-void		free_hist(t_shell *shell)
+void free_hist_entry(void *ctx, char **elem, size_t idx)
 {
-  t_history	*head;
-  t_history	*last;
-  int		i;
-
-  head = shell->hist.first;
-  while (head)
-    {
-      last = head;
-      i = -1;
-      while (head->cmd[++i])
-	free(head->cmd[i]);
-      free(head->cmd);
-      head = head->next;
-      free(last);
-    }
+    (void)(ctx);
+    (void)(idx);
+    for (size_t i = 0; elem && elem[i]; i++)
+        free(elem[i]);
+    free(elem);
 }
 
-void		free_alias(t_shell *shell)
+void free_hist(shell_t *shell)
 {
-  t_alias	*last;
-
-  last = NULL;
-  while (shell->alias != NULL)
-    {
-      free(shell->alias->command);
-      free(shell->alias->alias);
-      if (last != NULL)
-	free(last);
-      last = shell->alias;
-      shell->alias = shell->alias->next;
-    }
-  if (last != NULL)
-    free(last);
+    lvec_for_each(shell->hist.arr,
+        (void (*)(void *, void *, size_t))(free_hist_entry), 0);
+    lvec_drop(shell->hist.arr);
 }
 
-void	free_shell(t_shell *shell)
+void free_alias_entry(void *ctx, alias_t *elem, size_t idx)
 {
-  int	i;
-
-  i = -1;
-  if (shell->path != NULL)
-    {
-      while (shell->path[++i] != NULL)
-        free(shell->path[i]);
-      free(shell->path);
-    }
-  save_history(shell);
-  save_alias(shell);
-  free(shell->current);
-  free_shell2(shell);
+    (void)(ctx);
+    (void)(idx);
+    free(elem->alias);
+    free(elem->command);
+    free(elem);
 }
 
-void	free_shell2(t_shell *shell)
+void free_alias(shell_t *shell)
 {
-  int	i;
-
-  i = -1;
-  if (shell->final != NULL)
-    {
-      while (shell->final[++i] != NULL)
-	free(shell->final[i]);
-      free(shell->final);
-    }
-  free_alias(shell);
-  free(shell->last);
-  free(shell->prev);
-  free(shell->line);
-  free(shell->exit_str);
-  free_commands(shell);
-  if (isatty(0))
-    printf("exit\n");
+    lhmap_clear(shell->alias, true);
+    lhmap_drop(shell->alias);
 }
 
-void		free_commands(t_shell *shell)
+void free_shell(shell_t *shell)
 {
-  int		i;
-  t_command	*head;
-  t_command	*last;
+    int i;
 
-  head = shell->commands;
-  while (head)
-    {
-      i = -1;
-      while (head->av[++i])
-	free(head->av[i]);
-      free(head->av);
-      free(head->r_type);
-      free(head->r_name);
-      free(head->l_type);
-      free(head->l_name);
-      last = head;
-      head = head->next;
-      free(last);
+    i = -1;
+    if (shell->path != NULL) {
+        while (shell->path[++i] != NULL)
+            free(shell->path[i]);
+        free(shell->path);
+    }
+    save_history(shell);
+    save_alias(shell);
+    free(shell->current);
+    free_shell2(shell);
+}
+
+void free_shell2(shell_t *shell)
+{
+    int i;
+
+    i = -1;
+    if (shell->final != NULL) {
+        while (shell->final[++i] != NULL)
+            free(shell->final[i]);
+        free(shell->final);
+    }
+    free_alias(shell);
+    free(shell->last);
+    free(shell->prev);
+    free(shell->line);
+    free(shell->exit_str);
+    free_commands(shell);
+    if (isatty(0))
+        printf("exit\n");
+}
+
+void free_commands(shell_t *shell)
+{
+    int i;
+    command_t *head;
+    command_t *last;
+
+    head = shell->commands;
+    while (head) {
+        i = -1;
+        while (head->av[++i])
+            free(head->av[i]);
+        free(head->av);
+        free(head->r_type);
+        free(head->r_name);
+        free(head->l_type);
+        free(head->l_name);
+        last = head;
+        head = head->next;
+        free(last);
     }
 }

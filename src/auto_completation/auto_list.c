@@ -1,81 +1,72 @@
 /*
-** auto_list.c for auto_list in /home/Maxime/delivery/PSU/PSU_2016_42sh/auto_completation/
-**
-** Made by Maxime Jenny
-** Login   <maxime.jenny@epitech.eu>
-**
-** Started on  Tue May  9 20:54:46 2017 Maxime Jenny
-** Last update	Sat May 20 19:33:37 2017 Full Name
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** auto_list
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "auto_complete.h"
 #include "my.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void		destroy_the_list(t_match **list)
+void destroy_the_list(match_t **list)
 {
-  t_match	*prev;
-  t_match	*temp;
+    match_t *prev;
+    match_t *temp = *list;
 
-  temp = *list;
-  while (temp)
-    {
-      prev = temp;
-      free(temp->cmd);
-      temp = temp->next;
-      free(prev);
+    while (temp) {
+        prev = temp;
+        free(temp->cmd);
+        temp = temp->next;
+        free(prev);
     }
-  *list = NULL;
+    *list = NULL;
 }
 
-void		show_autolist(t_shell *shell, t_match *list)
+void show_autolist(shell_t *shell, match_t *list)
 {
-  t_match	*tmp;
-  char		*str;
-  char		*cmd;
+    match_t *tmp = list;
+    char *str;
+    char *cmd;
 
-  if (!list)
-    return ;
-  tmp = list;
-  str = strdup("echo '");
-  printf("\n");
-  while (tmp)
-    {
-      if (strcmp(tmp->cmd, "..") && strcmp(tmp->cmd, "."))
-	{
-	  if (asprintf(&cmd, "%s%s\\\\n", str, sanitize(tmp->cmd, 0)) == -1)
-	      handle_error("malloc");
-	  free(str);
-	  str = cmd;
-	}
-      tmp = tmp->next;
+    if (!list)
+        return;
+    str = strdup("echo '");
+    printf("\n");
+    while (tmp) {
+        if (strcmp(tmp->cmd, "..") && strcmp(tmp->cmd, ".")) {
+            if (asprintf(&cmd, "%s%s\\\\n", str, sanitize(tmp->cmd, 0)) == -1)
+                handle_error("calloc");
+            free(str);
+            str = cmd;
+        }
+        tmp = tmp->next;
     }
-  if (asprintf(&cmd, "%s' | sort | column", str) == -1)
-    handle_error("malloc");
-  free(str);
-  str = cmd;
-  quick_exec(shell, cmd);
+    if (asprintf(&cmd, "%s' | sort | column", str) == -1)
+        handle_error("calloc");
+    free(str);
+    str = cmd;
+    quick_exec(shell, cmd);
 }
 
-int		add_in_autolist(t_match **list, char *cmd)
+int add_in_autolist(match_t **list, char *cmd)
 {
-  t_match	*tmp;
-  t_match	*elem;
+    match_t *tmp;
+    match_t *elem = calloc(1, sizeof(*elem));
 
-  if ((elem = malloc(sizeof(*elem))) == NULL)
-    return (-1);
-  elem->cmd = cmd;
-  elem->next = NULL;
-  if (*list == NULL)
-    {
-      *list = elem;
-      return (0);
+    if (elem == NULL)
+        return -1;
+    elem->cmd = cmd;
+    elem->next = NULL;
+    if (*list == NULL) {
+        *list = elem;
+        return 0;
     }
-  tmp = *list;
-  while (tmp->next != NULL)
-    tmp = tmp->next;
-  tmp->next = elem;
-  return (0);
+    tmp = *list;
+    while (tmp->next != NULL)
+        tmp = tmp->next;
+    tmp->next = elem;
+    return 0;
 }

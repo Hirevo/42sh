@@ -1,60 +1,52 @@
 /*
-** auto_complete.h for auto in /home/Maxime/perso/autocompleter/include/
-**
-** Made by Maxime Jenny
-** Login   <maxime.jenny@epitech.eu>
-**
-** Started on  Tue May  9 13:51:20 2017 Maxime Jenny
-** Last update	Fri May 19 12:51:13 2017 Full Name
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** auto_complete
 */
 
-#ifndef AUTO_COMPLETE_H_
-# define AUTO_COMPLETE_H_
+#pragma once
 
-# include <dirent.h>
-# include "shell.h"
+#include "shell.h"
+#include <dirent.h>
 
-typedef struct		s_auto
-{
-  char			*pre_token;
-  char			*token;
-  char			*post_token;
-  int			is_path;
-  int			is_a_dir;
-}			t_auto;
+typedef struct auto_s {
+    char *pre_token;
+    char *token;
+    char *post_token;
+    int is_path;
+    int is_a_dir;
+} auto_t;
 
-typedef struct		s_match
-{
-  char			*cmd;
-  unsigned char		type;
-  struct s_match	*next;
-}			t_match;
+typedef struct match_s {
+    char *cmd;
+    unsigned char type;
+    struct match_s *next;
+} match_t;
 
-int		auto_complete(t_shell *shell, char *path);
-int		match(char *s1, char *s2);
-char		**split_it(char *str, char *to_split);
-int		word_length(char *str, int i, char *to_split);
-void		my_free_dirent(struct dirent **tab, int size);
-void		my_free_tab(void **tab);
-int		find_a_path(char **path, t_auto *token);
-void		transform(t_shell *shell, t_auto *t, t_match **list, char **s);
-char		*delete_str(char *to_del, char *content);
-int		for_bi(t_match **list, char *str2, t_auto *t);
-char		**get_builtin_tab();
-int		filter(const struct dirent *l);
+int auto_complete(shell_t *shell, char *path);
+int match(char *s1, char *s2);
+char **split_it(char *str, char *to_split);
+int word_length(char *str, int i, char *to_split);
+void my_free_dirent(struct dirent **tab, int size);
+void my_free_tab(void **tab);
+int find_a_path(char **path, auto_t *token);
+void transform(shell_t *shell, auto_t *t, match_t **list, char **s);
+char *delete_str(char *to_del, char *content);
+int for_bi(match_t **list, char *str2, auto_t *t);
+char **get_builtin_tab();
+int filter(const struct dirent *l);
 
 /*
 ** List
 */
 
-int		add_in_autolist(t_match **list, char *cmd);
-void		show_autolist(t_shell *, t_match *);
-void		destroy_the_list(t_match **list);
+int add_in_autolist(match_t **list, char *cmd);
+void show_autolist(shell_t *, match_t *);
+void destroy_the_list(match_t **list);
 
 /*
 ** Tokens
 */
 
-int		find_token(t_shell *shell, t_auto *token);
-
-#endif /* !AUTO_COMPLETE_H_ */
+int find_token(shell_t *shell, auto_t *token);

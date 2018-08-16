@@ -87,7 +87,7 @@ function delEnv() {
 	} else {
 		alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
 	}
-	return (false);
+	return false;
 }
 
 function get_name_env(str) {
@@ -97,7 +97,7 @@ function get_name_env(str) {
 	for (i = 0; i < str.length && str[i] != '='; i++) {
 		ret += str[i];
 	}
-	return (ret);
+	return ret;
 }
 
 function readEnv(data) {
@@ -141,7 +141,7 @@ $(document).ready(function() {
 		if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_".indexOf(e.key) == -1 &&
 		kc != "Backspace" && kc != "Delete" && kc != "ArrowDown" &&
 		kc != "ArrowUp" && kc != "ArrowLeft" && kc != "ArrowRight" && kc != "Tab") {
-			return (false);
+			return false;
 		}
 	});
 	$("#addEnv").click(function(){

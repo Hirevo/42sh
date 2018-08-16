@@ -1,27 +1,25 @@
 /*
-** bufferize.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-** 
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-** 
-** Started on  Mon Jan  9 10:55:14 2017 Nicolas Polomack
-** Last update Sun May 21 11:49:53 2017 Arthur Knoepflin
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** is
 */
 
-#include <sys/stat.h>
 #include "my.h"
+#include <string.h>
+#include <sys/stat.h>
 
-int	is_right_redirect(char *str)
+int is_right_redirect(char *str)
 {
-  return (my_strcmp(str, ">") == 0 || my_strcmp(str, ">>") == 0);
+    return strcmp(str, ">") == 0 || strcmp(str, ">>") == 0;
 }
 
-int	is_left_redirect(char *str)
+int is_left_redirect(char *str)
 {
-  return (my_strcmp(str, "<") == 0 || my_strcmp(str, "<<") == 0);
+    return strcmp(str, "<") == 0 || strcmp(str, "<<") == 0;
 }
 
-int	is_to_fork(char c)
+int is_to_fork(char c)
 {
-  return (c == ';' || c == 'e' || c == 'o');
+    return c == ';' || c == 'e' || c == 'o';
 }

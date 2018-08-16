@@ -1,11 +1,8 @@
 /*
-** exec.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Mon Jan  9 11:14:09 2017 Nicolas Polomack
-** Last update Fri Nov 2 03:39:20 2017 nicolaspolomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** exec
 */
 
 #include "get_next_line.h"
@@ -13,6 +10,7 @@
 #include "shell.h"
 #include <errno.h>
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -20,103 +18,110 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-void exec_child(t_shell *shell, int i)
+void exec_child(shell_t *shell)
 {
-	if (!is_path(shell->cur->av[0]))
-		execve(cat_path(shell->path, shell->cur->av[0], i),
-			shell->cur->av, environ);
-	else
-		execve(shell->cur->av[0], shell->cur->av, environ);
-	if (errno == ENOEXEC)
-		exit(my_print_err(shell->cur->av[0]) +
-			my_print_err(": Exec format error. Binary \
-file not executable.\n") -
-			1);
-	exit(my_print_err(shell->cur->av[0]) +
-		my_print_err(": Command not found.\n") - 1);
-	exit(0);
+    errno = 0;
+    execvp(shell->cur->av[0], shell->cur->av);
+    switch (errno) {
+    case ENOEXEC:
+        dprintf(2, "%s: Exec format error. Binary file not executable.\n",
+            shell->cur->av[0]);
+        exit(1);
+        break;
+    case EPERM:
+    case EACCES:
+    case EISDIR:
+        dprintf(2, "%s: Permission denied.\n", shell->cur->av[0]);
+        exit(1);
+        break;
+    case ENOENT:
+    default:
+        dprintf(2, "%s: Command not found.\n", shell->cur->av[0]);
+        exit(1);
+        break;
+    }
 }
 
-int check_access(char **final, t_shell *shell)
+int check_access(char **final, shell_t *shell)
 {
-	int i;
-	int ret;
-	struct stat stats;
+    int i;
+    int ret;
+    struct stat stats;
 
-	i = -1;
-	if (is_path(final[0])) {
-		if (stat(final[0], &stats) == 0)
-			return (compare_stats(&stats));
-	}
-	else
-		while (shell->path != NULL && shell->path[++i] != NULL)
-			if (stat(cat_path(shell->path, final[0], i), &stats) ==
-				0) {
-				ret = compare_stats(&stats);
-				return ((ret == 0) ? i : -2);
-			}
-	return (-1);
+    i = -1;
+    if (is_path(final[0])) {
+        if (stat(final[0], &stats) == 0)
+            return compare_stats(&stats);
+    }
+    else
+        while (shell->path != NULL && shell->path[++i] != NULL)
+            if (stat(cat_path(shell->path, final[0], i), &stats) == 0) {
+                ret = compare_stats(&stats);
+                return (ret == 0) ? i : -2;
+            }
+    return -1;
 }
 
-unsigned int exec_action(t_shell *shell, unsigned int args)
+unsigned int exec_action(shell_t *shell, unsigned int args)
 {
-	unsigned int r;
-	int i;
+    unsigned int r;
+    int i;
 
-	(void)args;
-	r = exec_pipeline(shell);
-	i = -1;
-	if (shell->is_done) {
-		free_shell(shell);
-		exit(r);
-	}
-	while (shell->final[++i])
-		free(shell->final[i]);
-	free(shell->final);
-	free_commands(shell);
-	free(shell->line);
-	if (shell->exit_str)
-		free(shell->exit_str);
-	if ((shell->exit_str = my_unsigned_to_char(r)) == NULL)
-		exit(84);
-	return (r);
+    (void)(args);
+    r = exec_pipeline(shell);
+    i = -1;
+    if (shell->is_done) {
+        free_shell(shell);
+        exit(r);
+    }
+    while (shell->final[++i])
+        free(shell->final[i]);
+    free(shell->final);
+    free_commands(shell);
+    free(shell->line);
+    if (shell->exit_str)
+        free(shell->exit_str);
+    shell->exit_str = my_unsigned_to_char(r);
+    if (shell->exit_str == NULL)
+        exit(84);
+    return r;
 }
 
-int format_commands(t_shell *shell)
+int format_commands(shell_t *shell)
 {
-	t_command *head;
-	int i;
+    command_t *head;
+    int i;
 
-	head = shell->commands;
-	while (head) {
-		i = -1;
-		while (head->av[++i])
-			if ((head->av[i] = format_arg(head->av[i])) == NULL)
-				return (-1);
-		head = head->next;
-	}
-	return (0);
+    head = shell->commands;
+    while (head) {
+        i = -1;
+        while (head->av[++i])
+            if ((head->av[i] = format_arg(head->av[i])) == NULL)
+                return -1;
+        head = head->next;
+    }
+    return 0;
 }
 
-unsigned int exec_line(t_shell *shell, unsigned int args)
+unsigned int exec_line(shell_t *shell, unsigned int args)
 {
-	if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 ||
-		parse_vars(shell) == -1 || magic(shell) == -1 ||
-		(shell->line = my_epurcommand(shell->line)) == NULL ||
-		parse_stars(shell) == 1 ||
-		(shell->line = my_epurstr(shell->line)) == NULL)
-		return (set_error(shell, 1));
-	if (is_line_empty(shell->line))
-		return (0);
-	free(shell->last);
-	shell->last = NULL;
-	if ((shell->final = bufferize(
-		     shell->line, args = count_args(shell->line))) == NULL)
-		return (1);
-	if (set_commands(shell) == -1 || set_redirects(shell) == -1 ||
-		check_error(shell) == -1 || format_commands(shell) == -1)
-		return (shell->exit = 1);
-	shell->cur = shell->commands;
-	args = exec_action(shell, args);
-	return (args);
+    if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 ||
+        parse_vars(shell) == -1 || magic(shell) == -1 ||
+        (shell->line = my_epurcommand(shell->line)) == NULL ||
+        parse_stars(shell) == 1 ||
+        (shell->line = my_epurstr(shell->line)) == NULL)
+        return set_error(shell, 1);
+    if (is_line_empty(shell->line))
+        return 0;
+    free(shell->last);
+    shell->last = NULL;
+    if ((shell->final = bufferize(
+             shell->line, args = count_args(shell->line))) == NULL)
+        return 1;
+    if (set_commands(shell) == -1 || set_redirects(shell) == -1 ||
+        check_error(shell) == -1 || format_commands(shell) == -1)
+        return shell->exit_code = 1;
+    shell->cur = shell->commands;
+    args = exec_action(shell, args);
+    return args;
 }

@@ -1,42 +1,39 @@
 /*
-** print.c for minishell1 in /home/nicolaspolomack/shell/PSU_2016_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Mon Jan  9 11:08:11 2017 Nicolas Polomack
-** Last update Sat May  6 22:17:55 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** print
 */
 
+#include "get_next_line.h"
+#include "my.h"
+#include "shell.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <stdio.h>
-#include "shell.h"
-#include "my.h"
-#include "get_next_line.h"
 
-int	my_print_err(char *err)
+int my_print_err(char *err)
 {
-  write(2, err, my_strlen(err));
-  return (1);
+    write(2, err, strlen(err));
+    return 1;
 }
 
-void	my_print_fd(char *str, int fd)
+void my_print_fd(char *str, int fd)
 {
-  write(fd, str, my_strlen(str));
+    write(fd, str, strlen(str));
 }
 
-int	my_print_ret(char *err, int ret)
+int my_print_ret(char *err, int ret)
 {
-  write(2, err, my_strlen(err));
-  return (ret);
+    write(2, err, strlen(err));
+    return ret;
 }
 
-int	ret_error(t_shell *shell, char *message)
+int ret_error(shell_t *shell, char *message)
 {
-  shell->exit = 1;
-  free(shell->exit_str);
-  shell->exit_str = my_unsigned_to_char(1);
-  printf("%s", message);
-  return (-1);
+    shell->exit_code = 1;
+    free(shell->exit_str);
+    shell->exit_str = my_unsigned_to_char(1);
+    printf("%s", message);
+    return -1;
 }

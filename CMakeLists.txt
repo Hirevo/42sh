@@ -2,9 +2,15 @@
 cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Iinclude -I../include -D_GNU_SOURCE -W -Wall -Wextra -Werror -O3")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Iinclude -I../include -D_GNU_SOURCE -W -Wall -Wextra -Werror -g")
+
+include_directories(lib/vec/src lib/str/src lib/hmap/src)
 
 add_subdirectory(lib/my)
+add_subdirectory(lib/vec)
+add_subdirectory(lib/str)
+add_subdirectory(lib/hmap)
+add_subdirectory(lib/json)
 
 add_executable(42sh
     src/alias/alias.c
@@ -44,29 +50,29 @@ add_executable(42sh
     src/builtins/which.c
     src/cd.c
     src/comment.c
-    src/config/add_env_http.c
-    src/config/client.c
-    src/config/com_serv.c
-    src/config/config.c
-    src/config/exec_cmd_http.c
-    src/config/exit.c
-    src/config/decode.c
-    src/config/get_env.c
-    src/config/get_info_pc.c
-    src/config/get_file_http.c
-    src/config/get_request.c
-    src/config/init_connection.c
-    src/config/int_toc.c
-    src/config/my_split.c
-    src/config/my_split_char.c
-    src/config/my_split_mulchar.c
-    src/config/navigator.c
-    src/config/prompt.c
-    src/config/response.c
-    src/config/send_env.c
-    src/config/send_info.c
-    src/config/send_file_http.c
-    src/config/send_mime.c
+    src/config-deprecated/add_env_http.c
+    src/config-deprecated/client.c
+    src/config-deprecated/com_serv.c
+    src/config-deprecated/config.c
+    src/config-deprecated/exec_cmd_http.c
+    src/config-deprecated/exit.c
+    src/config-deprecated/decode.c
+    src/config-deprecated/get_env.c
+    src/config-deprecated/get_info_pc.c
+    src/config-deprecated/get_file_http.c
+    src/config-deprecated/get_request.c
+    src/config-deprecated/init_connection.c
+    src/config-deprecated/int_toc.c
+    src/config-deprecated/my_split.c
+    src/config-deprecated/my_split_char.c
+    src/config-deprecated/my_split_mulchar.c
+    src/config-deprecated/navigator.c
+    src/config-deprecated/prompt.c
+    src/config-deprecated/response.c
+    src/config-deprecated/send_env.c
+    src/config-deprecated/send_info.c
+    src/config-deprecated/send_file_http.c
+    src/config-deprecated/send_mime.c
     src/echo.c
     src/env/env.c
     src/env/env2.c
@@ -155,5 +161,5 @@ add_executable(42sh
     src/auto_completation/free_dirent.c
     src/auto_completation/auto_token.c)
 
-link_directories(lib/my)
-target_link_libraries(42sh my ncurses)
+link_directories(lib/my lib/vec lib/str lib/hmap lib/json)
+target_link_libraries(42sh my json hmap vec str ncurses)

@@ -43,28 +43,28 @@ $(document).ready(function() {
           $("#terminalInput").val("$> ");
         }
       }
-      return (false);
+      return false;
     }
     if (e.key == "Home") {
       this.selectionStart = 3;
 			this.selectionEnd = 3;
-      return (false);
+      return false;
     }
     if (e.key == "End") {
       this.selectionStart = $(this).val().length;
       this.selectionEnd = $(this).val().length;
-      return (false);
+      return false;
     }
 		if (e.keyCode == 38) {
 			this.selectionStart = 3;
 			this.selectionEnd = 3;
-			return (false);
+			return false;
 		}
 		if (this.selectionStart <= 3 && (e.keyCode == 8 || e.keyCode == 37)) {
-			return (false);
+			return false;
 		}
 		if (this.selectionStart < 3) {
-			return (false);
+			return false;
 		}
 
 		if (e.keyCode == 13) {
@@ -97,7 +97,7 @@ $(document).ready(function() {
 			} else {
 				alert("Aucun port n'a été spécifier\nImpossible de comuniquer");
 			}
-			return (false);
+			return false;
 		}
 	});
 });

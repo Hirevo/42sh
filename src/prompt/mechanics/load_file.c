@@ -1,70 +1,63 @@
 /*
-** load_file.c for load_file in /home/arthur/delivery/COLLE/CPE_2016_stumper4
-** 
-** Made by Arthur Knoepflin
-** Login   <arthur.knoepflin@epitech.eu>
-** 
-** Started on  Wed May 10 14:41:00 2017 Arthur Knoepflin
-** Last update Fri May 12 22:42:59 2017 Arthur Knoepflin
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** load_file
 */
 
-#include <stdlib.h>
 #include "get_next_line.h"
 #include "my.h"
+#include <stdlib.h>
+#include <string.h>
 
-void	free_tab(char **tab)
+void free_tab(char **tab)
 {
-  int	i;
+    int i = 0;
 
-  i = 0;
-  while (tab && tab[i])
-    {
-      free(tab[i]);
-      i += 1;
+    while (tab && tab[i]) {
+        free(tab[i]);
+        i += 1;
     }
-  free(tab);
+    free(tab);
 }
 
-int	nb_tab(char **tab)
+int nb_tab(char **tab)
 {
-  int	i;
+    int i = 0;
 
-  i = 0;
-  while (tab && tab[i])
-    i += 1;
-  return (i);
+    while (tab && tab[i])
+        i += 1;
+    return i;
 }
 
-static char	**add_line(char **actual, char *line)
+static char **add_line(char **actual, char *line)
 {
-  int		i;
-  char		**ret;
+    int i = 0;
+    char **ret = calloc(nb_tab(actual) + 2, sizeof(char *));
 
-  if ((ret = malloc(sizeof(char *) * (nb_tab(actual) + 2))) == NULL)
-    return (NULL);
-  ret[nb_tab(actual) + 1] = NULL;
-  i = 0;
-  while (actual && actual[i])
-    {
-      ret[i] = my_strdup(actual[i]);
-      free(actual[i]);
-      i += 1;
+    if (ret == NULL)
+        return NULL;
+    ret[nb_tab(actual) + 1] = NULL;
+    while (actual && actual[i]) {
+        ret[i] = strdup(actual[i]);
+        free(actual[i]);
+        i += 1;
     }
-  ret[i] = line;
-  free(actual);
-  return (ret);
+    ret[i] = line;
+    free(actual);
+    return ret;
 }
 
-char	**load_file(int fd)
+char **load_file(int fd)
 {
-  char	*line;
-  char	**ret;
+    char *line = get_next_line(fd);
+    char **ret = 0;
 
-  ret = NULL;
-  while ((line = get_next_line(fd)))
-    {
-      if ((ret = add_line(ret, line)) == NULL)
-	return (NULL);
+    while (line) {
+        ret = add_line(ret, line);
+        if (ret == NULL)
+            return NULL;
+        line = get_next_line(fd);
     }
-  return (ret);
+    return ret;
 }

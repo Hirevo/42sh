@@ -1,0 +1,12 @@
+[submodule "lib/str"]
+	path = lib/str
+	url = git@github.com:Hirevo/libstr-c
+[submodule "lib/vec"]
+	path = lib/vec
+	url = git@github.com:Hirevo/libvec-c
+[submodule "lib/hmap"]
+	path = lib/hmap
+	url = git@github.com:Hirevo/libhmap-c
+[submodule "lib/json"]
+	path = lib/json
+	url = git@github.com:Hirevo/libjson-c

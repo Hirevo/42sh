@@ -1,66 +1,58 @@
 /*
-** ast_lvl_build_branch.c for 42sh in /home/benjamin/Dropbox/PSU_2016_42sh/parser_ll/
-**
-** Made by Benjamin
-** Login   <benjamin.solca@epitech.eu>
-**
-** Started on  Fri May 12 10:13:21 2017 Benjamin
-** Last update Sun May 21 17:58:32 2017 Arthur Knoepflin
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** ast_lvl_build_branch
 */
 
-#include "parser_ll.h"
 #include "bs.h"
+#include "parser_ll.h"
 
-t_ast	*rebuild_branch(t_ast *ast, t_ast *new, int count_ast)
+t_ast *rebuild_branch(t_ast *ast, t_ast *new, int count_ast)
 {
-  t_ast	*tmp;
-  t_ast	*father;
+    t_ast *tmp = ast;
+    t_ast *father;
 
-  tmp = ast;
-  while (tmp->father && count_ast > 0)
-    {
-      tmp = tmp->father;
-      count_ast--;
+    while (tmp->father && count_ast > 0) {
+        tmp = tmp->father;
+        count_ast--;
     }
-  if (!tmp->father)
-    return (rebuild_branch_start(tmp, new));
-  father = tmp->father;
-  new->father = father;
-  if (father->right == tmp)
-    father->right = new;
-  else
-    father->left = new;
-  new->left = tmp;
-  tmp->father = new;
-  return (new);
+    if (!tmp->father)
+        return rebuild_branch_start(tmp, new);
+    father = tmp->father;
+    new->father = father;
+    if (father->right == tmp)
+        father->right = new;
+    else
+        father->left = new;
+    new->left = tmp;
+    tmp->father = new;
+    return new;
 }
 
-t_ast	*create_simple_branch(t_ast *ast, t_ast *new)
+t_ast *create_simple_branch(t_ast *ast, t_ast *new)
 {
-  new->father = ast;
-  if (!ast->left)
-    {
-      ast->left = new;
-      ast = ast->left;
+    new->father = ast;
+    if (!ast->left) {
+        ast->left = new;
+        ast = ast->left;
     }
-  else if (!ast->right)
-    {
-      ast->right = new;
-      ast = ast->right;
+    else if (!ast->right) {
+        ast->right = new;
+        ast = ast->right;
     }
-  else
-    {
-      new->left = ast->right;
-      ast->right->father = new->left;
-      ast->right = new;
-      ast = ast->right;
+    else {
+        new->left = ast->right;
+        ast->right->father = new->left;
+        ast->right = new;
+        ast = ast->right;
     }
-  return (ast);
+    return ast;
 }
 
-t_ast	*rebuild_branch_start(t_ast *ast, t_ast *new)
+t_ast *rebuild_branch_start(t_ast *ast, t_ast *new)
 {
-  new->left = ast;
-  ast->father = new;
-  return (new);
+    new->left = ast;
+    ast->father = new;
+    return new;
 }

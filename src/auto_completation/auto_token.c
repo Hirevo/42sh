@@ -1,11 +1,8 @@
 /*
-** auto_token.c for auto_token in /home/Maxime/delivery/PSU/PSU_2016_42sh/auto_completation/
-**
-** Made by Maxime Jenny
-** Login   <maxime.jenny@epitech.eu>
-**
-** Started on  Fri May 12 13:59:20 2017 Maxime Jenny
-** Last update	Tue May 16 15:57:33 2017 Full Name
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** auto_token
 */
 
 #include "auto_complete.h"
@@ -13,103 +10,100 @@
 #include "shell.h"
 #include <stdlib.h>
 
-int find_a_path(char **path, t_auto *token)
+int find_a_path(char **path, auto_t *token)
 {
-	int i;
-	char *str;
-	char *new;
+    char *str = token->token;
+    int i = strlen(str) - 1;
+    char *new;
 
-	str = token->token;
-	i = my_strlen(str) - 1;
-	while (i >= 0 && str[i] != '/')
-		i--;
-	if (i == 0 && str[i] != '/')
-		return (0);
-	else if (i >= 0) {
-		if ((new = malloc(my_strlen((str + i)) + 1)) == NULL)
-			return (-1);
-		new = my_strdup(str + i + 1);
-		token->token = new;
-		*path = my_strndup(str, i + 1);
-		token->pre_token =
-			my_strcatdup(token->pre_token, my_strndup(str, i + 1));
-		free(str);
-		token->is_path = 1;
-	}
-	return (1);
+    while (i >= 0 && str[i] != '/')
+        i--;
+    if (i == 0 && str[i] != '/')
+        return 0;
+    else if (i >= 0) {
+        new = calloc(strlen(str + i) + 1, sizeof(char));
+        if (new == NULL)
+            return -1;
+        new = strdup(str + i + 1);
+        token->token = new;
+        *path = my_strndup(str, i + 1);
+        token->pre_token =
+            my_strcatdup(token->pre_token, my_strndup(str, i + 1));
+        free(str);
+        token->is_path = 1;
+    }
+    return 1;
 }
 
 char *extract_posttoken(char *str, int end)
 {
-	char *post_token;
-	int i;
-	int m;
+    char *post_token;
+    int i = end + 1;
+    int m = 0;
 
-	i = end + 1;
-	m = 0;
-	if (end == 0)
-		return (my_strdup(""));
-	if (!str[end + 1])
-		return (my_strdup(""));
-	if ((post_token = malloc(my_strlen(str) - end)) == NULL)
-		return (NULL);
-	while (str[i])
-		post_token[m++] = str[i++];
-	post_token[m] = 0;
-	return (post_token);
+    if (end == 0)
+        return strdup("");
+    if (!str[end + 1])
+        return strdup("");
+    post_token = calloc(strlen(str) - end, sizeof(char));
+    if (post_token == NULL)
+        return NULL;
+    while (str[i])
+        post_token[m++] = str[i++];
+    post_token[m] = 0;
+    return post_token;
 }
 
 char *extract_pretoken(char *str, int start)
 {
-	char *pre_token;
-	int i;
+    char *pre_token = calloc(start + 1, sizeof(char));
+    int i = 0;
 
-	i = 0;
-	if (start == 0)
-		return (my_strdup(""));
-	if ((pre_token = malloc(start + 1)) == NULL)
-		return (NULL);
-	while (i < start) {
-		pre_token[i] = str[i];
-		i++;
-	}
-	pre_token[i] = 0;
-	return (pre_token);
+    if (start == 0)
+        return strdup("");
+    if (pre_token == NULL)
+        return NULL;
+    while (i < start) {
+        pre_token[i] = str[i];
+        i++;
+    }
+    pre_token[i] = 0;
+    return pre_token;
 }
 
 char *extract_token(char *str, int i, int *start, int *end)
 {
-	char *token;
-	int m;
+    char *token;
+    int m = 0;
 
-	if (str == NULL)
-		return (my_strdup(""));
-	while (i >= 0 && str && str[i] != ' ')
-		i--;
-	*start = ++i;
-	*end = i + word_length(str, i, " ") - 1;
-	if ((token = malloc(*end - *start + 2)) == NULL)
-		return (NULL);
-	m = 0;
-	while (i <= *end)
-		token[m++] = str[i++];
-	token[m] = 0;
-	return (token);
+    if (str == NULL)
+        return strdup("");
+    while (i >= 0 && str && str[i] != ' ')
+        i--;
+    *start = ++i;
+    *end = i + word_length(str, i, " ") - 1;
+    token = calloc(*end - *start + 2, sizeof(char));
+    if (token == NULL)
+        return NULL;
+    while (i <= *end)
+        token[m++] = str[i++];
+    token[m] = 0;
+    return token;
 }
 
-int find_token(t_shell *shell, t_auto *token)
+int find_token(shell_t *shell, auto_t *token)
 {
-	int start;
-	int end;
+    int start = 0;
+    int end = 0;
 
-	start = 0;
-	end = 0;
-	if (!(token->token = extract_token(
-		      shell->line, shell->w.cur, &start, &end)))
-		return (-1);
-	if (!(token->pre_token = extract_pretoken(shell->line, start)))
-		return (-1);
-	if (!(token->post_token = extract_posttoken(shell->line, end)))
-		return (-1);
-	return (0);
+    token->token = extract_token(shell->line, shell->w.cur, &start, &end);
+    if (!token->token)
+        return -1;
+    token->pre_token = extract_pretoken(shell->line, start);
+    if (!token->pre_token)
+        return -1;
+    token->post_token = extract_posttoken(shell->line, end);
+    if (!token->post_token)
+        return -1;
+    return 0;
 }

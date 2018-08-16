@@ -1,50 +1,27 @@
 /*
-** unalias.c for 42sh in /home/nicolaspolomack/TurboSh
-** 
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-** 
-** Started on  Sun May  7 22:13:48 2017 Nicolas Polomack
-** Last update Sun May  7 22:23:13 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** unalias
 */
 
+#include "shell.h"
 #include <stdlib.h>
 #include <string.h>
-#include "shell.h"
 
-void		remove_alias(t_shell *shell, char *alias)
+void remove_alias(shell_t *shell, char *alias)
 {
-  t_alias	*head;
-  t_alias	*last;
-
-  head = shell->alias;
-  last = NULL;
-  while (head)
-    {
-      if (strcmp(head->alias, alias) == 0)
-	{
-	  if (last)
-	    last->next = head->next;
-	  else
-	    shell->alias = head->next;
-	  free(head->alias);
-	  free(head->command);
-	  free(head);
-	  return ;
-	}
-      last = head;
-      head = head->next;
-    }
+    free(lhmap_remove(shell->alias, alias));
 }
 
-int	unalias(t_shell *shell, char **aliases)
+int unalias(shell_t *shell, char **aliases)
 {
-  int	i;
+    int i;
 
-  i = -1;
-  if (shell->alias == NULL)
-    return (0);
-  while (aliases[++i])
-    remove_alias(shell, aliases[i]);
-  return (0);
+    i = -1;
+    if (shell->alias == NULL)
+        return 0;
+    while (aliases[++i])
+        remove_alias(shell, aliases[i]);
+    return 0;
 }

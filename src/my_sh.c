@@ -1,160 +1,141 @@
 /*
-** my_exec.c for my_exec in /home/nicolaspolomack/shell/bs_minishell1
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Tue Jan  3 09:03:30 2017 Nicolas Polomack
-** Last update Wed Aug 1 17:20:09 2017 nicolaspolomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** my_sh
 */
 
-#include <string.h>
-#include <sys/ioctl.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <time.h>
-#include <sys/wait.h>
-#include <signal.h>
-#include <stdio.h>
-#include <curses.h>
-#include "my.h"
 #include "get_next_line.h"
+#include "my.h"
 #include "parser_ll.h"
 #include "shell.h"
+#include <curses.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
 
-void	diagnose_status(unsigned int status)
+void diagnose_status(unsigned int status)
 {
-  if ((status % 128) == SIGSEGV)
-    my_print_err("Segmentation fault");
-  else if ((status % 128) == SIGFPE)
-    my_print_err("Floating exception");
-  else if ((status % 128) == SIGBUS)
-    my_print_err("Bus error");
-  else if ((status % 128) == SIGABRT)
-    my_print_err("Aborted");
-  else if ((status % 128) == SIGILL)
-    my_print_err("Illegal instruction");
-  else if ((status % 128) == SIGKILL)
-    my_print_err("Killed");
-  else if ((status % 128) == SIGTERM)
-    my_print_err("Terminated");
-  else if ((status % 128) == SIGPIPE)
-    return ;
-  my_print_err((WCOREDUMP(status)) ? " (core dumped)\n" : "\n");
+    if ((status % 128) == SIGSEGV)
+        dprintf(2, "Segmentation fault");
+    else if ((status % 128) == SIGFPE)
+        dprintf(2, "Floating exception");
+    else if ((status % 128) == SIGBUS)
+        dprintf(2, "Bus error");
+    else if ((status % 128) == SIGABRT)
+        dprintf(2, "Aborted");
+    else if ((status % 128) == SIGILL)
+        dprintf(2, "Illegal instruction");
+    else if ((status % 128) == SIGKILL)
+        dprintf(2, "Killed");
+    else if ((status % 128) == SIGTERM)
+        dprintf(2, "Terminated");
+    else if ((status % 128) == SIGPIPE)
+        return;
+    dprintf(2, (WCOREDUMP(status)) ? " (core dumped)\n" : "\n");
 }
 
-void		reload_shell(t_shell *shell)
+void reload_shell(shell_t *shell)
 {
-  int		k;
-  char		*path;
+    char *path = getenv("PATH");
 
-  if ((path = getenv("PATH")))
-    {
-      if (shell->path)
-	{
-	  k = -1;
-	  while (shell->path[++k])
-	    free(shell->path[k]);
-	  free(shell->path);
-	}
-      shell->path = init_path(path);
+    if (path) {
+        for (int k = 0; shell->path && shell->path[k]; k++)
+            free(shell->path[k]);
+        free(shell->path);
+        shell->path = init_path(path);
     }
-  shell->home = getenv("HOME");
-  shell->current = get_current(shell->current, shell->home);
+    shell->home = getenv("HOME");
+    shell->current = get_current(shell->current, shell->home);
 }
 
-void	execute(t_shell *shell)
+void execute(shell_t *shell)
 {
-  char	*str;
+    char *str;
 
-  if (shell->ioctl)
-    prompt_line(shell);
-  else
-    shell->line = get_next_line(0);
-  if (shell->line && shell->tty && shell->ioctl)
-    write(1, "\n", 1);
-  if (!shell->line)
-    shell->line = strdup("exit");
-  clear_comment(shell);
-  if (!is_line_empty(shell->line))
-    {
-      if ((str = get_alias_cmd(shell, "postcmd")))
-	quick_exec(shell, str);
-      shell->exit = exec_line(shell, shell->tty);
-      if ((str = get_alias_cmd(shell, "precmd")))
-	quick_exec(shell, str);
+    if (shell->ioctl)
+        prompt_line(shell);
+    else
+        shell->line = get_next_line(0);
+    if (shell->line && shell->tty && shell->ioctl)
+        write(1, "\n", 1);
+    if (!shell->line)
+        shell->line = strdup("exit");
+    clear_comment(shell);
+    if (!is_line_empty(shell->line)) {
+        if ((str = get_alias_cmd(shell, "postcmd")))
+            quick_exec(shell, str);
+        shell->exit_code = exec_line(shell, shell->tty);
+        if ((str = get_alias_cmd(shell, "precmd")))
+            quick_exec(shell, str);
     }
 }
 
-static int	start_standard_shell(t_shell *shell)
+static int start_standard_shell(shell_t *shell)
 {
-  signal(SIGINT, SIG_IGN);
-  signal(SIGTTOU, SIG_IGN);
-  while (1)
-    {
-      shell->line = NULL;
-      shell->w.cur = 0;
-      init_prompt(shell);
-      execute(shell);
+    signal(SIGINT, SIG_IGN);
+    signal(SIGTTOU, SIG_IGN);
+    while (1) {
+        shell->line = NULL;
+        shell->w.cur = 0;
+        init_prompt(shell);
+        execute(shell);
     }
-  if (shell->tty)
-    {
-      write(1, "exit\n", 5);
-      if (shell->ioctl)
-	{
-	  tcsetattr(0, TCSANOW, &shell->w.oterm);
-	  my_putstr(tigetstr("rmkx"));
-	  fflush(stdout);
-	}
+    if (shell->tty) {
+        write(1, "exit\n", 5);
+        if (shell->ioctl) {
+            tcsetattr(0, TCSANOW, &shell->w.oterm);
+            my_putstr(tigetstr("rmkx"));
+            fflush(stdout);
+        }
     }
-  return (shell->exit);
+    return shell->exit_code;
 }
 
-static int	treat_arg(t_shell *shell, int ac, char **av, int fd)
+static int treat_arg(shell_t *shell, int ac, char **av, int fd)
 {
-  if (strcmp(av[1], "-c") == 0)
-    {
-      if (ac >= 3)
-	{
-	  signal(SIGINT, SIG_IGN);
-	  signal(SIGTTOU, SIG_IGN);
-	  quick_exec(shell, strdup(av[2]));
-	}
-      return (shell->exit);
+    if (lstr_equals(av[1], "-c")) {
+        if (ac >= 3) {
+            signal(SIGINT, SIG_IGN);
+            signal(SIGTTOU, SIG_IGN);
+            quick_exec(shell, strdup(av[2]));
+        }
+        return shell->exit_code;
     }
-  else if (av[1][0] != '-')
-    {
-      if ((fd = open(av[1], O_RDONLY)) == -1)
-	{
-	  my_puterror(av[1]);
-	  my_puterror(": No such file or directory\n");
-	  return (1);
-	}
-      if (dup2(fd, 0) == -1)
-	return (1);
-      shell->tty = 0;
-      shell->ioctl = 0;
-      return (start_standard_shell(shell));
+    else if (av[1][0] != '-') {
+        fd = open(av[1], O_RDONLY);
+        if (fd == -1)
+            return dprintf(2, "%s: No such file or directory\n", av[1]), 1;
+        if (dup2(fd, 0) == -1)
+            return 1;
+        shell->tty = 0;
+        shell->ioctl = 0;
+        return start_standard_shell(shell);
     }
-  return (start_standard_shell(shell));
+    return start_standard_shell(shell);
 }
 
-int		main(int ac, char **av)
+int main(int ac, char **av)
 {
-  t_shell	shell;
-  int		fd;
+    shell_t shell;
+    int fd;
 
-  fd = 0;
-  setenv("SHELL", av[0], 1);
-  if (init_shell(&shell) == -1)
-    return (84);
-  shell.av = av + ((ac == 1) ? 0 : 1);
-  if (ac == 1)
-    return (start_standard_shell(&shell));
-  else
-    return (treat_arg(&shell, ac, av, fd));
-  return (0);
+    fd = 0;
+    setenv("SHELL", av[0], 1);
+    if (init_shell(&shell) == -1)
+        return 84;
+    shell.av = av + ((ac == 1) ? 0 : 1);
+    if (ac == 1)
+        return start_standard_shell(&shell);
+    else
+        return treat_arg(&shell, ac, av, fd);
+    return 0;
 }

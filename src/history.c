@@ -1,11 +1,8 @@
 /*
-** history.c for 42sh in /home/nicolaspolomack/psu/2/PSU_2016_42sh
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Thu May 11 20:41:13 2017 Nicolas Polomack
-** Last update Sun May 21 04:22:48 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** history
 */
 
 #include "get_next_line.h"
@@ -18,115 +15,108 @@
 #include <string.h>
 #include <unistd.h>
 
-void write_hist(t_shell *shell, int fd)
+static bool last_500(void *ctx, char **elem, size_t idx)
 {
-	t_history *head;
-	int i;
-	int c;
+    bool kept = idx < 500;
 
-	head = shell->hist.last;
-	c = -1;
-	while (head->prev && ++c < 500)
-		head = head->prev;
-	while (head) {
-		i = -1;
-		while (head->cmd[++i])
-			dprintf(fd, i ? " %s" : "%s", head->cmd[i]);
-		dprintf(fd, "\n");
-		head = head->next;
-		c += 1;
-	}
-	close(fd);
-	free_hist(shell);
+    (void)(ctx);
+    if (kept == false) {
+        for (size_t i = 0; elem && elem[i]; i++)
+            free(elem[i]);
+        free(elem);
+    }
+    return kept;
 }
 
-void save_history(t_shell *shell)
+void write_hist(shell_t *shell, int fd)
 {
-	int fd;
-	char *line;
+    vec_t *hist = shell->hist.arr;
 
-	if (shell->hist.first == NULL || shell->home == NULL ||
-		(line = malloc(512)) == NULL)
-		return;
-	line[0] = 0;
-	line = strcat(line, shell->home);
-	if (shell->home[strlen(shell->home)] != '/')
-		line[strlen(shell->home)] = '/';
-	line[strlen(shell->home) + 1] = 0;
-	line = my_strcat(line, HIST_FILE);
-	if ((fd = open(line, O_WRONLY | O_CREAT | O_TRUNC, 0644)) == -1)
-		return;
-	free(line);
-	write_hist(shell, fd);
+    lvec_reverse(hist);
+    lvec_filter(hist, (bool (*)(void *, void *, size_t))(last_500), 0);
+    lvec_reverse(hist);
+    for (size_t i = 0; i < hist->size; i++) {
+        const char **payload = hist->arr[i];
+        for (size_t j = 0; payload[j]; j++)
+            dprintf(fd, i ? " %s" : "%s", payload[j]);
+        dprintf(fd, "\n");
+    }
+    close(fd);
+    free_hist(shell);
 }
 
-int disp_hist(t_shell *shell, int args)
+void save_history(shell_t *shell)
 {
-	t_history *head;
-	int i;
-	int index;
+    char *line;
 
-	(void)args;
-	if (shell->hist.first == NULL)
-		return (0);
-	index = 0;
-	head = shell->hist.first;
-	while (head) {
-		index += 1;
-		printf("%6d   ", index);
-		i = -1;
-		while (head->cmd[++i])
-			printf(i ? " %s" : "%s", head->cmd[i]);
-		printf("\n");
-		head = head->next;
-	}
-	return (0);
+    if (shell->hist.arr == NULL || shell->home == NULL)
+        return;
+    line = calloc(512, sizeof(char));
+    line[0] = 0;
+    line = strcat(line, shell->home);
+    if (shell->home[strlen(shell->home)] != '/')
+        line[strlen(shell->home)] = '/';
+    line[strlen(shell->home) + 1] = 0;
+    line = strcat(line, HIST_FILE);
+    const int fd = open(line, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (fd == -1)
+        return;
+    free(line);
+    write_hist(shell, fd);
 }
 
-void add_hist_elem(t_shell *shell, char *line)
+int disp_hist(shell_t *shell, int args)
 {
-	t_history *elem;
+    vec_t *arr = shell->hist.arr;
 
-	if ((elem = malloc(sizeof(t_history))) == NULL ||
-		(elem->cmd = my_split_mulchar(line, " \t")) == NULL)
-		handle_error("malloc");
-	elem->next = NULL;
-	elem->prev = NULL;
-	if (shell->hist.last) {
-		shell->hist.last->next = elem;
-		elem->prev = shell->hist.last;
-		shell->hist.last = elem;
-	}
-	else {
-		shell->hist.first = elem;
-		shell->hist.last = elem;
-	}
+    (void)(args);
+    if (arr == NULL)
+        return 0;
+    for (size_t i = 0; i < arr->size; i++) {
+        char **payload = arr->arr[i];
+        printf("%6lu\t", i);
+        for (size_t j = 0; payload[j]; j++)
+            printf(i ? " %s" : "%s", payload[j]);
+        printf("\n");
+    }
+    return 0;
 }
 
-void init_history(t_shell *shell)
+void add_hist_elem(shell_t *shell, char *line)
 {
-	int fd;
-	char *line;
+    char **payload = my_split_mulchar(line, " \t");
 
-	shell->hist.cur = NULL;
-	shell->hist.last = NULL;
-	shell->hist.first = NULL;
-	if (shell->home == NULL)
-		return;
-	if ((line = malloc(512)) == NULL)
-		handle_error("malloc");
-	line[0] = 0;
-	line = strcat(line, shell->home);
-	if (shell->home[strlen(shell->home)] != '/')
-		line[strlen(shell->home)] = '/';
-	line[strlen(shell->home) + 1] = 0;
-	line = my_strcat(line, HIST_FILE);
-	if ((fd = open(line, O_RDONLY)) == -1)
-		return;
-	free(line);
-	while ((line = get_next_line(fd))) {
-		add_hist_elem(shell, line);
-		free(line);
-	}
-	close(fd);
+    if (payload == NULL)
+        handle_error("calloc");
+    lvec_push_back(shell->hist.arr, 1, payload);
+}
+
+void init_history(shell_t *shell)
+{
+    int fd;
+    char *line;
+
+    shell->hist.cur = 0;
+    shell->hist.arr = lvec_with_capacity(512);
+    if (shell->hist.arr == 0 || shell->home == NULL)
+        return;
+    line = calloc(512, sizeof(char));
+    if (line == NULL)
+        handle_error("calloc");
+    line[0] = 0;
+    line = strcat(line, shell->home);
+    if (shell->home[strlen(shell->home)] != '/')
+        line[strlen(shell->home)] = '/';
+    line[strlen(shell->home) + 1] = 0;
+    line = strcat(line, HIST_FILE);
+    if ((fd = open(line, O_RDONLY)) == -1)
+        return;
+    free(line);
+    line = get_next_line(fd);
+    while (line) {
+        add_hist_elem(shell, line);
+        free(line);
+        line = get_next_line(fd);
+    }
+    close(fd);
 }

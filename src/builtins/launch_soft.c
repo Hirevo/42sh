@@ -1,76 +1,63 @@
 /*
-** launch_soft.c for soft in /home/arthur/delivery/PSU/PSU_2016_minishell1
-** 
-** Made by Arthur Knoepflin
-** Login   <arthur@epitech.net>
-** 
-** Started on  Fri Jan 20 12:08:54 2017 Arthur Knoepflin
-** Last update Thu May 18 23:26:39 2017 Arthur Knoepflin
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** launch_soft
 */
 
-#include <stdlib.h>
-#include "shell.h"
 #include "builtin.h"
 #include "my.h"
+#include "shell.h"
+#include <stdlib.h>
 
-int	str_in(char *str1, char *in)
+int str_in(char *str1, char *in)
 {
-  if (my_strncmp(str1, in, my_strlen(str1)) == 0 &&
-      in[my_strlen(str1)] == '=')
-    return (1);
-  return (0);
+    if (my_strncmp(str1, in, strlen(str1)) == 0 && in[strlen(str1)] == '=')
+        return 1;
+    return 0;
 }
 
-int	nb_args_valid(t_parse_env *parse)
+int nb_args_valid(parse_env_t *parse)
 {
-  int	i;
-  int	count;
+    int i = 0;
+    int count = 0;
 
-  i = 0;
-  count = 0;
-  while (environ && environ[i])
-    {
-      if (!str_in_liste(parse->unset_l, environ[i]))
-	count += 1;
-      i += 1;
+    while (environ && environ[i]) {
+        if (!str_in_liste(parse->unset_l, environ[i]))
+            count += 1;
+        i += 1;
     }
-  return (count);
+    return count;
 }
 
-char	**getting_env(t_parse_env *parse, char **env)
+char **getting_env(parse_env_t *parse, char **env)
 {
-  int	i;
-  int	j;
+    int i = 0;
+    int j = 0;
 
-  if (parse->ignore == 1)
-    return (NULL);
-  if ((env = malloc(sizeof(char *) *
-		    (nb_args_valid(parse) + 1))) == NULL)
-    return (NULL);
-  env[nb_args_valid(parse)] = NULL;
-  i = 0;
-  j = 0;
-  while (environ && environ[i])
-    {
-      if (!str_in_liste(parse->unset_l, environ[i]))
-	{
-	  env[j] = my_strdup(environ[i]);
-	  j += 1;
-	}
-      i += 1;
+    if (parse->ignore == 1)
+        return NULL;
+    env = calloc(nb_args_valid(parse) + 1, sizeof(char *));
+    if (env == NULL)
+        return NULL;
+    env[nb_args_valid(parse)] = NULL;
+    while (environ && environ[i]) {
+        if (!str_in_liste(parse->unset_l, environ[i])) {
+            env[j] = strdup(environ[i]);
+            j += 1;
+        }
+        i += 1;
     }
-  return (env);
+    return env;
 }
 
-int	launch_soft(t_parse_env *parse)
+int launch_soft(parse_env_t *parse)
 {
-  char	**env;
+    char **env = getting_env(parse, 0);
 
-  env = NULL;
-  env = getting_env(parse, env);
-  if (parse->cmd != NULL)
-    return (exec_arg(parse->cmd[0], parse->cmd, env));
-  else
-    show_tab_env(env);
-  return (0);
+    if (parse->cmd != NULL)
+        return exec_arg(parse->cmd[0], parse->cmd, env);
+    else
+        show_tab_env(env);
+    return 0;
 }

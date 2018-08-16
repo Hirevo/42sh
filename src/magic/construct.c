@@ -1,11 +1,8 @@
 /*
-** construct.c for 42sh in /home/nicolaspolomack/TurboSh
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Sun May 21 05:03:54 2017 Nicolas Polomack
-** Last update Sun May 21 05:06:47 2017 Nicolas Polomack
+** EPITECH PROJECT, 2018
+** 42sh
+** File description:
+** construct
 */
 
 #include "my.h"
@@ -16,65 +13,57 @@
 
 int count_separators(char *str)
 {
-	int i;
-	int count;
+    int i = -1;
+    int count = 0;
 
-	i = -1;
-	count = 0;
-	while (str[++i])
-		if (str[i] == '\\')
-			i += !!(str[i + 1]);
-		else if (is_separator(str[i]) || is_space(str[i]) ||
-			str[i] == '\\' || str[i] == '"' || str[i] == '\'')
-			count += 1;
-	return (count);
+    while (str[++i])
+        if (str[i] == '\\')
+            i += !!(str[i + 1]);
+        else if (is_separator(str[i]) || is_space(str[i]) || str[i] == '\\' ||
+            str[i] == '"' || str[i] == '\'')
+            count += 1;
+    return count;
 }
 
 char *sanitize(char *str, int to_free)
 {
-	int i1;
-	int i2;
-	int size;
-	char *ret;
+    int i1 = -1;
+    int i2 = 0;
+    int size = count_separators(str);
+    char *ret = calloc(strlen(str) + (size * 2) + 1, sizeof(char));
 
-	i1 = -1;
-	i2 = 0;
-	size = count_separators(str);
-	if ((ret = malloc(strlen(str) + (size * 2) + 1)) == NULL)
-		return (NULL);
-	while (str[++i1])
-		if (str[i1] == '\\' || is_separator(str[i1]) ||
-			str[i1] == '"' || str[i1] == '\'' ||
-			is_space(str[i1])) {
-			ret[i2++] = '\\';
-			ret[i2++] = str[i1];
-		}
-		else
-			ret[i2++] = str[i1];
-	ret[i2] = 0;
-	if (to_free)
-		free(str);
-	return (ret);
+    if (ret == NULL)
+        return NULL;
+    while (str[++i1])
+        if (str[i1] == '\\' || is_separator(str[i1]) || str[i1] == '"' ||
+            str[i1] == '\'' || is_space(str[i1])) {
+            ret[i2++] = '\\';
+            ret[i2++] = str[i1];
+        }
+        else
+            ret[i2++] = str[i1];
+    ret[i2] = 0;
+    if (to_free)
+        free(str);
+    return ret;
 }
 
 char *construct_magic(char **tab)
 {
-	int i;
-	int len;
-	char *ret;
+    int i = -1;
+    int len = 0;
+    char *ret;
 
-	len = 0;
-	i = -1;
-	while (tab[++i])
-		len += ((!!i) + strlen(tab[i]) + 2);
-	if ((ret = malloc(len + 1)) == NULL)
-		handle_error("malloc");
-	*ret = 0;
-	i = -1;
-	while (tab[++i]) {
-		if (i)
-			strcat(ret, " ");
-		strcat(ret, tab[i]);
-	}
-	return (ret);
+    while (tab[++i])
+        len += ((!!i) + strlen(tab[i]) + 2);
+    ret = calloc(len + 1, sizeof(char));
+    if (ret == NULL)
+        handle_error("calloc");
+    i = -1;
+    while (tab[++i]) {
+        if (i)
+            strcat(ret, " ");
+        strcat(ret, tab[i]);
+    }
+    return ret;
 }
