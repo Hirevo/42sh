@@ -24,7 +24,7 @@ int launch_config(shell_t *shell)
     }
     config.env = environ;
     config.prompt = shell->prompt;
-    ret = config_http(&config);
+    ret = config_http(shell, &config);
     shell->prompt = config.prompt;
     asprintf(&prompt, "%d", config.prompt);
     setenv("PROMPT", prompt, 1);

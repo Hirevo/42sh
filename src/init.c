@@ -57,6 +57,10 @@ void init(shell_t *shell)
 {
     shell->tty = isatty(0);
     if (shell->tty) {
+        if (tcsetpgrp(0, getpgid(getpid()))) {
+            perror("tcsetpgrp");
+            return;
+        }
         if (getenv("TERM") == NULL || setupterm(NULL, 0, NULL) == ERR) {
             shell->ioctl = 0;
             return;

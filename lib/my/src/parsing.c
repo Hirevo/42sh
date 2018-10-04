@@ -10,7 +10,7 @@
 
 #include "my.h"
 
-char *get_flags(char *str, t_flags *flags, va_list ap, int *count)
+char *geflags_t(char *str, flags_t *flags, va_list ap, int *count)
 {
     if ((*str == '-') || (*str == '+') || (*str == '0') || (*str == '#') ||
         (*str == ' '))
@@ -38,7 +38,7 @@ char *get_flags(char *str, t_flags *flags, va_list ap, int *count)
     return (str);
 }
 
-char *check_parse(char *str, t_flags *flags, int *count)
+char *check_parse(char *str, flags_t *flags, int *count)
 {
     if (flags->format == 'd' || flags->format == 'i' || flags->format == 'p' ||
         flags->format == 'X' || flags->format == 'x' || flags->format == 'o' ||

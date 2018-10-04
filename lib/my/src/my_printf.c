@@ -14,7 +14,7 @@
 #include <stdarg.h>
 #include "my.h"
 
-void	my_octal_putstr(char *str, int *c, t_flags *flags)
+void	my_octal_putstr(char *str, int *c, flags_t *flags)
 {
   int	count;
 
@@ -37,7 +37,7 @@ void	my_octal_putstr(char *str, int *c, t_flags *flags)
     }
 }
 
-void	print_nbr(t_flags *flags, va_list ap, int *count)
+void	print_nbr(flags_t *flags, va_list ap, int *count)
 {
   if (flags->format == 'o')
     display_number(flags, ap, "01234567", count);
@@ -61,7 +61,7 @@ void	print_nbr(t_flags *flags, va_list ap, int *count)
     display_number(flags, ap, "0123456789", count);
 }
 
-void	print_flag(t_flags *flags, va_list ap, int *count)
+void	print_flag(flags_t *flags, va_list ap, int *count)
 {
   if (flags->format == 's')
     my_putstr_printf(va_arg(ap, char *), count, flags, 0);
@@ -73,7 +73,7 @@ void	print_flag(t_flags *flags, va_list ap, int *count)
     my_putchar_printf('%', count);
 }
 
-void	initialize_flags(t_flags *flags, int *count)
+void	initialize_flags(flags_t *flags, int *count)
 {
   *count = 0;
   flags->width = 0;
@@ -87,7 +87,7 @@ int		my_printf(char *str, ...)
 {
   int		count;
   va_list	ap;
-  t_flags	flags;
+  flags_t	flags;
 
   initialize_flags(&flags, &count);
   va_start(ap, str);
@@ -96,7 +96,7 @@ int		my_printf(char *str, ...)
     if (*str == '%')
     {
       flags.backup = str;
-      str = get_flags(str + 1, &flags, ap, &count);
+      str = geflags_t(str + 1, &flags, ap, &count);
       if (flags.format == 'd' || flags.format == 'i' ||
 	  flags.format == 'p' || flags.format == 'X' || flags.format == 'x' ||
 	  flags.format == 'o' || flags.format == 'u' || flags.format == 'b')

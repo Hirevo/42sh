@@ -68,7 +68,7 @@ int my_compare(char *, char *, int);
 int my_printf(char *, ...);
 void print_flag(flags_t *, va_list, int *);
 flags_t *inititalize_flags(flags_t **, int *);
-char *get_flags(char *, flags_t *, va_list, int *);
+char *geflags_t(char *, flags_t *, va_list, int *);
 void my_octal_putstr(char *, int *, flags_t *);
 void my_put_nbr_base(int, int, flags_t *, int *);
 void my_put_nbr_long(long, int *);

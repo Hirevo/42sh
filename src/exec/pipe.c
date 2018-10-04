@@ -60,6 +60,8 @@ int exec_pipeline(shell_t *shell)
         if ((r = exec_branch(shell, &head, fds, &ret)) == 84)
             return 84;
     }
+    if (tcsetpgrp(0, getpgid(getpid())) == -1)
+        perror("tcsetpgrp");
     return r;
 }
 
@@ -122,8 +124,8 @@ int father_action(command_t **head, int *ret, int *fds, shell_t *shell)
     r = 0;
     if (!((*head)->next) || (*head)->link != '|') {
         r = get_return(shell);
-        shell->pgid = 0 + (fds[2] = -1) * 0;
-        tcsetpgrp(0, getpid());
+        shell->pgid = 0;
+        fds[2] = -1;
     }
     skip_commands(head, WEXITSTATUS(r));
     if (*head)

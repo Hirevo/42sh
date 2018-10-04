@@ -8,6 +8,7 @@
 #include "get_next_line.h"
 #include "my.h"
 #include "server.h"
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -67,21 +68,19 @@ static int core(t_socket sock, t_config *config, int actual)
     return 0;
 }
 
-int config_http(t_config *config)
+int config_http(shell_t *shell, t_config *config)
 {
     int port;
     t_socket serv;
-    // char *p_nav;
+    char *ip;
 
-    // if ((p_nav = find_navigator(config->env)) == NULL) {
-    //     dprintf(2, "No browser found\n");
-    //     return 1;
-    // }
     srand(getpid() * time(NULL));
     if ((port = init_connection(&serv)) == -1)
         return 1;
     printf("Server started on http://localhost:%d/\n", port);
-    // launch_nav(p_nav, port, config->env);
+    ip = lstr_concat(
+        strdup("open 'http://localhost:"), 1, LSTR_INT, (int)(port));
+    quick_exec(shell, ip);
     core(serv, config, 0);
     close(serv);
     return 0;

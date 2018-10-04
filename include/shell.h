@@ -213,7 +213,7 @@ int clear_comment(shell_t *);
 ** config.c
 */
 
-int config_http(t_config *);
+int config_http(shell_t *, t_config *);
 
 /*
 ** history.c

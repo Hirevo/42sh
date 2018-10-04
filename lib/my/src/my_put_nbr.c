@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "my.h"
 
-void	my_put_nbr_base(int n, int base, t_flags *flags, int *count)
+void	my_put_nbr_base(int n, int base, flags_t *flags, int *count)
 {
   int	nbr;
 
