@@ -78,8 +78,8 @@ int config_http(shell_t *shell, t_config *config)
     if ((port = init_connection(&serv)) == -1)
         return 1;
     printf("Server started on http://localhost:%d/\n", port);
-    ip = lstr_concat(
-        strdup("open 'http://localhost:"), 1, LSTR_INT, (int)(port));
+    ip = lstr_concat(strdup("open 'http://localhost:"), 2, LSTR_INT,
+        (int)(port), LSTR_CHAR, '\'');
     quick_exec(shell, ip);
     core(serv, config, 0);
     close(serv);
