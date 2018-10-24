@@ -140,6 +140,8 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/prompt/bigmac.c
     ${PROJECT_SOURCE_DIR}/src/prompt/oh_my_zsh.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mysh_lambda.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mysh_256.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/advanced.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/fct.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/tmp.c
