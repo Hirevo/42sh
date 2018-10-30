@@ -24,6 +24,6 @@ void mysh_lambda(shell_t *shell)
     git = show_cur_branch();
     if (git)
         printf("\e[1m[\e[38;2;0;133;255m%s\e[0m\e[1m] ", git);
-    printf(getuid() ? "λ> " : "# ");
+    printf(getuid() ? "λ> " : "#> ");
     fflush(stdout);
 }
