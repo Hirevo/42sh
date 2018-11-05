@@ -24,6 +24,11 @@
 
 extern char **environ;
 
+typedef struct exec_status_s {
+    bool ok;
+    int code;
+} exec_status_t;
+
 typedef struct command_s {
     char **av;
     char link;
@@ -156,8 +161,7 @@ void my_print_command(shell_t *);
 char *detect_home(char *, char *);
 char *get_current(char *, char *);
 int indexof_builtin(char *);
-int exec_builtins(shell_t *, int, int *);
-int exec_builtins2(shell_t *, int, int *, int);
+exec_status_t exec_builtins(shell_t *, int);
 unsigned int get_unsigned_int(char *);
 int is_line_empty(char *);
 int init_shell(shell_t *);
@@ -221,13 +225,13 @@ int config_http(shell_t *, t_config *);
 void save_history(shell_t *);
 int disp_hist(shell_t *, int);
 void add_hist_elem(shell_t *, char *);
-void init_history(shell_t *);
+void init_history(shell_t *, const char *filename);
 void skip_string(char *, int *);
 
 /*
 ** history2.c
 */
-int parse_history(shell_t *, int);
+int subst_history(shell_t *, int);
 
 /*
 ** magic/magic.c
@@ -243,7 +247,7 @@ char *construct_magic(char **);
 /*
 ** exec/exec2.c
 */
-unsigned int exec_redirected_builtins(shell_t *, int, int *, int[2]);
+exec_status_t exec_redirected_builtins(shell_t *, int, int[2]);
 void quick_exec(shell_t *, char *);
 
 /*
@@ -308,7 +312,7 @@ int check_error(shell_t *);
 /*
 ** exec/pipe.c
 */
-int exec_pipeline(shell_t *);
+exec_status_t exec_pipeline(shell_t *);
 int father_action(command_t **, int *, int *, shell_t *);
 void exec_piped_child(int, command_t *, int[2], shell_t *);
 

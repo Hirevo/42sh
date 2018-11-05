@@ -119,7 +119,7 @@ static int is_hist_sym(shell_t *shell, int i)
     return 0;
 }
 
-int parse_history(shell_t *shell, int save)
+int subst_history(shell_t *shell, int save)
 {
     int i;
     char *last;

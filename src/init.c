@@ -42,7 +42,7 @@ int init_shell(shell_t *shell)
     shell->exit_str = NULL;
     shell->fds = NULL;
     shell->is_done = 0;
-    init_history(shell);
+    init_history(shell, HIST_FILE);
     init_aliases(shell);
     parse_rc(shell);
     init_vars(shell);

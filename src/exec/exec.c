@@ -64,27 +64,24 @@ int check_access(char **final, shell_t *shell)
 
 unsigned int exec_action(shell_t *shell, unsigned int args)
 {
-    unsigned int r;
-    int i;
+    exec_status_t status = exec_pipeline(shell);
 
     (void)(args);
-    r = exec_pipeline(shell);
-    i = -1;
     if (shell->is_done) {
         free_shell(shell);
-        exit(r);
+        exit(status.code);
     }
-    while (shell->final[++i])
+    for (size_t i = 0; shell->final[i]; i++)
         free(shell->final[i]);
     free(shell->final);
     free_commands(shell);
     free(shell->line);
     if (shell->exit_str)
         free(shell->exit_str);
-    shell->exit_str = my_unsigned_to_char(r);
+    shell->exit_str = my_unsigned_to_char(status.code);
     if (shell->exit_str == NULL)
         exit(84);
-    return r;
+    return status.code;
 }
 
 int format_commands(shell_t *shell)
@@ -105,7 +102,7 @@ int format_commands(shell_t *shell)
 
 unsigned int exec_line(shell_t *shell, unsigned int args)
 {
-    if (parse_history(shell, args) == -1 || parse_alias(shell) == -1 ||
+    if (subst_history(shell, args) == -1 || parse_alias(shell) == -1 ||
         parse_vars(shell) == -1 || magic(shell) == -1 ||
         (shell->line = my_epurcommand(shell->line)) == NULL ||
         parse_stars(shell) == 1 ||

@@ -90,7 +90,7 @@ int indexof_builtin(char *cmd)
     return -1;
 }
 
-int exec_builtins(shell_t *shell, int args, int *r)
+exec_status_t exec_builtins(shell_t *shell, int args)
 {
     int (*built_fnt[nb_built(g_built_tab)])(shell_t *, int);
     int idx;
@@ -98,8 +98,13 @@ int exec_builtins(shell_t *shell, int args, int *r)
     init_fnt_builtin(built_fnt);
     idx = indexof_builtin(shell->cur->av[0]);
     if (idx >= 0 && idx < nb_built(g_built_tab)) {
-        *r = built_fnt[idx](shell, args);
-        return 1;
+        return (exec_status_t){
+            .ok = true,
+            .code = built_fnt[idx](shell, args),
+        };
     }
-    return 0;
+    return (exec_status_t){
+        .ok = false,
+        .code = 1,
+    };
 }

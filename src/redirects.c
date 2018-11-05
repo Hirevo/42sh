@@ -93,7 +93,7 @@ int set_redirects(shell_t *shell)
     last = NULL;
     head = shell->commands;
     while (head) {
-        if ((check_redirects(head, last)) == -1)
+        if (check_redirects(head, last) == -1)
             return -1;
         i = -1;
         while (head->av[++i])

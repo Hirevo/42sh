@@ -91,32 +91,29 @@ void add_hist_elem(shell_t *shell, char *line)
     lvec_push_back(shell->hist.arr, 1, payload);
 }
 
-void init_history(shell_t *shell)
+void init_history(shell_t *shell, const char *filename)
 {
-    int fd;
-    char *line;
-
     shell->hist.cur = 0;
     shell->hist.arr = lvec_with_capacity(512);
-    if (shell->hist.arr == 0 || shell->home == NULL)
+    if (shell->hist.arr == 0 || shell->home == NULL ||
+        access(shell->home, F_OK | R_OK) == -1)
         return;
-    line = calloc(512, sizeof(char));
-    if (line == NULL)
+    int len = strlen(shell->home);
+    char *path = calloc(len + 2 + strlen(filename), sizeof(char));
+    if (path == 0)
         handle_error("calloc");
-    line[0] = 0;
-    line = strcat(line, shell->home);
-    if (shell->home[strlen(shell->home)] != '/')
-        line[strlen(shell->home)] = '/';
-    line[strlen(shell->home) + 1] = 0;
-    line = strcat(line, HIST_FILE);
-    if ((fd = open(line, O_RDONLY)) == -1)
+    strcpy(path, shell->home);
+    if (lstr_ends_with(path, "/") == false)
+        strcat(path, "/");
+    strcat(path, filename);
+    int fd = open(path, O_RDONLY);
+    free(path);
+    if (fd == -1)
         return;
-    free(line);
-    line = get_next_line(fd);
-    while (line) {
+    path = get_next_line(fd);
+    for (char *line = get_next_line(fd); line; line = get_next_line(fd)) {
         add_hist_elem(shell, line);
         free(line);
-        line = get_next_line(fd);
     }
     close(fd);
 }
