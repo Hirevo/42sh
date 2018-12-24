@@ -64,7 +64,7 @@ static void write_file(char **env)
     if (path == NULL)
         return;
     str = my_strcatdup(path, RC_FILE);
-    fd = open(str, O_WRONLY | O_TRUNC | O_CREAT);
+    fd = open(str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
     if (fd == -1)
         return;
     free(path);

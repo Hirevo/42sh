@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(42sh C)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra -Werror")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/my)
@@ -176,3 +176,4 @@ target_include_directories(42sh PRIVATE
     ${PROJECT_SOURCE_DIR}/include
 )
 target_compile_definitions(42sh PRIVATE _GNU_SOURCE)
+install(TARGETS 42sh DESTINATION bin)
