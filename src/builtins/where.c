@@ -13,13 +13,11 @@
 
 static int find_cmd(shell_t *shell, char *str)
 {
-    int i;
-    int ret;
+    int i = -1;
+    int ret = 0;
     char *path = NULL;
     char *tmp;
 
-    i = -1;
-    ret = 0;
     while (shell->path[++i]) {
         if (shell->path[i][strlen(shell->path[i])] != '/')
             tmp = my_strcatdup(shell->path[i], "/");
@@ -39,10 +37,9 @@ static int find_cmd(shell_t *shell, char *str)
 
 static int search(shell_t *shell, int i)
 {
-    char *str;
-    int ret;
+    char *str = 0;
+    int ret = 1;
 
-    ret = 1;
     if ((str = get_alias_cmd(shell, shell->cur->av[i]))) {
         printf("%s is aliased to %s\n", shell->cur->av[i], str);
         free(str);
@@ -60,12 +57,10 @@ static int search(shell_t *shell, int i)
 
 int where(shell_t *shell, int args)
 {
-    int i;
-    int ret;
+    int i = 0;
+    int ret = 0;
 
     (void)args;
-    i = 0;
-    ret = 0;
     while (shell->cur->av[++i])
         if (is_path(shell->cur->av[i])) {
             printf("where: / in command makes no sense\n");

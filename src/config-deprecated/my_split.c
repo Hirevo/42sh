@@ -72,7 +72,7 @@ int len_child(char *str, char *sep, int index)
 
 char **my_split(char *str, char *sep)
 {
-    int i = 0;
+    int i = -1;
     int j;
     int index;
     char **ret = calloc(nb_par(str, sep) + 1, sizeof(char *));

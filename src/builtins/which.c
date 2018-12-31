@@ -13,13 +13,11 @@
 
 static int find_first_cmd(shell_t *shell, char *str)
 {
-    int i;
-    int ret;
+    int i = -1;
+    int ret = 0;
     char *path = NULL;
     char *tmp;
 
-    i = -1;
-    ret = 0;
     while (!ret && shell->path[++i]) {
         if (shell->path[i][strlen(shell->path[i])] != '/')
             tmp = my_strcatdup(shell->path[i], "/");
@@ -40,7 +38,7 @@ static int find_first_cmd(shell_t *shell, char *str)
 static int search(shell_t *shell, int i)
 {
     char *str;
-    int ret;
+    int ret = 1;
 
     ret = 1;
     if ((str = get_alias_cmd(shell, shell->cur->av[i]))) {
@@ -62,12 +60,10 @@ static int search(shell_t *shell, int i)
 
 int which(shell_t *shell, int args)
 {
-    int i;
-    int ret;
+    int i = 0;
+    int ret = 0;
 
     (void)args;
-    i = 0;
-    ret = 0;
     while (shell->cur->av[++i])
         if (is_path(shell->cur->av[i]))
             if (access(shell->cur->av[i], F_OK | X_OK) == 0)
