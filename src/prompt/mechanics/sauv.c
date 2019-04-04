@@ -42,7 +42,7 @@ static void update_prompt(char ***file, shell_t *shell)
     if (asprintf(&add, "PROMPT=%d", shell->prompt) == -1)
         handle_error("calloc");
     while ((*file)[i]) {
-        if (!my_strncmp("PROMPT=", (*file)[i], 7)) {
+        if (!strncmp("PROMPT=", (*file)[i], 7)) {
             free((*file)[i]);
             (*file)[i] = strdup(add);
             stop = 1;
@@ -81,22 +81,15 @@ static void write_file(char **env)
 void sauv_prompt(shell_t *shell)
 {
     char *home = get_env("HOME");
-    char *path = my_strcatdup(home, "/");
-    char *str;
-    char **file;
-    int fd;
+    char *path = home ?  my_strcatdup(home, "/") : 0;
+    char *str = path ? my_strcatdup(path, RC_FILE) : 0;
+    int fd = str ? open(str, O_RDONLY) : -1;
 
-    if (home == 0)
-        return;
-    if (path == NULL)
-        return;
-    str = my_strcatdup(path, RC_FILE);
-    fd = open(str, O_RDONLY);
     if (fd == -1)
         return;
     free(path);
     free(str);
-    file = load_file(fd);
+    char **file = load_file(fd);
     if (file == NULL) {
         close(fd);
         return;

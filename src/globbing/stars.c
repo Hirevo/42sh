@@ -68,7 +68,7 @@ int parse_stars(shell_t *shell)
             len = 0;
             while (shell->line[i + len] && !is_space(shell->line[i + len]))
                 len += 1;
-            glob_stars(shell, my_strndup(shell->line + i, len), &i);
+            glob_stars(shell, strndup(shell->line + i, len), &i);
         }
     return 0;
 }

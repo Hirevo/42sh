@@ -53,6 +53,6 @@ void skip_commands(command_t **head, unsigned char ret)
 void set_fground(shell_t *shell)
 {
     setpgid(0, shell->pgid);
-    if (shell->pgid == 0)
+    if (shell->tty && shell->pgid == 0)
         tcsetpgrp(0, getpid());
 }

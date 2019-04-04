@@ -10,31 +10,29 @@
 
 static void rec_print(t_ast *ast)
 {
-    t_ast *left = ast;
-    t_ast *right = ast;
-
     if (!ast) {
-        printf("AST est NULL\n");
+        printf("No ast\n");
         return;
     }
-    printf(">> %s <<\n", ast->value);
+    printf(">> '%s' <<\n", ast->value);
     if (ast->left) {
-        left = ast->left;
-        printf("-Left-");
-        rec_print(left);
+        printf("Left:\n");
+        rec_print(ast->left);
+    } else {
+        printf("Left: None\n");
     }
     if (ast->right) {
-        right = ast->right;
-        printf("-Right-");
-        rec_print(right);
+        printf("Right:\n");
+        rec_print(ast->right);
+    } else {
+        printf("Right: None\n");
     }
-    printf("!!! UP (Father) !!!\n");
 }
 
 void print_ast(t_ast *ast)
 {
     if (!ast) {
-        printf("AST est NULL\n");
+        printf("No ast\n");
         return;
     }
     printf("\n");

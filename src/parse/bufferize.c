@@ -29,7 +29,7 @@ int count_real_chars(char *str)
 char *unquote_arg(char *str)
 {
     int len = strlen(str) - 2;
-    char *ret = my_strndup(str + 1, len);
+    char *ret = strndup(str + 1, len);
 
     if (ret == NULL)
         return NULL;
@@ -104,7 +104,7 @@ char **bufferize(char *str, int n)
             len = arg_length(str + i);
             if (len == -1)
                 return NULL;
-            final[args] = my_strndup(str + i, len);
+            final[args] = strndup(str + i, len);
             if (final[args] == NULL)
                 return NULL;
             i += len;

@@ -9,6 +9,10 @@
 
 #include <stdarg.h>
 
+#define FREE_LEFT 1
+#define FREE_BOTH 2
+#define FREE_RIGHT 3
+
 typedef struct flags_s {
     char format;
     char length;

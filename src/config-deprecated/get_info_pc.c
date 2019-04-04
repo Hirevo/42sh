@@ -22,10 +22,10 @@ int parse_info_version(t_info_pc *ret, int fd)
     ret->version = NULL;
     ret->os = NULL;
     while (tmp) {
-        if (!my_strncmp("NAME=", tmp, 5))
-            ret->os = my_strndup(tmp + 6, strlen(tmp) - 7);
-        if (!my_strncmp("VERSION=", tmp, 8))
-            ret->version = my_strndup(tmp + 9, strlen(tmp) - 10);
+        if (!strncmp("NAME=", tmp, 5))
+            ret->os = strndup(tmp + 6, strlen(tmp) - 7);
+        if (!strncmp("VERSION=", tmp, 8))
+            ret->version = strndup(tmp + 9, strlen(tmp) - 10);
         free(tmp);
         tmp = get_next_line(fd);
     }
@@ -59,13 +59,13 @@ int parse_ram(t_info_pc *ret, int i)
     if (fd == -1)
         return 1;
     while (str) {
-        if (!my_strncmp(str, "MemTotal:", 9)) {
+        if (!strncmp(str, "MemTotal:", 9)) {
             i = 9;
             while (str[i] && !(str[i] >= '0' && str[i] <= '9'))
                 i += 1;
             ret->mem_total = my_getnbr(str + i);
         }
-        if (!my_strncmp(str, "MemAvailable:", 13)) {
+        if (!strncmp(str, "MemAvailable:", 13)) {
             i = 13;
             while (str[i] && !(str[i] >= '0' && str[i] <= '9'))
                 i += 1;
@@ -86,7 +86,7 @@ int parse_proco(t_info_pc *ret)
     if (fd == -1)
         return 1;
     while (str) {
-        if (!my_strncmp(str, "model name", 10)) {
+        if (!strncmp(str, "model name", 10)) {
             i = 10;
             while (str[i] && str[i] != ':')
                 i += 1;

@@ -46,12 +46,8 @@ t_ast *set_ast(t_ast *ast, t_token *token)
 
 t_ast *create_ast(t_ast *ast, t_token *token)
 {
-    if (!token) {
-        ast = calloc(1, sizeof(t_ast));
-        if (ast == 0)
-            return NULL;
-        return ast;
-    }
+    if (!token)
+        return calloc(1, sizeof(t_ast));
     while (token->prev)
         token = token->prev;
     ast = ast_rec(ast, token);

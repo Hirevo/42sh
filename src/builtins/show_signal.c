@@ -11,11 +11,13 @@
 
 int show_signal(int pid)
 {
-    int ret;
+    int ret = 0;
 
-    ret = 0;
     waitpid(pid, &ret, 0);
-    if (!WIFEXITED(ret))
+    if (WIFEXITED(ret) == 0) {
         diagnose_status(ret);
-    return WIFEXITED(ret) ? WEXITSTATUS(ret) : ret;
+        return ret;
+    } else {
+        return WEXITSTATUS(ret);
+    }
 }

@@ -21,9 +21,9 @@ static void print_cmd(char *buf, char **prompt, int *nb_char)
 
 int response_serv(t_socket sock, char *buf, char **prompt, int *nb_char)
 {
-    if (!my_strncmp(buf, "char:", 5))
+    if (!strncmp(buf, "char:", 5))
         prompt_serv(sock, buf[5], prompt, nb_char);
-    if (!my_strncmp(buf, "cmd:", 4))
+    if (!strncmp(buf, "cmd:", 4))
         print_cmd(buf, prompt, nb_char);
     free(buf);
     return 0;

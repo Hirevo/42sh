@@ -24,7 +24,7 @@ int clear_comment(shell_t *shell)
             quote = (quote == 0) ? 2 : 0;
         if (shell->line[i] == '#' && quote == 0 &&
             (i == 0 || (i != 0 && (shell->line[i - 1] == ' ')))) {
-            tmp = my_strndup(shell->line, i);
+            tmp = strndup(shell->line, i);
             free(shell->line);
             shell->line = tmp;
             return 0;

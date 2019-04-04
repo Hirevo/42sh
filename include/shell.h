@@ -24,7 +24,7 @@
 
 extern char **environ;
 
-typedef struct exec_status_s {
+typedef struct {
     bool ok;
     int code;
 } exec_status_t;
@@ -41,25 +41,26 @@ typedef struct command_s {
     struct command_s *next;
 } command_t;
 
-typedef struct alias_s {
+typedef struct {
     char *alias;
     char *command;
 } alias_t;
 
-typedef struct subst_s {
+typedef struct {
     int idx;
     char **list;
 } subst_t;
 
-typedef struct hist_ctrl_s {
+typedef struct {
     vec_t *arr;
     long cur;
     char *cur_line;
 } hist_ctrl_t;
 
-typedef struct window_s {
+typedef struct {
     struct termios oterm;
     char *smkx;
+    char *rmkx;
     char *clear;
     char *end;
     char *home;
@@ -72,7 +73,7 @@ typedef struct window_s {
     int cur;
 } window_t;
 
-typedef struct config_s {
+typedef struct {
     char *rc_file;
     char *alias_file;
     char *history_file;
@@ -98,7 +99,7 @@ typedef struct config_s {
 ** prev: last working directory, for cd builtin
 **
 */
-typedef struct shell_s {
+typedef struct {
     char **av;
     int script;
     int prompt;
@@ -139,8 +140,8 @@ void parse_rc(shell_t *);
 int count_entries(char *);
 int get_next_entry(char *, char **, int);
 char **init_path(char *);
-char **set_default_path();
-int disp_env();
+char **set_default_path(void);
+int disp_env(void);
 int move_dir(char **, int, shell_t *);
 unsigned int exec_action(shell_t *, unsigned int);
 unsigned int process_command(shell_t *, int);
@@ -276,7 +277,7 @@ int init_dualcast(t_socket *);
 /*
 ** dualcast/get_password.c
 */
-char *get_password();
+char *get_password(void);
 
 /*
 ** launch_config.c
@@ -429,15 +430,14 @@ void init_prompt(shell_t *);
 /*
 ** misc.c
 */
-void set_raw();
-char get_input();
+char get_input(void);
 void handle_error(char *);
 
 /*
 ** prompt/get_cur_branch.c
 */
 
-char *show_cur_branch();
+char *show_cur_branch(void);
 
 /*
 ** prompt/mechanics/char.c

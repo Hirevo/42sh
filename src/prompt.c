@@ -26,7 +26,7 @@ char *get_hostname(void)
     return ret;
 }
 
-static void get_tab_prompt(void (*tab_prompt[9])(shell_t *))
+static void get_tab_prompt(void (*tab_prompt[11])(shell_t *))
 {
     tab_prompt[0] = &turbosh_prompt;
     tab_prompt[1] = &bash_prompt;
@@ -38,14 +38,15 @@ static void get_tab_prompt(void (*tab_prompt[9])(shell_t *))
     tab_prompt[7] = &mysh;
     tab_prompt[8] = &mysh_lambda;
     tab_prompt[9] = &mysh_256;
+    tab_prompt[10] = &mysh_arrow;
 }
 
 void print_prompt(shell_t *shell)
 {
-    void (*tab_prompt[10])(shell_t *);
+    void (*tab_prompt[11])(shell_t *);
 
     get_tab_prompt(tab_prompt);
-    if (shell->prompt >= 0 && shell->prompt < 10)
+    if (shell->prompt >= 0 && shell->prompt < 11)
         tab_prompt[shell->prompt](shell);
     else
         tab_prompt[0](shell);

@@ -25,7 +25,7 @@ void set_conio_terminal_mode(struct termios *orig_termios)
     tcsetattr(0, TCSANOW, &new_termios);
 }
 
-int kbhit()
+int kbhit(void)
 {
     struct timeval tv;
     fd_set fds;
@@ -37,7 +37,7 @@ int kbhit()
     return select(1, &fds, NULL, NULL, &tv);
 }
 
-int getch_c()
+int getch_c(void)
 {
     int r;
     unsigned char c;

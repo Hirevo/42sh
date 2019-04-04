@@ -9,7 +9,7 @@
 #include "shell.h"
 #include <stdlib.h>
 
-char **set_default_path()
+char **set_default_path(void)
 {
     char **path = calloc(3, sizeof(char *));
 

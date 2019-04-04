@@ -33,13 +33,13 @@ char *get_file_http(char *buf)
     char *spec;
     int i;
 
-    if (my_strncmp(buf, "GET", 3))
+    if (strncmp(buf, "GET", 3))
         return NULL;
     buf += 4;
     i = 0;
     while (buf[i] && buf[i] != ' ')
         i += 1;
-    ret = my_strndup(buf, i);
+    ret = strndup(buf, i);
     if ((spec = special_case(ret)) != NULL)
         return spec;
     return ret;

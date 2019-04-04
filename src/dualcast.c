@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int launch_dc_server()
+int launch_dc_server(void)
 {
     fd_set rdfs;
     t_socket socket;

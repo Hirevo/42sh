@@ -45,7 +45,7 @@ void move_forw(shell_t *shell)
 {
     if (shell->line && shell->w.cur < ((int)strlen(shell->line))) {
         shell->w.cur += 1;
-        write(1, shell->w.forw, strlen(shell->w.forw));
+        my_putstr(shell->w.forw);
     }
 }
 
@@ -53,7 +53,7 @@ void move_backw(shell_t *shell)
 {
     if (shell->w.cur) {
         shell->w.cur -= 1;
-        write(1, shell->w.backw, strlen(shell->w.backw));
+        my_putstr(shell->w.backw);
     }
 }
 
@@ -67,8 +67,7 @@ void move_upw(shell_t *shell)
         else
             shell->hist.cur_line = NULL;
         shell->hist.cur = shell->hist.arr->size - 1;
-    }
-    else if (shell->hist.cur > 0)
+    } else if (shell->hist.cur > 0)
         shell->hist.cur -= 1;
     free(shell->line);
     shell->line = construct_alias(shell->hist.arr->arr[shell->hist.cur]);

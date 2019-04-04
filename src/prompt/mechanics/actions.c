@@ -19,10 +19,9 @@ void remove_char(shell_t *shell)
     if (shell->w.cur)
         shell->w.cur -= 1;
     if (shell->tty) {
-        write(1, shell->w.backw, strlen(shell->w.backw));
-        write(
-            1, shell->line + shell->w.cur, strlen(shell->line + shell->w.cur));
-        write(1, " ", 1);
+        my_putstr(shell->w.backw);
+        my_putstr(shell->line + shell->w.cur);
+        my_putstr(" ");
         shell->w.cur -= 1;
         pos_cursor(shell);
         shell->w.cur += 1;
@@ -33,12 +32,10 @@ void add_char(shell_t *shell, char c)
 {
     insert_char_cur(&shell->line, c, shell->w.cur);
     if (shell->tty) {
-        write(
-            1, shell->line + shell->w.cur, strlen(shell->line + shell->w.cur));
+        my_putstr(shell->line + shell->w.cur);
         shell->w.cur += 1;
         pos_cursor(shell);
-    }
-    else
+    } else
         shell->w.cur += 1;
 }
 
@@ -50,7 +47,7 @@ void pos_cursor(shell_t *shell)
         return;
     c = strlen(shell->line) - shell->w.cur - 1;
     while (c-- >= 0)
-        write(1, shell->w.backw, strlen(shell->w.backw));
+        my_putstr(shell->w.backw);
 }
 
 void move_cursor(shell_t *shell, char c)
@@ -72,7 +69,7 @@ void move_cursor(shell_t *shell, char c)
 void clear_term(shell_t *shell)
 {
     if (shell->tty) {
-        write(1, shell->w.clear, strlen(shell->w.clear));
+        my_putstr(shell->w.clear);
         init_prompt(shell);
         if (shell->line)
             my_putstr(shell->line);

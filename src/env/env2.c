@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int disp_env()
+int disp_env(void)
 {
     int i;
 

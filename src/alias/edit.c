@@ -40,8 +40,8 @@ int check_alias(shell_t *shell, int *i, char *last)
     char *line;
     alias_t found;
 
-    len[0] = my_strstrlen(shell->line + *i, " \t><;|");
-    line = my_strndup(shell->line + *i, len[0]);
+    len[0] = strcspn(shell->line + *i, " \t><;|");
+    line = strndup(shell->line + *i, len[0]);
     for (ssize_t j = 0; j < (ssize_t)(shell->alias->size); j++) {
         char *name = shell->alias->key_table->arr[j];
         if (lstr_equals(line, name)) {
@@ -52,8 +52,8 @@ int check_alias(shell_t *shell, int *i, char *last)
                 return -1;
             free(last);
             last = line;
-            len[0] = my_strstrlen(shell->line + *i, " \t><;|");
-            line = my_strndup(shell->line + *i, len[0]);
+            len[0] = strcspn(shell->line + *i, " \t><;|");
+            line = strndup(shell->line + *i, len[0]);
             if (lstr_equals(line, last))
                 break;
             j = -1;
@@ -78,8 +78,7 @@ int parse_alias(shell_t *shell)
                 if (is_delimiter(shell->line[i++]))
                     c = 1;
             i -= 1;
-        }
-        else if (c && !(c = 0))
+        } else if (c && !(c = 0))
             if (check_alias(shell, &i, last) == -1)
                 return -1;
     free_subst(shell);

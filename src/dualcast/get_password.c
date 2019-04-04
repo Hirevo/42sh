@@ -7,7 +7,7 @@
 
 #include <stdlib.h>
 
-char *get_password()
+char *get_password(void)
 {
     int i;
     char *ret = calloc(5, sizeof(char));

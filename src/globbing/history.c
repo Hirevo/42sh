@@ -104,15 +104,15 @@ static void final_things(shell_t *shell, char *last, int save)
 
 static int is_hist_sym(shell_t *shell, int i)
 {
-    if (my_strncmp(shell->line + i, "!!", 2) == 0) {
+    if (strncmp(shell->line + i, "!!", 2) == 0) {
         if (insert_full_hist(shell, i) == -1)
             return -1;
     }
-    else if (my_strncmp(shell->line + i, "!$", 2) == 0) {
+    else if (strncmp(shell->line + i, "!$", 2) == 0) {
         if (insert_last_hist(shell, i) == -1)
             return -1;
     }
-    else if (my_strncmp(shell->line + i, "!:", 2) == 0 &&
+    else if (strncmp(shell->line + i, "!:", 2) == 0 &&
         (shell->line[i + 2] >= '0' && shell->line[i + 2] <= '9'))
         if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
             return -1;

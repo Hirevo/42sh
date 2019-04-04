@@ -17,7 +17,7 @@ void del_last_char(int len_prompt, char **prompt, int *len)
 
     *len = tmp - 11;
     if (tmp > len_prompt)
-        *prompt = my_strndup(*prompt, tmp - 1);
+        *prompt = strndup(*prompt, tmp - 1);
 }
 
 void add_char_dc(char **prompt, char c, int *len)

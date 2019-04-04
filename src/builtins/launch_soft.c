@@ -12,7 +12,7 @@
 
 int str_in(char *str1, char *in)
 {
-    if (my_strncmp(str1, in, strlen(str1)) == 0 && in[strlen(str1)] == '=')
+    if (strncmp(str1, in, strlen(str1)) == 0 && in[strlen(str1)] == '=')
         return 1;
     return 0;
 }

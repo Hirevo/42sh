@@ -28,7 +28,7 @@ void my_base_long_pf(unsigned long long int nbr, char *base, int *count);
 void my_pointer_adress_pf(void *ptr, int *count);
 void put_type_pf(va_list ap, char *str, int *i);
 void put_flag_pf(char *str, int *i);
-char *tab_flag_pf();
+char *tab_flag_pf(void);
 void tab_fonc_pf(int i, va_list ap, int *count);
 void check_mallc_pf(char *str);
 int check_flag_pf(char *str, int i);

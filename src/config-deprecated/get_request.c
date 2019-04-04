@@ -10,15 +10,23 @@
 #include "shell.h"
 #include <stdlib.h>
 
-static const char *request_tab[] = {"quit", "get_env", "get_info", "add_env",
-    "update_env", "del_env", "exec", "get_prompt_sel", "update_prompt_sel",
-    NULL};
+static const char *request_tab[] = {
+    "quit",
+    "get_env",
+    "get_info",
+    "add_env",
+    "update_env",
+    "del_env",
+    "exec",
+    "get_prompt_sel",
+    "update_prompt_sel",
+    NULL,
+};
 
-int nb_request()
+int nb_request(void)
 {
-    int i;
+    int i = 0;
 
-    i = 0;
     while (request_tab[i])
         i += 1;
     return i;
@@ -26,9 +34,8 @@ int nb_request()
 
 int indexof_request(char *str)
 {
-    int i;
+    int i = 0;
 
-    i = 0;
     while (request_tab[i]) {
         if (!strcmp(str, (char *)request_tab[i]))
             return i;

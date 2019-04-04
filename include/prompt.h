@@ -19,3 +19,4 @@ void oh_my_zsh(shell_t *);
 void mysh(shell_t *);
 void mysh_lambda(shell_t *);
 void mysh_256(shell_t *);
+void mysh_arrow(shell_t *);

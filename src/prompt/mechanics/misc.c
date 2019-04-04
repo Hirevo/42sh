@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-char get_input()
+char get_input(void)
 {
     char c = -1;
 

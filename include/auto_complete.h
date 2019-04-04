@@ -34,7 +34,7 @@ int find_a_path(char **path, auto_t *token);
 void transform(shell_t *shell, auto_t *t, match_t **list, char **s);
 char *delete_str(char *to_del, char *content);
 int for_bi(match_t **list, char *str2, auto_t *t);
-char **get_builtin_tab();
+char **get_builtin_tab(void);
 int filter(const struct dirent *l);
 
 /*

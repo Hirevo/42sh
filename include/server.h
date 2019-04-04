@@ -156,7 +156,7 @@ char *get_env(char *);
 ** get_info.c
 */
 
-t_info_pc *get_info();
+t_info_pc *get_info(void);
 
 /*
 ** get_file_http.c
@@ -168,7 +168,7 @@ char *get_file_http(char *);
 ** get_request.c
 */
 
-int nb_request();
+int nb_request(void);
 int indexof_request(char *);
 void get_tab_request(void (**)(t_socket, t_config *, char **));
 
@@ -287,8 +287,8 @@ int response_serv(t_socket, char *, char **, int *);
 
 void reset_terminal_mode(struct termios *);
 void set_conio_terminal_mode(struct termios *);
-int kbhit();
-int getch_c();
+int kbhit(void);
+int getch_c(void);
 
 /*
 ** term_emul.c

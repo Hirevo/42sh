@@ -33,7 +33,7 @@ static int check_correct_passwd(t_client *cli)
     char *ret;
 
     read_socket(cli->sock, &ret);
-    if (!my_strncmp(ret, "OK:", 3)) {
+    if (!strncmp(ret, "OK:", 3)) {
         cli->name = strdup(ret + 3);
         free(ret);
         return 1;

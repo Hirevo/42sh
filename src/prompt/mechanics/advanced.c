@@ -17,7 +17,7 @@ void move_end(shell_t *shell)
 
     len = strlen(shell->line);
     while (shell->w.cur < len) {
-        write(1, shell->w.forw, strlen(shell->w.forw));
+        my_putstr(shell->w.forw);
         shell->w.cur += 1;
     }
 }
@@ -25,7 +25,7 @@ void move_end(shell_t *shell)
 void move_home(shell_t *shell)
 {
     while (shell->w.cur > 0) {
-        write(1, shell->w.backw, strlen(shell->w.backw));
+        my_putstr(shell->w.backw);
         shell->w.cur -= 1;
     }
 }
@@ -51,12 +51,12 @@ void suppress_line(shell_t *shell)
     len = ((shell->line != NULL) ? strlen(shell->line) : 0);
     while (shell->w.cur < len) {
         shell->w.cur += 1;
-        write(1, shell->w.forw, strlen(shell->w.forw));
+        my_putstr(shell->w.forw);
     }
     while (shell->w.cur > 0) {
         shell->w.cur -= 1;
-        write(1, shell->w.backw, strlen(shell->w.backw));
-        write(1, " ", 1);
-        write(1, shell->w.backw, strlen(shell->w.backw));
+        my_putstr(shell->w.backw);
+        my_putstr(" ");
+        my_putstr(shell->w.backw);
     }
 }

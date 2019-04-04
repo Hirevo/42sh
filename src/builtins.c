@@ -12,30 +12,50 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const char *g_built_tab[] = {"alias", "cd", "config", "dualcast",
-    "history", "echo", "exit", "setenv", "unalias", "unsetenv", "builtins",
-    "prompt", "env", "set", "unset", "where", "which", "parserll", NULL};
+static const char *g_built_tab[] = {
+    "alias",
+    "cd",
+    "config",
+    "dualcast",
+    "history",
+    "echo",
+    "exit",
+    "setenv",
+    "unalias",
+    "unsetenv",
+    "builtins",
+    "prompt",
+    "env",
+    "set",
+    "unset",
+    "where",
+    "which",
+    "parserll",
+    NULL,
+};
 
 static int show_builtins(shell_t *shell, int args)
 {
-    char *ret;
-    int i = 0;
-
-    args = isatty(1);
-    if (args)
-        ret = strdup("echo '");
-    while (g_built_tab[i]) {
-        if (args) {
-            ret = my_fstrcat(ret, (char *)g_built_tab[i], 1);
-            ret = my_fstrcat(ret, "\n", 1);
+    (void)(args);
+    if (isatty(1)) {
+        char *tmp1 = strdup("echo '");
+        char *tmp2 = 0;
+        if (tmp1 == 0)
+            return 1;
+        for (int i = 0; g_built_tab[i]; i++) {
+            if (asprintf(&tmp2, "%s%s\n", tmp1, g_built_tab[i]) == -1)
+                return 1;
+            free(tmp1);
+            tmp1 = tmp2;
         }
-        else
+        if (asprintf(&tmp2, "%s' | sort | column", tmp1) == -1)
+            return 1;
+        free(tmp1);
+        tmp1 = tmp2;
+        quick_exec(shell, tmp1);
+    } else {
+        for (int i = 0; g_built_tab[i]; i++)
             printf("%s\n", g_built_tab[i]);
-        i += 1;
-    }
-    if (args) {
-        ret = my_fstrcat(ret, "' | sort | column", 1);
-        quick_exec(shell, ret);
     }
     return 0;
 }
@@ -63,30 +83,22 @@ static void init_fnt_builtin(
     built_fnt[17] = &call_parser_ll;
 }
 
-char **get_builtin_tab()
+char **get_builtin_tab(void)
 {
-    int i = 0;
     char **ret = calloc(nb_built(g_built_tab) + 1, sizeof(char *));
 
-    if (ret == NULL)
-        return NULL;
-    while (g_built_tab[i]) {
-        ret[i] = strdup((char *)g_built_tab[i]);
-        i += 1;
-    }
-    ret[i] = NULL;
+    if (ret == 0)
+        return 0;
+    for (int i = 0; g_built_tab[i]; i++)
+        ret[i] = strdup(g_built_tab[i]);
     return ret;
 }
 
 int indexof_builtin(char *cmd)
 {
-    int i = 0;
-
-    while (g_built_tab[i]) {
-        if (!strcmp(cmd, (char *)g_built_tab[i]))
+    for (int i = 0; g_built_tab[i]; i++)
+        if (strcmp(cmd, g_built_tab[i]) == 0)
             return i;
-        i += 1;
-    }
     return -1;
 }
 
@@ -102,9 +114,10 @@ exec_status_t exec_builtins(shell_t *shell, int args)
             .ok = true,
             .code = built_fnt[idx](shell, args),
         };
+    } else {
+        return (exec_status_t){
+            .ok = false,
+            .code = 1,
+        };
     }
-    return (exec_status_t){
-        .ok = false,
-        .code = 1,
-    };
 }

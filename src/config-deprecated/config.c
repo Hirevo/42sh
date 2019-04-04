@@ -16,9 +16,8 @@
 static int init_client(
     fd_set *rdfs, int actual, t_socket sock, t_socket *clients)
 {
-    int i;
+    int i = 0;
 
-    i = 0;
     FD_ZERO(rdfs);
     FD_SET(STDIN_FILENO, rdfs);
     FD_SET(sock, rdfs);

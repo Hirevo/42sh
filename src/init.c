@@ -5,6 +5,7 @@
 ** init
 */
 
+#include "my.h"
 #include "shell.h"
 #include <curses.h>
 #include <stdlib.h>
@@ -67,6 +68,7 @@ void init(shell_t *shell)
         }
         shell->ioctl = tcgetattr(0, &shell->w.oterm) + 1;
         shell->w.smkx = tigetstr("smkx");
+        shell->w.rmkx = tigetstr("rmkx");
         shell->w.clear = tigetstr("clear");
         shell->w.end = tigetstr("kend");
         shell->w.home = tigetstr("khome");
@@ -85,10 +87,6 @@ void init_prompt(shell_t *shell)
     shell->hist.cur = -1;
     shell->hist.cur_line = NULL;
     if (shell->tty) {
-        if (shell->ioctl) {
-            printf("%s", shell->w.smkx);
-            fflush(stdout);
-        }
         get_prompt(shell);
         sauv_prompt(shell);
         print_prompt(shell);

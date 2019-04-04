@@ -32,12 +32,12 @@ static char *get_arg(char *head)
     resp = my_split(head, "\r\n\r\n");
     if (resp) {
         req = my_split(resp[0], "\r\n");
-        if (req && !my_strncmp(req[0], "GET", 3)) {
+        if (req && !strncmp(req[0], "GET", 3)) {
             i = 0;
             while (req[0][i] && req[0][i] != '?')
                 i += 1;
             i += 1;
-            ret = my_strndup(req[0] + i, strlen_space(req[0]));
+            ret = strndup(req[0] + i, strlen_space(req[0]));
             free_tab(req);
             free_tab(resp);
             return ret;
@@ -74,7 +74,7 @@ int response(t_socket client, char *buf, t_config *config)
     if ((file = get_file_http(buf)) == NULL)
         return 1;
     r_arg = getenv("CFG_PATH");
-    if (!my_strncmp(file + 1, MAGIC, strlen(MAGIC))) {
+    if (!strncmp(file + 1, MAGIC, strlen(MAGIC))) {
         if ((r_arg = get_arg(buf)) && (arg = my_split_mulchar(r_arg, "&=")))
             if (!strcmp(arg[0], "arg")) {
                 free(r_arg);

@@ -16,7 +16,7 @@ int str_in_liste(char **str1, char *in)
 
     i = 0;
     while (i < nb_args(str1)) {
-        if (my_strncmp(str1[i], in, strlen(str1[i])) == 0 &&
+        if (strncmp(str1[i], in, strlen(str1[i])) == 0 &&
             in[strlen(str1[i])] == '=')
             return 1;
         i += 1;

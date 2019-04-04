@@ -29,7 +29,7 @@ static char *get_mime(int fd, char *ext)
     char *ret;
 
     while (tmp) {
-        if (!my_strncmp(tmp, ext, strlen(ext))) {
+        if (!strncmp(tmp, ext, strlen(ext))) {
             ret = strdup(tmp + strlen(ext) + 1);
             free(tmp);
             return ret;

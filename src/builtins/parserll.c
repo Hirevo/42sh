@@ -14,16 +14,11 @@
 
 int call_parser_ll(shell_t *shell, int args)
 {
-    char *str;
-
     (void)(shell);
     (void)(args);
-    my_putstr("Type a CMD and see the Tree: ");
-    str = get_next_line(0);
-    if (!parser_ll(str)) {
-        free(str);
-        return 1;
-    }
+    my_putstr("Type a shell command (no worries, it won't get executed): ");
+    char *str = get_next_line(0);
+    t_ast *ret = parser_ll(str);
     free(str);
-    return 0;
+    return ret == 0;
 }

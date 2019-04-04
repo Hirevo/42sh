@@ -19,9 +19,8 @@
 exec_status_t exec_branch(
     shell_t *shell, command_t **head, int fds[3], int *fd_carry)
 {
-    int r = 0;
-
     const bool to_fork = is_to_fork((*head)->link) || (*head)->next == NULL;
+
     if (to_fork == true) {
         const exec_status_t status =
             exec_redirected_builtins(shell, fds[2], fds);
@@ -43,11 +42,16 @@ exec_status_t exec_branch(
             .ok = false,
             .code = 1,
         };
-    fds[2] ? (r = father_action(head, fd_carry, fds, shell)) :
-             exec_piped_child(*fd_carry, *head, fds, shell);
+
+    int code = 0;
+    if (fds[2]) {
+        code = father_action(head, fd_carry, fds, shell);
+    } else {
+        exec_piped_child(*fd_carry, *head, fds, shell);
+    }
     return (exec_status_t){
         .ok = true,
-        .code = r,
+        .code = code,
     };
 }
 
@@ -76,7 +80,7 @@ exec_status_t exec_pipeline(shell_t *shell)
         if (status.ok == false)
             break;
     }
-    if (tcsetpgrp(0, getpgid(getpid())) == -1)
+    if (shell->tty && tcsetpgrp(0, getpgid(getpid())) == -1)
         perror("tcsetpgrp");
     return status;
 }
@@ -113,14 +117,13 @@ int get_return(shell_t *shell)
     int r = 0;
     int final = 0;
 
-    while (shell->fds[++i])
-        ;
+    while (shell->fds[++i]);
     i -= 1;
     while (i >= 0) {
         waitpid(shell->fds[i], &r, 0);
         if (!WIFEXITED(r))
             diagnose_status(r);
-        if (r && !final)
+        if (r && final == 0)
             final = r;
         i -= 1;
     }
@@ -131,7 +134,7 @@ int get_return(shell_t *shell)
 
 int father_action(command_t **head, int *ret, int *fds, shell_t *shell)
 {
-    int r;
+    int r = 0;
 
     if (shell->pgid == 0)
         shell->pgid = fds[2];
@@ -140,12 +143,10 @@ int father_action(command_t **head, int *ret, int *fds, shell_t *shell)
     if ((*head)->link == '|') {
         *ret = fds[0];
         close(fds[1]);
-    }
-    else
+    } else
         *ret = 0;
     insert_int(&shell->fds, fds[2]);
-    r = 0;
-    if (!((*head)->next) || (*head)->link != '|') {
+    if ((*head)->next == 0 || (*head)->link != '|') {
         r = get_return(shell);
         shell->pgid = 0;
         fds[2] = -1;
@@ -153,5 +154,5 @@ int father_action(command_t **head, int *ret, int *fds, shell_t *shell)
     skip_commands(head, WEXITSTATUS(r));
     if (*head)
         (*head) = (*head)->next;
-    return WIFEXITED(r) ? WEXITSTATUS(r) : r % 128 + 128;
+    return WIFEXITED(r) ? WEXITSTATUS(r) : (r % 128 + 128);
 }
