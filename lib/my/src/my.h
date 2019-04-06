@@ -9,6 +9,7 @@
 
 #include <stdarg.h>
 
+#define FREE_NONE 0
 #define FREE_LEFT 1
 #define FREE_BOTH 2
 #define FREE_RIGHT 3

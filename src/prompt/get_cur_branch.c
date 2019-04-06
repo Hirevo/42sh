@@ -95,13 +95,11 @@ static int is_root(char *path)
 
 static char *handle_standard(char *git_dir)
 {
-    char *path = my_fstrcat(git_dir, "/HEAD", FREE_LEFT);
+    char *path = my_fstrcat(git_dir, "/HEAD", FREE_NONE);
     char *branch = find_branch(path);
-    if (branch == NULL) {
-        free(path);
+    if (branch == NULL)
         return NULL;
-    }
-    free(path);
+    free(git_dir);
     return branch;
 }
 
@@ -109,7 +107,6 @@ static char *handle_submodule(char *path)
 {
     int fd = open(path, O_RDONLY);
 
-    free(path);
     if (fd == -1)
         return NULL;
     char *tmp = get_next_line(fd);
@@ -126,7 +123,20 @@ static char *handle_submodule(char *path)
         free(tmp);
         if (git_dir == NULL)
             return NULL;
-        return handle_standard(git_dir);
+        char *dir = dirname(path);
+        if (dir == NULL)
+            return NULL;
+        dir = my_fstrcat(dir, "/", FREE_NONE);
+        if (dir == NULL)
+            return NULL;
+        git_dir = my_fstrcat(dir, git_dir, FREE_RIGHT);
+        if (git_dir == NULL)
+            return NULL;
+        char *ret = handle_standard(git_dir);
+        if (ret == NULL)
+            return NULL;
+        free(path);
+        return ret;
     }
     return NULL;
 }
@@ -134,7 +144,7 @@ static char *handle_submodule(char *path)
 char *show_cur_branch(void)
 {
     char *result = 0;
-    char *path = strdup(".git");
+    char *path = strdup("./.git");
     struct stat stats = {0};
 
     while (path != NULL) {
