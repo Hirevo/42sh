@@ -28,6 +28,9 @@ DEF_OPTION(CharPtrPtr, char **);
 OPT_NULLABLE(CharPtrPtr, char **);
 DEF_RESULT(CharPtrPtr, char **, char *);
 
+DEF_OPTION(SizeT, size_t);
+DEF_RESULT(SizeT, size_t, char *);
+
 #define RC_FILE ".42shrc"
 #define HIST_FILE ".42sh_history"
 #define ALIAS_FILE ".42sh_alias"

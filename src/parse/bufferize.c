@@ -68,7 +68,7 @@ char *format_arg(char *str)
     return ret;
 }
 
-int arg_length(char *str)
+OPTION(SizeT) arg_length(char *str)
 {
     static const char *delim[] = {
         ">>",
@@ -90,31 +90,31 @@ int arg_length(char *str)
             if (str[i] == '\\' && quote != '\'')
                 i += !!(str[i + 1]);
         }
-        return (str[i] == 0) ? -1 : (i + 1);
+        return (str[i] == 0) ? NONE(SizeT) : SOME(SizeT, i + 1);
     } else {
         for (size_t i2 = 0; delim[i2]; i2++) {
             if (lstr_starts_with(str, delim[i2])) {
-                return strlen(delim[i2]);
+                return SOME(SizeT, strlen(delim[i2]));
             }
         }
         size_t i = 0;
         for (; str[i] && !is_space(str[i]); i++) {
             for (size_t i2 = 0; delim[i2]; i2++)
                 if (lstr_starts_with(str + i, delim[i2]))
-                    return i;
+                    return SOME(SizeT, i);
             if (str[i] == '\\')
                 i += !!(str[i + 1]);
         }
-        return i;
+        return SOME(SizeT, i);
     }
 }
 
 char **bufferize(char *str, int n)
 {
-    int i = 0;
-    int args = 0;
+    size_t i = 0;
+    size_t args = 0;
     char **final = calloc(n + 1, sizeof(char *));
-    int len;
+    OPTION(SizeT) len = NONE(SizeT);
 
     if (final == NULL)
         return NULL;
@@ -123,12 +123,12 @@ char **bufferize(char *str, int n)
             i += 1;
         else {
             len = arg_length(str + i);
-            if (len == -1)
+            if (IS_NONE(len))
                 return NULL;
-            final[args] = strndup(str + i, len);
+            final[args] = strndup(str + i, OPT_UNWRAP(len));
             if (final[args] == NULL)
                 return NULL;
-            i += len;
+            i += OPT_UNWRAP(len);
             args += 1;
         }
     final[args] = NULL;
