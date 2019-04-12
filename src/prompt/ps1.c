@@ -24,7 +24,18 @@ void ps1_prompt(shell_t *shell)
             case '\\':
                 my_putchar('\\');
                 break;
-            case 'h':
+            case 'h': {
+                OPTION(CharPtr) hostname = get_hostname();
+                if (IS_SOME(hostname)) {
+                    char *hostname_u = OPT_UNWRAP(hostname);
+                    ssize_t idx = lstr_index_of(hostname_u, 0, ".");
+                    if (idx == -1)
+                        my_putstr(hostname_u);
+                    else
+                        write(1, hostname_u, idx);
+                    free(hostname_u);
+                }
+            } break;
             case 'H': {
                 OPTION(CharPtr) hostname = get_hostname();
                 OPT_AND_THEN(hostname, my_putstr);
@@ -83,8 +94,7 @@ void ps1_prompt(shell_t *shell)
             default:
                 break;
             }
-        }
-        else {
+        } else {
             my_putchar(ps1[i]);
         }
     }
