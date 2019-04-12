@@ -12,19 +12,21 @@
 char get_escaped_char(char c)
 {
     if (c == 'a')
-        return 0x7;
+        return '\a';
     else if (c == 'b')
-        return 0x8;
+        return '\b';
+    else if (c == 'e')
+        return '\e';
     else if (c == 'f')
-        return 0xc;
+        return '\f';
     else if (c == 'n')
-        return 0xa;
+        return '\n';
     else if (c == 'r')
-        return 0xd;
+        return '\r';
     else if (c == 't')
-        return 0x9;
+        return '\t';
     else if (c == 'v')
-        return 0xb;
+        return '\v';
     else if (c == '\\')
         return '\\';
     return c;
@@ -33,25 +35,38 @@ char get_escaped_char(char c)
 void print_char(char *c, int *i)
 {
     if (c[*i] == '\\')
-        if (c[++(*i)] == 'a')
-            my_putchar(0x7);
-        else if (c[*i] == 'b')
-            my_putchar(0x8);
-        else if (c[*i] == 'f')
-            my_putchar(0xc);
-        else if (c[*i] == 'n')
-            my_putchar(0xa);
-        else if (c[*i] == 'r')
-            my_putchar(0xd);
-        else if (c[*i] == 't')
-            my_putchar(0x9);
-        else if (c[*i] == 'v')
-            my_putchar(0xb);
-        else if (c[*i] == '\\')
+        switch (c[++(*i)]) {
+        case 'a':
+            my_putchar('\a');
+            break;
+        case 'b':
+            my_putchar('\b');
+            break;
+        case 'f':
+            my_putchar('\f');
+            break;
+        case 'n':
+            my_putchar('\n');
+            break;
+        case 'r':
+            my_putchar('\r');
+            break;
+        case 't':
+            my_putchar('\t');
+            break;
+        case 'v':
+            my_putchar('\v');
+            break;
+        case 'e':
+            my_putchar('\e');
+            break;
+        case '\\':
             my_putchar('\\');
-        else {
+            break;
+        default:
             my_putchar('\\');
             my_putchar(c[*i]);
+            break;
         }
     else
         my_putchar(c[*i]);
@@ -59,16 +74,13 @@ void print_char(char *c, int *i)
 
 int echo_term(char **args)
 {
-    int i;
-    int j;
-    int flag_n;
+    int flag_n = (args[0] && !strcmp(args[0], "-n"));
+    int i = flag_n - 1;
 
-    flag_n = (args[0] && !strcmp(args[0], "-n"));
-    i = flag_n - 1;
     while (args[++i]) {
         if (i - (flag_n))
             my_putchar(' ');
-        j = -1;
+        int j = -1;
         while (args[i][++j])
             print_char(args[i], &j);
     }

@@ -39,27 +39,30 @@ char *unquote_arg(char *str)
 
 char *format_arg(char *str)
 {
-    int i1;
-    int i2;
-    char *ret;
+    int i2 = 0;
+    char quote = 0;
 
-    i1 = -1;
-    i2 = 0;
-    if (str[i1 + 1] == '"' || str[i1 + 1] == '\'')
+    if (str[0] == '"' || str[0] == '\'') {
+        quote = str[0];
         str = unquote_arg(str);
-    ret = calloc(count_real_chars(str) + 1, sizeof(char));
+    }
+    if (quote == '\'')
+        return str;
+    char *ret = calloc(count_real_chars(str) + 1, sizeof(char));
     if (ret == NULL)
         return NULL;
-    while (str[++i1])
-        if (str[i1] == '\\')
-            if (str[i1 + 1] == 0)
+    for (size_t i1 = 0; str[i1]; i1++) {
+        if (str[i1] == '\\') {
+            if (str[i1 + 1] == 0) {
                 return NULL;
-            else {
+            } else {
                 i1 += !!(str[i1 + 1]);
                 ret[i2++] = str[i1];
             }
-        else
+        } else {
             ret[i2++] = str[i1];
+        }
+    }
     ret[i2] = 0;
     free(str);
     return ret;
@@ -67,25 +70,41 @@ char *format_arg(char *str)
 
 int arg_length(char *str)
 {
-    int i;
-    char quote;
+    static const char *delim[] = {
+        ">>",
+        "<<",
+        ">",
+        "<",
+        "|",
+        ";",
+        "&",
+        0,
+    };
 
-    i = 0;
-    if (str[i] == '"' || str[i] == '\'') {
-        quote = str[i++];
-        while (str[i] && str[i] != quote) {
-            if (str[i] == '\\')
+    if (str[0] == '"' || str[0] == '\'') {
+        char quote = str[0];
+        size_t i = 1;
+        for (; str[i] && str[i] != quote; i++) {
+            if (str[i] == '\\' && quote != '\'')
                 i += !!(str[i + 1]);
-            i += 1;
         }
         return (str[i] == 0) ? -1 : (i + 1);
+    } else {
+        for (size_t i2 = 0; delim[i2]; i2++) {
+            if (lstr_starts_with(str, delim[i2])) {
+                return strlen(delim[i2]);
+            }
+        }
+        size_t i = 0;
+        for (; str[i] && !is_space(str[i]); i++) {
+            for (size_t i2 = 0; delim[i2]; i2++)
+                if (lstr_starts_with(str + i, delim[i2]))
+                    return i;
+            if (str[i] == '\\')
+                i += !!(str[i + 1]);
+        }
+        return i;
     }
-    while (str[i] && !is_space(str[i])) {
-        if (str[i] == '\\')
-            i += !!(str[i + 1]);
-        i += 1;
-    }
-    return i;
 }
 
 char **bufferize(char *str, int n)

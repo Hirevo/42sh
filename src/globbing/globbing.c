@@ -77,7 +77,7 @@ static void final_checks(shell_t *shell, char *str, int *cur, int i)
     shell->line = str;
 }
 
-static bool replace_var(shell_t *shell, int *cur, Var var)
+static bool replace_var(shell_t *shell, int *cur, Var var, bool is_free)
 {
     char *str;
     char *resolved;
@@ -89,13 +89,16 @@ static bool replace_var(shell_t *shell, int *cur, Var var)
     else if (!strncmp(shell->line + *cur, "$$", 2))
         ret = asprintf(&str, "%.*s%d%s", *cur, shell->line, getpid(),
             shell->line + *cur + 2);
-    else if ((resolved = get_var(shell, var.name)))
+    else if (strlen(var.name) == 0) {
+        return true;
+    } else if ((resolved = get_var(shell, var.name)) ||
+        (resolved = getenv(var.name))) {
+        resolved =
+            (is_free ? sanitize : sanitize_double_quotes)(resolved, false);
         ret = asprintf(&str, "%.*s%s%s", *cur, shell->line, resolved,
             shell->line + *cur + strlen(var.name) + (var.enclosed ? 3 : 1));
-    else if ((resolved = getenv(var.name)))
-        ret = asprintf(&str, "%.*s%s%s", *cur, shell->line, resolved,
-            shell->line + *cur + strlen(var.name) + (var.enclosed ? 3 : 1));
-    else if (shell->line[*cur + 1] >= '0' && shell->line[*cur + 1] <= '9')
+        free(resolved);
+    } else if (shell->line[*cur + 1] >= '0' && shell->line[*cur + 1] <= '9')
         ret = get_arg(shell, &str, cur);
     else {
         dprintf(2, "%s: Undefined variable.\n", var.name);
@@ -123,7 +126,7 @@ int parse_vars(shell_t *shell)
             OPTION(Var) var = get_gvar(shell->line + cur + 1);
             if (IS_NONE(var))
                 continue;
-            if (replace_var(shell, &cur, OPT_UNWRAP(var)) == false)
+            if (replace_var(shell, &cur, OPT_UNWRAP(var), is_free) == false)
                 return -1;
         }
     return 0;

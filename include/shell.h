@@ -17,6 +17,16 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <termios.h>
+#include <option.h>
+#include <result.h>
+
+DEF_OPTION(CharPtr, char *);
+OPT_NULLABLE(CharPtr, char *);
+DEF_RESULT(CharPtr, char *, char *);
+
+DEF_OPTION(CharPtrPtr, char **);
+OPT_NULLABLE(CharPtrPtr, char **);
+DEF_RESULT(CharPtrPtr, char **, char *);
 
 #define RC_FILE ".42shrc"
 #define HIST_FILE ".42sh_history"
@@ -242,8 +252,13 @@ int magic(shell_t *);
 /*
 ** magic/construct.c
 */
-char *sanitize(char *, int);
 char *construct_magic(char **);
+
+/*
+** sanitizers/sanitizers.c
+*/
+char *sanitize(char *, bool);
+char *sanitize_double_quotes(char *, bool);
 
 /*
 ** exec/exec2.c
@@ -404,7 +419,7 @@ int ret_error(shell_t *, char *);
 /*
 ** prompt.c
 */
-char *get_hostname(void);
+OPTION(CharPtr) get_hostname(void);
 void print_prompt(shell_t *);
 void get_prompt(shell_t *);
 

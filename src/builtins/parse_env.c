@@ -15,7 +15,7 @@ int nb_args_env(char **cmd)
     int i = 1;
 
     while (cmd[i] && cmd[i][0] == '-') {
-        if (is_in_env(cmd[i], 'u') && strcmp(cmd[i], "--null") &&
+        if (lstr_includes(cmd[i], "u") && strcmp(cmd[i], "--null") &&
             strncmp(cmd[i], "--unset=", 8))
             i += 1;
         i += 1;
@@ -25,14 +25,14 @@ int nb_args_env(char **cmd)
 
 static void fill_stru_2(char **cmd, parse_env_t *ret, int *i)
 {
-    if (is_in_env(cmd[*i], 'u')) {
+    if (lstr_includes(cmd[*i], "u")) {
         (*i) += 1;
         ret->unset_l = add_to_chardouble(cmd[*i], ret->unset_l);
         ret->unset = 1;
     }
-    if (is_in_env(cmd[*i], '0'))
+    if (lstr_includes(cmd[*i], "0"))
         ret->null = 1;
-    if (is_in_env(cmd[*i], 'i'))
+    if (lstr_includes(cmd[*i], "i"))
         ret->ignore = 1;
 }
 

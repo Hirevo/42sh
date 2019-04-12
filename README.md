@@ -4,7 +4,7 @@ A shell written in C, the third and final shell project from EPITECH, after **mi
 
 ## Introduction
 
-The project was done in a group of 5 students:
+The project was done as a group of 5 students:
 - **Nicolas Polomack** (nicolas.polomack@epitech.eu)
 - **Arthur Knoepflin** (arthur.knoepflin@epitech.eu)
 - **Maxime Jenny** (maxime.jenny@epitech.eu)
@@ -25,7 +25,7 @@ So, I am still maintaining it and will probably rewrite it eventually (in Rust, 
 
 The shell launches in interactive mode by default.  
 It can take a file as an argument and will execute it like a script (therefore supporting being mentioned in shebangs).  
-It also accept to evaluate a single line with **`-c`** followed by the command.  
+It also accepts to evaluate a single line with **`-c`** followed by the command.  
 
 - Delimiters:
     - Separator (**`;`**)
@@ -33,9 +33,9 @@ It also accept to evaluate a single line with **`-c`** followed by the command.
     - Redirections (**`<`**, **`>`**, **`<<`**, **`>>`**)
     - Conditionals (**`||`**, **`&&`**)
 - Quote types:
-    - Double quotes (Expands variables like **`$PATH`**, disables file globbing such as **`*`** and **`?`**)
-    - Single quotes (Disables everything except escaping with backslashes)
-    - Magic quotes / Back ticks (Evaluates the sub-command and replace with the results in-place)
+    - Double quotes (Expands variables like **`$PATH`** and **`${PATH}`**, disables file globbing such as **`*`** and **`?`**)
+    - Single quotes (Disables everything)
+    - Magic quotes / Backticks (Evaluates the sub-command and replace with the results in-place)
 - Line Editing:
     - Auto-completion for commands and filenames
     - Advanced line edition with cursor, arrow-keys if terminal supported, will fallback to standard stdin read otherwise
@@ -52,6 +52,10 @@ It also accept to evaluate a single line with **`-c`** followed by the command.
     - Self-aliasing supported
     - Alias loops are detected and prevented
     - Aliases are saved upon exit and loaded on launch
+    - Special aliases:
+        - **`precmd`**: before typing a command
+        - **`postcmd`**: after typing a command
+        - **`cwdcmd`**: after changing directory
     - Stored in **`~/.42sh_alias`**
 - History:
     - **`history`** built-in command
@@ -63,14 +67,15 @@ It also accept to evaluate a single line with **`-c`** followed by the command.
 - Variables:
     - **`set`** and **`unset`** built-in commands
     - Can be used for expansions
-    - **`$pid`**, **`$sid`**, **`$gid`** and **`$pgid`** are set by default on launch
+    - **`${pid}`**, **`${sid}`**, **`${gid}`** and **`${pgid}`** are set by default on launch
 - Prompts:
     - **`prompt`** built-in command
-    - 7 prompts to choose from
+    - 11 prompts to choose from
+    - Prompt customization through the PS1 environment variable
     - Can be saved by setting the **`PROMPT`** environment variable with the prompt ID number
 - Other built-in commands:
     - **`where`** and **`which`**
     - **`cd`**: To change directory (supports **`-`** to go back to previous directory)
     - **`exit`**: To exit the shell (supports an exit code as argument)
     - **`echo`**: To print stuff (supports **`-n`**)
-    - **`builtins`**: To list the builtins available
+    - **`builtins`**: To list the available builtins

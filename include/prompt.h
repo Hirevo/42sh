@@ -20,3 +20,4 @@ void mysh(shell_t *);
 void mysh_lambda(shell_t *);
 void mysh_256(shell_t *);
 void mysh_arrow(shell_t *);
+void ps1_prompt(shell_t *);

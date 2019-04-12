@@ -12,17 +12,16 @@
 
 void tcsh_prompt(shell_t *shell)
 {
-    char *hostname;
+    OPTION(CharPtr) hostname = get_hostname();
 
     fflush(stdout);
-    if ((hostname = get_hostname()))
-        printf("\e[4m%s\e[0m", hostname);
-    free(hostname);
+    printf("\e[4m%s\e[0m", OPT_UNWRAP_OR(hostname, "???"));
+    OPT_AND_THEN(hostname, free);
     printf("%s", ":");
     if (shell->current)
         printf("\e[1m%s\e[0m", shell->current);
     else
-        printf("\e[1m?\e[0m");
+        printf("\e[1m???\e[0m");
     printf("%s", "> ");
     fflush(stdout);
 }

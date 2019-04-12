@@ -13,22 +13,20 @@
 
 void bigmac_prompt(shell_t *shell)
 {
-    char *login;
-    char *hostname;
+    OPTION(CharPtr) login = OPT_FROM_NULLABLE(CharPtr, getenv("LOGNAME"));
+    OPTION(CharPtr) hostname = get_hostname();
 
     fflush(stdout);
     printf("%s", "[");
-    if ((login = getenv("LOGNAME")))
-        printf("\033[35;1m%s\033[0m", login);
+    printf("\e[35;1m%s\e[0m", OPT_UNWRAP_OR(login, "???"));
     printf("%s", "@");
-    if ((hostname = get_hostname()))
-        printf("\033[31;1m%s\033[0m", hostname);
-    free(hostname);
+    printf("\e[31;1m%s\e[0m", OPT_UNWRAP_OR(hostname, "???"));
+    OPT_AND_THEN(hostname, free);
     printf("%s", " ");
     if (shell->current)
-        printf("\033[32;1m%s\033[0m", shell->current);
+        printf("\e[32;1m%s\e[0m", shell->current);
     else
-        printf("\033[32;1m?\033[0m");
+        printf("\e[32;1m?\e[0m");
     printf("%s", getuid() ? "]$ " : "]# ");
     fflush(stdout);
 }

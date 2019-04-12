@@ -19,6 +19,7 @@ static const char *g_built_tab[] = {
     "dualcast",
     "history",
     "echo",
+    "exec",
     "exit",
     "setenv",
     "unalias",
@@ -69,18 +70,19 @@ static void init_fnt_builtin(
     built_fnt[3] = &dualcast_b;
     built_fnt[4] = &disp_hist;
     built_fnt[5] = &echo_b;
-    built_fnt[6] = &exit_b;
-    built_fnt[7] = &setenv_b;
-    built_fnt[8] = &unalias_b;
-    built_fnt[9] = &unsetenv_b;
-    built_fnt[10] = &show_builtins;
-    built_fnt[11] = &prompt;
-    built_fnt[12] = &env_b;
-    built_fnt[13] = &set;
-    built_fnt[14] = &unset;
-    built_fnt[15] = &where;
-    built_fnt[16] = &which;
-    built_fnt[17] = &call_parser_ll;
+    built_fnt[6] = &exec_b;
+    built_fnt[7] = &exit_b;
+    built_fnt[8] = &setenv_b;
+    built_fnt[9] = &unalias_b;
+    built_fnt[10] = &unsetenv_b;
+    built_fnt[11] = &show_builtins;
+    built_fnt[12] = &prompt;
+    built_fnt[13] = &env_b;
+    built_fnt[14] = &set;
+    built_fnt[15] = &unset;
+    built_fnt[16] = &where;
+    built_fnt[17] = &which;
+    built_fnt[18] = &call_parser_ll;
 }
 
 char **get_builtin_tab(void)

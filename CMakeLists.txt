@@ -40,8 +40,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins/env.c
     ${PROJECT_SOURCE_DIR}/src/builtins/env_checkerr.c
     ${PROJECT_SOURCE_DIR}/src/builtins/env_cherror_2.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/exec_arg.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/exec_arg_2.c
+    ${PROJECT_SOURCE_DIR}/src/builtins/exec.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exit.c
     ${PROJECT_SOURCE_DIR}/src/builtins/launch_soft.c
     ${PROJECT_SOURCE_DIR}/src/builtins/parse_env.c
@@ -143,6 +142,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_lambda.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_256.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_arrow.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/ps1.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/advanced.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/fct.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/tmp.c
@@ -171,6 +171,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/auto_completation/split_it.c
     ${PROJECT_SOURCE_DIR}/src/auto_completation/free_dirent.c
     ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_token.c
+    ${PROJECT_SOURCE_DIR}/src/sanitizers/sanitizers.c
 )
 target_link_libraries(42sh my json hmap vec str ncurses)
 target_include_directories(42sh PRIVATE

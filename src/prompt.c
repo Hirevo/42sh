@@ -14,19 +14,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-char *get_hostname(void)
+OPTION(CharPtr) get_hostname(void)
 {
-    char *ret;
-    int fd = open("/etc/hostname", O_RDONLY);
-
-    if (fd == -1)
-        return NULL;
-    ret = get_next_line(fd);
-    close(fd);
-    return ret;
+    char ret[512] = {0};
+    
+    if (gethostname(ret, 512) == -1)
+        return NONE(CharPtr);
+    return OPT_FROM_NULLABLE(CharPtr, strdup(ret));
 }
 
-static void get_tab_prompt(void (*tab_prompt[11])(shell_t *))
+static void get_tab_prompt(void (*tab_prompt[12])(shell_t *))
 {
     tab_prompt[0] = &turbosh_prompt;
     tab_prompt[1] = &bash_prompt;
@@ -39,14 +36,15 @@ static void get_tab_prompt(void (*tab_prompt[11])(shell_t *))
     tab_prompt[8] = &mysh_lambda;
     tab_prompt[9] = &mysh_256;
     tab_prompt[10] = &mysh_arrow;
+    tab_prompt[11] = &ps1_prompt;
 }
 
 void print_prompt(shell_t *shell)
 {
-    void (*tab_prompt[11])(shell_t *);
+    void (*tab_prompt[12])(shell_t *);
 
     get_tab_prompt(tab_prompt);
-    if (shell->prompt >= 0 && shell->prompt < 11)
+    if (shell->prompt >= 0 && shell->prompt < 12)
         tab_prompt[shell->prompt](shell);
     else
         tab_prompt[0](shell);

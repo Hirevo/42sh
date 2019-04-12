@@ -35,6 +35,8 @@ static void show_prompt(shell_t *shell)
     mysh_256(shell);
     printf("\n\033[0m10: Mysh (arrow)   : ");
     mysh_arrow(shell);
+    printf("\n\033[0m11: PS1            : ");
+    ps1_prompt(shell);
     printf("\n\033[0m");
 }
 
@@ -51,7 +53,7 @@ int prompt(shell_t *shell, int args)
         }
         if (*input != 0 && is_num(input)) {
             int chosen = atoi(input);
-            if (chosen >= 0 && chosen < 11) {
+            if (chosen >= 0 && chosen < 12) {
                 shell->prompt = chosen;
                 setenv("PROMPT", input, 1);
                 free(input);

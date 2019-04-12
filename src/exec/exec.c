@@ -26,39 +26,33 @@ void exec_child(shell_t *shell)
     case ENOEXEC:
         dprintf(2, "%s: Exec format error. Binary file not executable.\n",
             shell->cur->av[0]);
-        exit(1);
         break;
     case EPERM:
     case EACCES:
     case EISDIR:
         dprintf(2, "%s: Permission denied.\n", shell->cur->av[0]);
-        exit(1);
         break;
     case ENOENT:
     default:
         dprintf(2, "%s: Command not found.\n", shell->cur->av[0]);
-        exit(1);
         break;
     }
+    exit(1);
 }
 
 int check_access(char **final, shell_t *shell)
 {
-    int i;
-    int ret;
     struct stat stats;
 
-    i = -1;
     if (is_path(final[0])) {
         if (stat(final[0], &stats) == 0)
             return compare_stats(&stats);
+    } else {
+        for (size_t i = 0; shell->path && shell->path[i]; i++) {
+            if (stat(cat_path(shell->path, final[0], i), &stats) == 0)
+                return (compare_stats(&stats) == 0) ? i : -2;
+        }
     }
-    else
-        while (shell->path != NULL && shell->path[++i] != NULL)
-            if (stat(cat_path(shell->path, final[0], i), &stats) == 0) {
-                ret = compare_stats(&stats);
-                return (ret == 0) ? i : -2;
-            }
     return -1;
 }
 
@@ -86,16 +80,12 @@ unsigned int exec_action(shell_t *shell, unsigned int args)
 
 int format_commands(shell_t *shell)
 {
-    command_t *head;
-    int i;
-
-    head = shell->commands;
-    while (head) {
-        i = -1;
-        while (head->av[++i])
-            if ((head->av[i] = format_arg(head->av[i])) == NULL)
+    for (command_t *head = shell->commands; head; head = head->next) {
+        for (size_t i = 0; head->av[i]; i++) {
+            head->av[i] = format_arg(head->av[i]);
+            if (head->av[i] == NULL)
                 return -1;
-        head = head->next;
+        }
     }
     return 0;
 }
@@ -112,13 +102,12 @@ unsigned int exec_line(shell_t *shell, unsigned int args)
         return 0;
     free(shell->last);
     shell->last = NULL;
-    if ((shell->final = bufferize(
-             shell->line, args = count_args(shell->line))) == NULL)
-        return 1;
-    if (set_commands(shell) == -1 || set_redirects(shell) == -1 ||
-        check_error(shell) == -1 || format_commands(shell) == -1)
-        return shell->exit_code = 1;
+    args = count_args(shell->line);
+    shell->final = bufferize(shell->line, args);
+    if (shell->final == NULL || set_commands(shell) == -1 ||
+        set_redirects(shell) == -1 || check_error(shell) == -1 ||
+        format_commands(shell) == -1)
+        return set_error(shell, 1);
     shell->cur = shell->commands;
-    args = exec_action(shell, args);
-    return args;
+    return exec_action(shell, args);
 }

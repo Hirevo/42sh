@@ -49,7 +49,7 @@ int count_links(char *str)
             buf = str[i];
             i += 1;
             while (str[i] && str[i] != buf)
-                i += (str[i] == '\\') + 1;
+                i += (str[i] == '\\' && buf != '\'') + 1;
             if (str[i] == 0) {
                 my_putchar_fd(buf, 2);
                 return my_print_ret(": Invalid quotes.\n", -1);
@@ -62,12 +62,11 @@ int count_links(char *str)
 
 void skip_and_copy_string(char *str, int *i, char *ret, int *t)
 {
-    char quote;
+    char quote = str[(*i)++];
 
-    quote = str[(*i)++];
     ret[(*t)++] = quote;
     while (str[*i] && str[*i] != quote) {
-        if (str[*i] == '\\') {
+        if (str[*i] == '\\' && quote != '\'') {
             ret[(*t)++] = '\\';
             ret[(*t)++] = str[(*i) + 1];
             *i += !!(str[(*i) + 1]);

@@ -12,7 +12,7 @@
 
 void mysh_arrow(shell_t *shell)
 {
-    char *git = 0;
+    OPTION(CharPtr) git = OPT_FROM_NULLABLE(CharPtr, show_cur_branch());
 
     fflush(stdout);
     if (shell->exit_str)
@@ -21,9 +21,9 @@ void mysh_arrow(shell_t *shell)
     if (shell->current != NULL)
         printf("%s", shell->current);
     printf("\e[0m \e[1m");
-    git = show_cur_branch();
-    if (git)
-        printf("\e[1m[\e[38;2;0;133;255m%s\e[0m\e[1m] ", git);
+    if (IS_SOME(git))
+        printf("\e[1m[\e[38;2;0;133;255m%s\e[0m\e[1m] ", OPT_UNWRAP(git));
+    OPT_AND_THEN(git, free);
     printf(getuid() ? "=> " : "#> ");
     fflush(stdout);
 }

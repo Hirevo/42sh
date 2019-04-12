@@ -22,8 +22,8 @@ unsigned int count_args(char *str)
         else if (str[i] == '\'' || str[i] == '"') {
             skip_string(str, &i);
             args += 1;
-        }
-        else if (i == 0 && str[i] != ' ' && str[i] != '\t')
+        } else if (i == 0 && str[i] != ' ' && str[i] != '\t' &&
+            !is_separator(str[i]))
             args += 1;
         else if ((str[i] != ' ' && str[i] != '\t') &&
             (str[i - 1] == ' ' || str[i - 1] == '\t'))
@@ -37,7 +37,7 @@ int get_quoted_text(char *arg, char **final, int l, char c)
     int j = 1;
 
     while (arg[j] != c && arg[j] != 0) {
-        if (arg[j] == '\\')
+        if (arg[j] == '\\' && c != '\'')
             j += !!(arg[j]);
         j += 1;
     }
@@ -47,7 +47,7 @@ int get_quoted_text(char *arg, char **final, int l, char c)
     if (*final == NULL)
         return -1;
     while (arg[++i + 1] != c) {
-        if (arg[i + 1] == '\\')
+        if (arg[i + 1] == '\\' && c != '\'')
             i += !!(arg[i + 2]);
         (*final)[i] = arg[i + 1];
     }

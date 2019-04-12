@@ -37,7 +37,7 @@ void show_autolist(shell_t *shell, match_t *list)
     printf("\n");
     while (tmp) {
         if (strcmp(tmp->cmd, "..") && strcmp(tmp->cmd, ".")) {
-            if (asprintf(&cmd, "%s%s\\\\n", str, sanitize(tmp->cmd, 0)) == -1)
+            if (asprintf(&cmd, "%s%s\\n", str, sanitize(tmp->cmd, 0)) == -1)
                 handle_error("calloc");
             free(str);
             str = cmd;

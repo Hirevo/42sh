@@ -27,7 +27,7 @@ static int check_arg(char **cmd)
     for (int i = 0; cmd[i] && cmd[i][0] == '-'; i++) {
         if (!is_an_arg(cmd[i]))
             return dprintf(2, "env: invalid option -- '%s'\n", cmd[i] + 1), 1;
-        if (is_in_env(cmd[i], 'u') && strncmp(cmd[i], "--unset=", 8) &&
+        if (lstr_includes(cmd[i], "u") && strncmp(cmd[i], "--unset=", 8) &&
             strcmp(cmd[i], "--null"))
             i += 1;
     }
@@ -70,7 +70,7 @@ static int check_unset(char **cmd)
             if (is_alpha_err(cmd[i], 8))
                 return 1;
         }
-        else if (is_in_env(cmd[i], 'u') && strcmp(cmd[i], "--null")) {
+        else if (lstr_includes(cmd[i], "u") && strcmp(cmd[i], "--null")) {
             i += 1;
             if (is_alpha_err(cmd[i], 0))
                 return 1;
