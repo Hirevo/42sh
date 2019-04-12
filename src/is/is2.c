@@ -5,6 +5,8 @@
 ** is2
 */
 
+#include <stddef.h>
+
 int is_separator(char c)
 {
     return c == '>' || c == '<' || c == '|' || c == ';' || c == '&';
@@ -17,7 +19,7 @@ int is_space(char c)
 
 int is_delimiter(char c)
 {
-    return c == ';' || c == '|';
+    return c == ';' || c == '|' || c == '&';
 }
 
 int is_alphanum(char c)
@@ -28,13 +30,9 @@ int is_alphanum(char c)
 
 int is_num(char *str)
 {
-    int i;
-
-    i = 0;
-    while (str[i]) {
+    for (size_t i = 0; str[i]; i++) {
         if (str[i] < '0' || str[i] > '9')
             return 0;
-        i += 1;
     }
     return 1;
 }
