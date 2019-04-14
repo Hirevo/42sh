@@ -23,8 +23,7 @@ int setup_right_redirect(command_t *head, int *fds, int i)
         if (errno == EISDIR) {
             my_print_err(head->r_name);
             return my_print_ret(": Is a directory.\n", -1);
-        }
-        else
+        } else
             return -1;
     }
     dup2(fd, 1);
@@ -43,8 +42,7 @@ int setup_left_redirect(char *name, int type)
         if (isatty(0))
             my_putstr("> ");
         return buffer_input(name, i);
-    }
-    else if ((fd = open(name, O_RDONLY)) == -1)
+    } else if ((fd = open(name, O_RDONLY)) == -1)
         return -1;
     return fd;
 }
@@ -101,8 +99,7 @@ int set_redirects(shell_t *shell)
                 if (prepare_redirect(
                         head, &head->r_type, &head->r_name, i--) == -1)
                     return -1;
-            }
-            else if (is_left_redirect(head->av[i]))
+            } else if (is_left_redirect(head->av[i]))
                 if (prepare_redirect(
                         head, &head->l_type, &head->l_name, i--) == -1)
                     return -1;

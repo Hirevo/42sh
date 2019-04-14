@@ -19,8 +19,7 @@ char *line_cases(int fd, int *fd_s, char **final)
     else if (**final != 0) {
         *fd_s = -1;
         return *final;
-    }
-    else {
+    } else {
         free(*final);
         *final = NULL;
         return NULL;

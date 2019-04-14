@@ -11,18 +11,21 @@
 
 int check_exit(shell_t *shell, int args)
 {
-    if (args > 2 ||
-        (args == 2 &&
-            (shell->cur->av[1][0] < '0' || shell->cur->av[1][0] > '9') &&
-            shell->cur->av[1][0] != '-'))
-        my_print_err("exit: Expression Syntax.\n");
-    else if (args == 2 && !my_str_isnum(shell->cur->av[1] + 1))
-        my_print_err("exit: Badly Formed Number.\n");
-    else {
+    if (args == 2) {
+        char *arg = shell->cur->av[1];
+        if (my_str_isnum(arg) && arg[0] != '-') {
+            shell->is_done = 1;
+            return get_unsigned_int(arg);
+        } else {
+            my_print_err("exit: invalid exit code.\n");
+            return 1;
+        }
+    } else if (args == 1) {
         shell->is_done = 1;
-        shell->exit_code = ((args == 2) ? get_unsigned_int(shell->cur->av[1]) :
-                                          shell->exit_code);
         return shell->exit_code;
+    } else {
+        my_print_err("exit: invalid syntax.\n");
+        return 1;
     }
     return 1;
 }

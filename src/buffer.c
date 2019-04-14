@@ -23,8 +23,7 @@ int buffer_input(char *name, int i[2])
             free(str);
             close(i[1]);
             return i[0];
-        }
-        else {
+        } else {
             write(i[1], str, strlen(str));
             write(i[1], &c, 1);
             free(str);

@@ -17,7 +17,7 @@
 OPTION(CharPtr) get_hostname(void)
 {
     char ret[512] = {0};
-    
+
     if (gethostname(ret, 512) == -1)
         return NONE(CharPtr);
     return OPT_FROM_NULLABLE(CharPtr, strdup(ret));
