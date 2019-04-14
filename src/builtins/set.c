@@ -11,40 +11,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-int disp_vars(shell_t *shell)
+void display_var(void *ctx, char *key, void *value)
 {
-    int i;
-
-    i = -1;
-    if (shell->vars)
-        while (shell->vars[++i]) {
-            my_putstr(shell->vars[i]);
-            my_putchar(0xa);
-        }
-    return 0;
+    (void)(ctx);
+    putstr("%s\t%s\n", key, (char *)(value));
 }
 
 int set(shell_t *shell, int args)
 {
-    char *str;
-    char *comp = NULL;
-    int i;
-    int ret;
+    int ret = 0;
 
-    if (args == 1)
-        return disp_vars(shell);
-    else {
-        ret = 0;
-        i = 0;
-        while (shell->cur->av[++i]) {
-            if ((str = strdup(shell->cur->av[i])) == NULL ||
-                (comp = strsep(&str, "=")) == NULL)
-                handle_error("calloc");
-            if (check_env_error("set", comp))
+    if (args == 1) {
+        lhmap_for_each(shell->vars, display_var, NULL);
+        return 0;
+    } else {
+        for (size_t i = 1; shell->cur->av[i]; i++) {
+            ssize_t idx = lstr_index_of(shell->cur->av[i], 0, "=");
+            if (idx == -1) {
+                eputstr("set: missing value\n");
                 ret = 1;
-            else
-                add_var(shell, comp, str);
-            free(comp);
+                continue;
+            }
+            char *key = lstr_substr(shell->cur->av[i], 0, idx);
+            char *val = strdup(shell->cur->av[i] + idx + 1);
+            if (key == 0 || val == 0 || check_env_error("set", key))
+                ret = 1;
+            else {
+                free(lhmap_get(shell->vars, key));
+                lhmap_set(shell->vars, key, val);
+                free(key);
+            }
         }
     }
     return ret;

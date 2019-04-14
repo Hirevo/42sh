@@ -113,7 +113,7 @@ typedef struct {
     char **av;
     int script;
     int prompt;
-    char **vars;
+    hmap_t *vars;
     char *line;
     char **final;
     char is_done;
@@ -360,11 +360,6 @@ void replace_home(shell_t *);
 int parse_stars(shell_t *);
 
 /*
-** vars.c
-*/
-void add_var(shell_t *, char *, char *);
-
-/*
 ** echo.c
 */
 char get_escaped_char(char);
@@ -425,7 +420,6 @@ void get_prompt(shell_t *);
 /*
 ** vars.c
 */
-char *get_var(shell_t *, char *);
 void init_vars(shell_t *);
 
 /*

@@ -91,7 +91,7 @@ static bool replace_var(shell_t *shell, int *cur, Var var, bool is_free)
             shell->line + *cur + 2);
     else if (strlen(var.name) == 0) {
         return true;
-    } else if ((resolved = get_var(shell, var.name)) ||
+    } else if ((resolved = lhmap_get(shell->vars, var.name)) ||
         (resolved = getenv(var.name))) {
         resolved =
             (is_free ? sanitize : sanitize_double_quotes)(resolved, false);
