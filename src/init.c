@@ -31,25 +31,16 @@ void set_raw(struct termios *oterm)
 int init_shell(shell_t *shell)
 {
     srand(getpid() * time(NULL));
-    shell->home = getenv("HOME");
-    shell->current = calloc(512, sizeof(char));
-    if (shell->current == 0)
-        return -1;
-    shell->current = get_current(shell->current, shell->home);
     shell->exit_code = 0;
     shell->is_comp = 0;
     shell->last = NULL;
-    shell->prev = NULL;
-    shell->exit_str = NULL;
     shell->fds = NULL;
     shell->is_done = 0;
-    init_history(shell, HIST_FILE);
+    init_history(shell);
     init_aliases(shell);
     parse_rc(shell);
     init_vars(shell);
     get_prompt(shell);
-    shell->path = init_path(getenv("PATH"));
-    shell->path = (shell->path) ? shell->path : set_default_path();
     init(shell);
     return 0;
 }

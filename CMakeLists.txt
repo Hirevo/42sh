@@ -26,20 +26,24 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/alias/loop.c
     ${PROJECT_SOURCE_DIR}/src/alias/parse.c
     ${PROJECT_SOURCE_DIR}/src/alias/unalias.c
-    ${PROJECT_SOURCE_DIR}/src/parse/bufferize.c
-    ${PROJECT_SOURCE_DIR}/src/builtins.c
+    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_complete.c
+    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_list.c
+    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_token.c
+    ${PROJECT_SOURCE_DIR}/src/auto_completation/free_dirent.c
+    ${PROJECT_SOURCE_DIR}/src/auto_completation/match.c
+    ${PROJECT_SOURCE_DIR}/src/auto_completation/split_it.c
+    ${PROJECT_SOURCE_DIR}/src/buffer.c
     ${PROJECT_SOURCE_DIR}/src/builtins_init.c
+    ${PROJECT_SOURCE_DIR}/src/builtins.c
     ${PROJECT_SOURCE_DIR}/src/builtins/alias.c
     ${PROJECT_SOURCE_DIR}/src/builtins/cd.c
     ${PROJECT_SOURCE_DIR}/src/builtins/char_double.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/check_file.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/check_file_2.c
     ${PROJECT_SOURCE_DIR}/src/builtins/config.c
     ${PROJECT_SOURCE_DIR}/src/builtins/dualcast.c
     ${PROJECT_SOURCE_DIR}/src/builtins/echo.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/env.c
     ${PROJECT_SOURCE_DIR}/src/builtins/env_checkerr.c
     ${PROJECT_SOURCE_DIR}/src/builtins/env_cherror_2.c
+    ${PROJECT_SOURCE_DIR}/src/builtins/env.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exec.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exit.c
     ${PROJECT_SOURCE_DIR}/src/builtins/launch_soft.c
@@ -48,130 +52,123 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins/prompt.c
     ${PROJECT_SOURCE_DIR}/src/builtins/set.c
     ${PROJECT_SOURCE_DIR}/src/builtins/setenv.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/shw_env_parse.c
     ${PROJECT_SOURCE_DIR}/src/builtins/show_signal.c
+    ${PROJECT_SOURCE_DIR}/src/builtins/shw_env_parse.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unalias.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unset.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unsetenv.c
     ${PROJECT_SOURCE_DIR}/src/builtins/where.c
     ${PROJECT_SOURCE_DIR}/src/builtins/which.c
     ${PROJECT_SOURCE_DIR}/src/cd.c
+    ${PROJECT_SOURCE_DIR}/src/char.c
     ${PROJECT_SOURCE_DIR}/src/comment.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/add_env_http.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/client.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/com_serv.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/config.c
+    ${PROJECT_SOURCE_DIR}/src/config-deprecated/decode.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/exec_cmd_http.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/exit.c
-    ${PROJECT_SOURCE_DIR}/src/config-deprecated/decode.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/get_env.c
-    ${PROJECT_SOURCE_DIR}/src/config-deprecated/get_info_pc.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/get_file_http.c
+    ${PROJECT_SOURCE_DIR}/src/config-deprecated/get_info_pc.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/get_request.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/init_connection.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/int_toc.c
-    ${PROJECT_SOURCE_DIR}/src/config-deprecated/my_split.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/my_split_char.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/my_split_mulchar.c
+    ${PROJECT_SOURCE_DIR}/src/config-deprecated/my_split.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/navigator.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/prompt.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/response.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/send_env.c
-    ${PROJECT_SOURCE_DIR}/src/config-deprecated/send_info.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/send_file_http.c
+    ${PROJECT_SOURCE_DIR}/src/config-deprecated/send_info.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/send_mime.c
-    ${PROJECT_SOURCE_DIR}/src/echo.c
-    ${PROJECT_SOURCE_DIR}/src/env/env.c
-    ${PROJECT_SOURCE_DIR}/src/env/env2.c
-    ${PROJECT_SOURCE_DIR}/src/exec/exec.c
-    ${PROJECT_SOURCE_DIR}/src/exec/exec2.c
-    ${PROJECT_SOURCE_DIR}/src/exec/pipe.c
-    ${PROJECT_SOURCE_DIR}/src/exec/close.c
-    ${PROJECT_SOURCE_DIR}/src/exec/setup.c
     ${PROJECT_SOURCE_DIR}/src/dualcast.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/com_sock.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/connect.c
-    ${PROJECT_SOURCE_DIR}/src/dualcast/core_server.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/core_client.c
+    ${PROJECT_SOURCE_DIR}/src/dualcast/core_server.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/get_password.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/init_dualcast.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/prompt_client.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/prompt_serv.c
-    ${PROJECT_SOURCE_DIR}/src/dualcast/termio.c
-    ${PROJECT_SOURCE_DIR}/src/dualcast/term_emul.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/response_serv.c
+    ${PROJECT_SOURCE_DIR}/src/dualcast/term_emul.c
+    ${PROJECT_SOURCE_DIR}/src/dualcast/termio.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/wait_connection.c
-    ${PROJECT_SOURCE_DIR}/src/launch_config.c
+    ${PROJECT_SOURCE_DIR}/src/echo.c
+    ${PROJECT_SOURCE_DIR}/src/env/env.c
+    ${PROJECT_SOURCE_DIR}/src/env/env2.c
+    ${PROJECT_SOURCE_DIR}/src/exec/close.c
+    ${PROJECT_SOURCE_DIR}/src/exec/exec.c
+    ${PROJECT_SOURCE_DIR}/src/exec/exec2.c
+    ${PROJECT_SOURCE_DIR}/src/exec/pipe.c
+    ${PROJECT_SOURCE_DIR}/src/exec/setup.c
+    ${PROJECT_SOURCE_DIR}/src/exit.c
+    ${PROJECT_SOURCE_DIR}/src/format.c
     ${PROJECT_SOURCE_DIR}/src/free.c
+    ${PROJECT_SOURCE_DIR}/src/get_next_line.c
     ${PROJECT_SOURCE_DIR}/src/globbing/globbing.c
     ${PROJECT_SOURCE_DIR}/src/globbing/history.c
-    ${PROJECT_SOURCE_DIR}/src/globbing/home.c
     ${PROJECT_SOURCE_DIR}/src/globbing/stars.c
     ${PROJECT_SOURCE_DIR}/src/history.c
     ${PROJECT_SOURCE_DIR}/src/home.c
+    ${PROJECT_SOURCE_DIR}/src/init.c
+    ${PROJECT_SOURCE_DIR}/src/is/is.c
+    ${PROJECT_SOURCE_DIR}/src/is/is2.c
+    ${PROJECT_SOURCE_DIR}/src/launch_config.c
     ${PROJECT_SOURCE_DIR}/src/magic/construct.c
     ${PROJECT_SOURCE_DIR}/src/magic/magic.c
     ${PROJECT_SOURCE_DIR}/src/misc.c
-    ${PROJECT_SOURCE_DIR}/src/parse/parse.c
+    ${PROJECT_SOURCE_DIR}/src/my_sh.c
+    ${PROJECT_SOURCE_DIR}/src/parse/bufferize.c
     ${PROJECT_SOURCE_DIR}/src/parse/error.c
+    ${PROJECT_SOURCE_DIR}/src/parse/line.c
+    ${PROJECT_SOURCE_DIR}/src/parse/parse.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_arg.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_lvl_build_branch.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_lvl.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast.c
+    ${PROJECT_SOURCE_DIR}/src/parser_ll/lib/my_str_to_wordtab.c
+    ${PROJECT_SOURCE_DIR}/src/parser_ll/lib/my_strcat.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/parse.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/print_ast.c
-    ${PROJECT_SOURCE_DIR}/src/parser_ll/token.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/set/arg.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/set/op_high.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/set/op_low.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/set/redir.c
-    ${PROJECT_SOURCE_DIR}/src/parser_ll/lib/my_str_to_wordtab.c
-    ${PROJECT_SOURCE_DIR}/src/parser_ll/lib/my_strcat.c
+    ${PROJECT_SOURCE_DIR}/src/parser_ll/token.c
     ${PROJECT_SOURCE_DIR}/src/path/path.c
     ${PROJECT_SOURCE_DIR}/src/path/path2.c
-    ${PROJECT_SOURCE_DIR}/src/print.c
     ${PROJECT_SOURCE_DIR}/src/prompt.c
     ${PROJECT_SOURCE_DIR}/src/prompt/bash.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/turbosh.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/tcsh.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/minimalist.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/ketchup.c
     ${PROJECT_SOURCE_DIR}/src/prompt/bigmac.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/oh_my_zsh.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mysh.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mysh_lambda.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/get_cur_branch.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/ketchup.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/actions.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/advanced.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/char.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/cursor.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/fct.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/load_file.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/misc.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/prompt.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/sauv.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/tmp.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/minimalist.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_256.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_arrow.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mysh_lambda.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mysh.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/oh_my_zsh.c
     ${PROJECT_SOURCE_DIR}/src/prompt/ps1.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/advanced.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/fct.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/tmp.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/load_file.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/prompt.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/actions.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/char.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/sauv.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/cursor.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/misc.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/get_cur_branch.c
-    ${PROJECT_SOURCE_DIR}/src/vars.c
-    ${PROJECT_SOURCE_DIR}/src/my_sh.c
-    ${PROJECT_SOURCE_DIR}/src/exit.c
-    ${PROJECT_SOURCE_DIR}/src/parse/line.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/tcsh.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/turbosh.c
     ${PROJECT_SOURCE_DIR}/src/redirects.c
-    ${PROJECT_SOURCE_DIR}/src/buffer.c
-    ${PROJECT_SOURCE_DIR}/src/char.c
-    ${PROJECT_SOURCE_DIR}/src/init.c
-    ${PROJECT_SOURCE_DIR}/src/is/is.c
-    ${PROJECT_SOURCE_DIR}/src/is/is2.c
-    ${PROJECT_SOURCE_DIR}/src/get_next_line.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_complete.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_list.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/match.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/split_it.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/free_dirent.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_token.c
     ${PROJECT_SOURCE_DIR}/src/sanitizers/sanitizers.c
+    ${PROJECT_SOURCE_DIR}/src/vars.c
 )
 target_link_libraries(42sh my json hmap vec str ncurses)
 target_include_directories(42sh PRIVATE

@@ -43,20 +43,6 @@ void diagnose_status(unsigned int status)
     dprintf(2, (WCOREDUMP(status)) ? " (core dumped)\n" : "\n");
 }
 
-void reload_shell(shell_t *shell)
-{
-    char *path = getenv("PATH");
-
-    if (path) {
-        for (int k = 0; shell->path && shell->path[k]; k++)
-            free(shell->path[k]);
-        free(shell->path);
-        shell->path = init_path(path);
-    }
-    shell->home = getenv("HOME");
-    shell->current = get_current(shell->current, shell->home);
-}
-
 void execute(shell_t *shell)
 {
     char *str;
@@ -84,7 +70,7 @@ static int start_standard_shell(shell_t *shell)
     signal(SIGINT, SIG_IGN);
     signal(SIGTTOU, SIG_IGN);
     while (1) {
-        shell->line = NULL;
+        shell->line = 0;
         shell->w.cur = 0;
         init_prompt(shell);
         execute(shell);

@@ -16,15 +16,24 @@ void turbosh_prompt(shell_t *shell)
     char *str;
 
     fflush(stdout);
-    printf("%s", shell->exit_code ? "\033[31;1m" : "\033[0m");
-    printf("%s", "##\033[0m");
+    printf("%s", shell->exit_code ? "\e[31;1m" : "\e[0m");
+    printf("%s", "##\e[0m");
     str = getenv("LOGNAME");
-    printf("\033[32;1m%s\033[0m", str ? str : "");
+    printf("\e[32;1m%s\e[0m", str ? str : "");
     printf("%s", ":");
-    if (shell->current)
-        printf("\033[34;1m%s\033[0m", shell->current);
-    else
-        printf("\033[34;1m?\033[0m");
+    char *cwd = getcwd(0, 0);
+    if (cwd) {
+        char *path = pretty_path(cwd);
+        free(cwd);
+        if (path) {
+            printf("\e[34;1m%s\e[0m", path);
+            free(path);
+        } else {
+            printf("\e[34;1m%s\e[0m", cwd);
+        }
+    } else {
+        printf("\e[34;1m?\e[0m");
+    }
     printf("%s", getuid() ? "$ " : "# ");
     fflush(stdout);
 }

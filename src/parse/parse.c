@@ -11,6 +11,20 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+void skip_string(char *str, int *i)
+{
+    char quote = str[(*i)++];
+
+    while (str[*i]) {
+        if (str[*i] == '\\' && quote != '\'')
+            *i += (!!str[(*i) + 1]);
+        else if (str[*i] != quote)
+            break;
+        *i += 1;
+    }
+    *i -= (str[*i] == 0);
+}
+
 unsigned int count_args(char *str)
 {
     int i = -1;

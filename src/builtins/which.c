@@ -11,28 +11,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int find_first_cmd(shell_t *shell, char *str)
+static int find_first_cmd(const char *path, char *str)
 {
-    int i = -1;
-    int ret = 0;
-    char *path = NULL;
-    char *tmp;
+    vec_t *paths = lstr_split(path, ":");
 
-    while (!ret && shell->path[++i]) {
-        if (shell->path[i][strlen(shell->path[i])] != '/')
-            tmp = my_strcatdup(shell->path[i], "/");
-        else
-            tmp = strdup(shell->path[i]);
-        if (tmp == NULL || (path = my_strcatdup(tmp, str)) == NULL)
-            handle_error("calloc");
-        free(tmp);
-        if (access(path, F_OK | X_OK) == 0) {
-            printf("%s\n", path);
-            ret = 1;
+    for (size_t i = 0; i < lvec_size(paths); i++) {
+        char *cur = path_join(path, str);
+        if (access(cur, F_OK | X_OK) == 0) {
+            printf("%s\n", cur);
+            lvec_clear(paths, true);
+            lvec_drop(paths);
+            return 1;
         }
-        free(path);
+        free(cur);
     }
-    return ret;
+    lvec_clear(paths, true);
+    lvec_drop(paths);
+    return 0;
 }
 
 static int search(shell_t *shell, int i)
@@ -50,33 +45,32 @@ static int search(shell_t *shell, int i)
         printf("%s: shell built-in command.\n", shell->cur->av[i]);
         ret = 0;
     }
-    if (ret && shell->path)
-        if (find_first_cmd(shell, shell->cur->av[i]))
-            ret = 0;
+    char *path = getenv("PATH");
+    if (ret && path && find_first_cmd(path, shell->cur->av[i]))
+        ret = 0;
     if (ret == 1)
-        printf("%s: Command not found.\n", shell->cur->av[i]);
+        printf("%s: command not found.\n", shell->cur->av[i]);
     return ret;
 }
 
 int which(shell_t *shell, int args)
 {
-    int i = 0;
-    int ret = 0;
-
-    (void)args;
-    while (shell->cur->av[++i])
-        if (is_path(shell->cur->av[i]))
-            if (access(shell->cur->av[i], F_OK | X_OK) == 0)
-                printf("%s\n", shell->cur->av[i]);
-            else {
-                printf("%s: Command not found.\n", shell->cur->av[i]);
-                ret = 1;
-            }
-        else
-            ret |= search(shell, i);
-    if (i == 1) {
-        dprintf(2, "which: Too few arguments.\n");
+    if (args == 1) {
+        dprintf(2, "which: too few arguments.\n");
         return 1;
     }
-    return ret;
+    for (size_t i = 1; shell->cur->av[i]; i++) {
+        if (is_path(shell->cur->av[i])) {
+            if (access(shell->cur->av[i], F_OK | X_OK) == 0) {
+                printf("%s\n", shell->cur->av[i]);
+                return 0;
+            } else {
+                printf("%s: command not found.\n", shell->cur->av[i]);
+                return 1;
+            }
+        } else {
+            return search(shell, i);
+        }
+    }
+    return 0;
 }

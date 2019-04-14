@@ -91,27 +91,20 @@ void set_path(shell_t *shell, char *path)
 
 void parse_rc(shell_t *shell)
 {
-    int fd;
-    char *path;
-
-    if (shell->home == NULL)
+    char *home = getenv("HOME");
+    if (home == NULL)
         return;
-    path = calloc(512, sizeof(char));
+    char *path = path_join(home, RC_FILE);
     if (path == NULL)
-        handle_error("calloc");
-    path[0] = 0;
-    path = strcat(path, shell->home);
-    if (shell->home[strlen(shell->home)] != '/')
-        path[strlen(shell->home)] = '/';
-    path[strlen(shell->home) + 1] = 0;
-    path = strcat(path, RC_FILE);
-    if ((fd = open(path, O_RDONLY)) == -1)
         return;
+    int fd = open(path, O_RDONLY);
     free(path);
-    while ((path = get_next_line(fd)) != NULL) {
-        if (is_valid_path(path))
-            set_path(shell, path);
-        free(path);
+    if (fd == -1)
+        return;
+    for (char *line = get_next_line(fd); line; line = get_next_line(fd)) {
+        if (is_valid_path(line))
+            set_path(shell, line);
+        free(line);
     }
     close(fd);
 }

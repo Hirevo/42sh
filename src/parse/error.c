@@ -16,11 +16,7 @@ int check_error(shell_t *shell)
         if (((head->av == NULL || head->av[0] == NULL) && head->next) ||
             ((head->link == '|' || head->link == 'e' || head->link == 'o') &&
             !head->next)) {
-            shell->exit_code = 1;
-            free(shell->exit_str);
-            shell->exit_str = my_unsigned_to_char(0);
-            printf("Invalid null command.\n");
-            return -1;
+            return eputstr("invalid null command.\n"), -1;
         }
     }
     return 0;

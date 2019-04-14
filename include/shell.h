@@ -98,9 +98,6 @@ typedef struct {
 **
 ** av: av give in the main (for var $0, $1, ...)
 ** script: is launch from script
-** env: the environement
-** path: the current path
-** home: the current home, for prompt & cd builtin
 ** current: the current working directory, for prompt
 ** line: raw command input from user
 ** final: parsed command from line
@@ -116,21 +113,15 @@ typedef struct {
     char **av;
     int script;
     int prompt;
-    char **path;
-    char *home;
     char **vars;
-    char *current;
     char *line;
     char **final;
     char is_done;
     unsigned int exit_code;
-    char *exit_str;
     char *last;
-    char *prev;
     int *fds;
     int tty;
     int ioctl;
-    char *cwd;
     pid_t pgid;
     hmap_t *alias;
     subst_t subst;
@@ -155,7 +146,7 @@ int get_next_entry(char *, char **, int);
 char **init_path(char *);
 char **set_default_path(void);
 int disp_env(void);
-int move_dir(char **, int, shell_t *);
+int move_dir(char **, int);
 unsigned int exec_action(shell_t *, unsigned int);
 unsigned int process_command(shell_t *, int);
 int is_char_alpha(char *);
@@ -182,7 +173,6 @@ int init_shell(shell_t *);
 int my_strlen_spe(char *, char);
 void init_aliases(shell_t *);
 void set_alias(shell_t *, char *);
-void reload_shell(shell_t *);
 void free_alias(shell_t *);
 void free_hist(shell_t *);
 int disp_alias(shell_t *, char *);
@@ -198,6 +188,12 @@ int compare_stats(struct stat *);
 void check_exec(shell_t *, int, int *);
 void exec_piped_command(char *, command_t *, int[2], shell_t *);
 char *format_arg(char *);
+
+void putstr(const char *fmt, ...);
+void eputstr(const char *fmt, ...);
+void dputstr(const int fd, const char *fmt, ...);
+char *path_join(const char *p1, const char *p2);
+char *pretty_path(const char *path);
 
 /*
 ** alias/alias.c
@@ -239,7 +235,7 @@ int config_http(shell_t *, t_config *);
 void save_history(shell_t *);
 int disp_hist(shell_t *, int);
 void add_hist_elem(shell_t *, char *);
-void init_history(shell_t *, const char *filename);
+void init_history(shell_t *);
 void skip_string(char *, int *);
 
 /*
@@ -425,11 +421,6 @@ int ret_error(shell_t *, char *);
 OPTION(CharPtr) get_hostname(void);
 void print_prompt(shell_t *);
 void get_prompt(shell_t *);
-
-/*
-** exit.c
-*/
-int set_error(shell_t *, int);
 
 /*
 ** vars.c

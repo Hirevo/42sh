@@ -51,8 +51,7 @@ int count_links(char *str)
             while (str[i] && str[i] != buf)
                 i += (str[i] == '\\' && buf != '\'') + 1;
             if (str[i] == 0) {
-                my_putchar_fd(buf, 2);
-                return my_print_ret(": Invalid quotes.\n", -1);
+                return eputstr("%c: invalid quotes.\n", buf), -1;
             }
         }
         count += is_separator(str[i]);

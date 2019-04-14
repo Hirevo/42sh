@@ -66,7 +66,7 @@ int core_server_dc(t_socket sock, t_socket client, fd_set *rdfs)
     int stop;
 
     stop = 0;
-    prompt = strdup("(\033[32;1mDualCast\033[0m) $> ");
+    prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
     my_putstr(prompt);
     nb_char = strlen(prompt);
     while (!stop) {

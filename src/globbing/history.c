@@ -22,7 +22,7 @@ static int insert_one_hist(shell_t *shell, int i, int n)
     while (last && last[++len])
         ;
     if (n >= len)
-        return ret_error(shell, "Bad ! arg selector.\n");
+        return eputstr("bad ! arg selector.\n"), -1;
     len = strlen(last[n]) + strlen(shell->line);
     len += strlen(shell->line) - 3;
     str = calloc(len + 1, sizeof(char));

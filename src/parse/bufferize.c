@@ -180,8 +180,9 @@ int set_commands(shell_t *shell)
         (head) ? (head->next = elem) : (shell->commands = elem);
         elem->prev = head;
         last = i;
-        if ((i += count_link(shell->final + i)) == last)
-            return ret_error(shell, "Invalid null command.\n");
+        i += count_link(shell->final + i);
+        if (i == last)
+            return eputstr("invalid null command.\n"), -1;
         prepare_link(shell, elem, i, last);
         i -= (elem->link == '0');
         head = elem;

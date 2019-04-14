@@ -47,21 +47,15 @@ void write_hist(shell_t *shell, int fd)
 
 void save_history(shell_t *shell)
 {
-    char *line;
+    char *home = getenv("HOME");
 
-    if (shell->hist.arr == NULL || shell->home == NULL)
+    if (shell->hist.arr == NULL)
         return;
-    line = calloc(512, sizeof(char));
-    line[0] = 0;
-    line = strcat(line, shell->home);
-    if (shell->home[strlen(shell->home)] != '/')
-        line[strlen(shell->home)] = '/';
-    line[strlen(shell->home) + 1] = 0;
-    line = strcat(line, HIST_FILE);
-    const int fd = open(line, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    char *path = path_join(home, HIST_FILE);
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    free(path);
     if (fd == -1)
         return;
-    free(line);
     write_hist(shell, fd);
 }
 
@@ -91,26 +85,21 @@ void add_hist_elem(shell_t *shell, char *line)
     lvec_push_back(shell->hist.arr, 1, payload);
 }
 
-void init_history(shell_t *shell, const char *filename)
+void init_history(shell_t *shell)
 {
+    char *home = getenv("HOME");
+
     shell->hist.cur = 0;
     shell->hist.arr = lvec_with_capacity(512);
-    if (shell->hist.arr == 0 || shell->home == NULL ||
-        access(shell->home, F_OK | R_OK) == -1)
+    if (shell->hist.arr == 0 || home == NULL)
         return;
-    int len = strlen(shell->home);
-    char *path = calloc(len + 2 + strlen(filename), sizeof(char));
+    char *path = path_join(home, HIST_FILE);
     if (path == 0)
-        handle_error("calloc");
-    strcpy(path, shell->home);
-    if (lstr_ends_with(path, "/") == false)
-        strcat(path, "/");
-    strcat(path, filename);
+        return;
     int fd = open(path, O_RDONLY);
     free(path);
     if (fd == -1)
         return;
-    path = get_next_line(fd);
     for (char *line = get_next_line(fd); line; line = get_next_line(fd)) {
         add_hist_elem(shell, line);
         free(line);

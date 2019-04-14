@@ -21,8 +21,7 @@ int setup_right_redirect(command_t *head, int *fds, int i)
     if ((fd = open(head->r_name, O_WRONLY | O_CREAT | (i ? O_TRUNC : O_APPEND),
              0644)) == -1) {
         if (errno == EISDIR) {
-            my_print_err(head->r_name);
-            return my_print_ret(": Is a directory.\n", -1);
+            return eputstr("%s: Is a directory.\n", head->r_name), -1;
         } else
             return -1;
     }
@@ -51,13 +50,13 @@ int prepare_redirect(command_t *head, char **type, char **name, int i)
 {
     *type = head->av[i];
     if (!head->av[i + 1])
-        return my_print_ret("Missing name for redirect.\n", -1);
+        return eputstr("missing name for redirect.\n"), -1;
     *name = head->av[i + 1];
     while (head->av[++i + 1])
         head->av[i - 1] = head->av[i + 1];
     head->av[i - 1] = NULL;
     if (i == 1)
-        return my_print_ret("Invalid null command.\n", -1);
+        return eputstr("invalid null command.\n"), -1;
     return 0;
 }
 
@@ -71,14 +70,14 @@ int check_redirects(command_t *head, command_t *last)
     while (head->av[++i])
         if (is_right_redirect(head->av[i]) || is_left_redirect(head->av[i])) {
             if (head->av[i + 1] == NULL)
-                return my_print_ret("Missing name for redirect.\n", -1);
+                return eputstr("missing name for redirect.\n"), -1;
             else
                 (is_left_redirect(head->av[i])) ? (l += 1) : (r += 1);
         }
     if (r > 1 || (r == 1 && head->link == '|'))
-        return my_print_ret("Ambiguous output redirect.\n", -1);
+        return eputstr("ambiguous output redirect.\n"), -1;
     else if (l > 1 || (l == 1 && last && last->link == '|'))
-        return my_print_ret("Ambiguous input redirect.\n", -1);
+        return eputstr("ambiguous input redirect.\n"), -1;
     return 0;
 }
 

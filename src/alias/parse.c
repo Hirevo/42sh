@@ -14,24 +14,23 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-int is_valid_alias(char *path)
+bool is_valid_alias(char *path)
 {
-    int i = 0;
+    size_t i = 6;
 
-    if (path[i++] != 'a' || path[i++] != 'l' || path[i++] != 'i' ||
-        path[i++] != 'a' || path[i++] != 's' || path[i++] != ' ')
-        return 0;
+    if (lstr_starts_with(path, "alias ") == false)
+        return false;
     while (path[i] != '=')
         if (path[i++] == 0)
-            return 0;
+            return false;
     if (path[++i] != '\'')
-        return 0;
+        return false;
     while (path[++i] != '\'')
         if (path[i] == 0)
-            return 0;
+            return false;
     if (path[++i] == 0)
-        return 1;
-    return 0;
+        return true;
+    return false;
 }
 
 void write_alias(int *fd, char *name, char *command)
@@ -41,23 +40,19 @@ void write_alias(int *fd, char *name, char *command)
 
 void save_alias(shell_t *shell)
 {
-    int fd;
-    char *path = calloc(512, sizeof(char));
+    char *home = getenv("HOME");
 
-    if (shell->tty == 0 || shell->home == NULL || path == NULL)
+    if (shell->tty == 0 || home == 0)
         return;
-    path[0] = 0;
-    path = strcat(path, shell->home);
-    if (shell->home[strlen(shell->home)] != '/')
-        path[strlen(shell->home)] = '/';
-    path[strlen(shell->home) + 1] = 0;
-    path = strcat(path, ALIAS_FILE);
-    fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    char *path = path_join(home, ALIAS_FILE);
+    if (path == 0)
+        return;
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    free(path);
     if (fd == -1)
         return;
     lhmap_for_each(
         shell->alias, (void (*)(void *, char *, void *))(write_alias), &fd);
-    free(path);
     close(fd);
 }
 
@@ -90,28 +85,22 @@ void set_alias(shell_t *shell, char *path)
 
 void init_aliases(shell_t *shell)
 {
-    int fd;
-    char *path = calloc(512, sizeof(char));
+    char *home = getenv("HOME");
 
     shell->alias = lhmap_new();
-    if (shell->alias == NULL || shell->home == NULL || path == NULL)
+    if (shell->alias == NULL)
         return;
-    path[0] = 0;
-    path = strcat(path, shell->home);
-    if (shell->home[strlen(shell->home)] != '/')
-        path[strlen(shell->home)] = '/';
-    path[strlen(shell->home) + 1] = 0;
-    path = strcat(path, ALIAS_FILE);
-    fd = open(path, O_RDONLY);
+    char *path = path_join(home, ALIAS_FILE);
+    if (path == 0)
+        return;
+    int fd = open(path, O_RDONLY);
+    free(path);
     if (fd == -1)
         return;
-    free(path);
-    path = get_next_line(fd);
-    while (path) {
-        if (is_valid_alias(path))
-            set_alias(shell, path);
-        free(path);
-        path = get_next_line(fd);
+    for (char *line = get_next_line(fd); line; line = get_next_line(fd)) {
+        if (is_valid_alias(line))
+            set_alias(shell, line);
+        free(line);
     }
     close(fd);
 }

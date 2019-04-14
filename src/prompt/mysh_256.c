@@ -15,11 +15,21 @@ void mysh_256(shell_t *shell)
     char *git = 0;
 
     fflush(stdout);
-    if (shell->exit_str)
-        printf("\e[1m\e[38;5;227m(%s)\e[0m ", shell->exit_str);
+    printf("\e[1m\e[38;5;227m(%u)\e[0m ", shell->exit_code);
     printf("\e[1m\e[38;5;9m42sh\e[21m\e[0m \e[1m\e[38;5;48m");
-    if (shell->current != NULL)
-        printf("%s", shell->current);
+    char *cwd = getcwd(0, 0);
+    if (cwd) {
+        char *path = pretty_path(cwd);
+        free(cwd);
+        if (path) {
+            printf("%s", path);
+            free(path);
+        } else {
+            printf("%s", cwd);
+        }
+    } else {
+        printf("?");
+    }
     printf("\e[0m \e[1m");
     git = show_cur_branch();
     if (git)

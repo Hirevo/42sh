@@ -38,7 +38,7 @@ void prompt_serv(t_socket sock, char c, char **prompt, int *nb_char)
     if (c == 13) {
         write_client(sock, "OK");
         exc_cmd(sock, prompt, nb_char);
-        *prompt = strdup("(\033[32;1mDualCast\033[0m) $> ");
+        *prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
         *nb_char = strlen(*prompt);
         printf("\n%s", *prompt);
         return;

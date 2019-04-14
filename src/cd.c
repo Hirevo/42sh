@@ -22,46 +22,50 @@ int check_dir(char *path)
     return 0;
 }
 
-int move_dir2(char **final, int ac, shell_t *shell)
+static int change_to(const char *path)
 {
-    char *temp;
-    int check;
-
-    if (ac == 2 && strcmp(final[1], "-") == 0) {
-        if (shell->prev == NULL)
-            return my_print_err(": No such file or directory.\n");
-        temp = strdup(shell->prev);
-        shell->prev = getcwd(NULL, 512);
-        if (chdir(temp) == -1)
-            return (my_print_err(temp) +
-                my_print_err(": No such file or directory.\n") - 1);
-        free(temp);
-    } else if ((check = check_dir((ac == 2) ? final[1] : final[2])) == 0) {
-        shell->prev = getcwd(NULL, 256);
-        chdir((ac == 2) ? final[1] : final[2]);
-    } else
-        return (my_print_err((ac == 2) ? final[1] : final[2]) +
-            my_print_err((check == -2) ? ": Not a directory.\n" :
-                                         ": No such file or directory.\n") -
-            1);
+    char *oldpwd = getcwd(NULL, 0);
+    if (chdir(path) == -1) {
+        free(oldpwd);
+        return eputstr("cd: can't change to target directory.\n"), 1;
+    }
+    char *pwd = getcwd(NULL, 0);
+    setenv("OLDPWD", oldpwd, 1);
+    setenv("PWD", pwd, 1);
+    free(oldpwd);
+    free(pwd);
     return 0;
 }
 
-int move_dir(char **final, int ac, shell_t *shell)
+int move_dir2(char **final, int ac)
 {
-    if (ac > 3 || (ac == 3 && strcmp(final[1], "--"))) {
-        my_print_err("cd: Too many arguments.\n");
+    int check = 0;
+
+    if (ac == 2 && lstr_equals(final[1], "-")) {
+        char *oldpwd = getenv("OLDPWD");
+        if (oldpwd == NULL)
+            return eputstr(": no such file or directory.\n"), 1;
+        return change_to(oldpwd);
+    } else if ((check = check_dir((ac == 2) ? final[1] : final[2])) == 0) {
+        return change_to((ac == 2) ? final[1] : final[2]);
+    } else {
+        char *msg = ((check == -2) ? "%s: not a directory.\n" :
+                                     "%s: no such file or directory.\n");
+        return eputstr(msg, (ac == 2) ? final[1] : final[2]), 1;
+    }
+    return 0;
+}
+
+int move_dir(char **final, int ac)
+{
+    if (ac > 3 || (ac == 3 && lstr_equals(final[1], "--") == false)) {
+        return eputstr("cd: too many arguments.\n"), 1;
+    } else if (ac == 1 || (ac == 2 && lstr_equals(final[1], "--"))) {
+        char *home = getenv("HOME");
+        if (home == NULL)
+            return eputstr("cd: no home directory.\n"), 1;
+        return change_to(home);
+    } else if (move_dir2(final, ac))
         return 1;
-    } else if (ac == 1 || (ac == 2 && !strcmp(final[1], "--"))) {
-        shell->prev = getcwd(NULL, 512);
-        if (shell->home == NULL)
-            return my_print_err("cd: No home directory.\n");
-        else if (chdir(shell->home) == -1)
-            return my_print_err("cd: Can't change to home directory.\n");
-        shell->current = get_current(shell->current, shell->home);
-        return 0;
-    } else if (move_dir2(final, ac, shell))
-        return 1;
-    shell->current = get_current(shell->current, shell->home);
     return 0;
 }

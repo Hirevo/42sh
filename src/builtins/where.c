@@ -11,36 +11,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int find_cmd(shell_t *shell, char *str)
+static int find_cmd(const char *path, char *str)
 {
-    int i = -1;
     int ret = 0;
-    char *path = NULL;
-    char *tmp;
+    vec_t *paths = lstr_split(path, ":");
 
-    while (shell->path[++i]) {
-        if (shell->path[i][strlen(shell->path[i])] != '/')
-            tmp = my_strcatdup(shell->path[i], "/");
-        else
-            tmp = strdup(shell->path[i]);
-        if (tmp == NULL || (path = my_strcatdup(tmp, str)) == NULL)
-            handle_error("calloc");
-        free(tmp);
-        if (access(path, F_OK | X_OK) == 0) {
-            printf("%s\n", path);
+    for (size_t i = 0; i < lvec_size(paths); i++) {
+        char *cur = path_join(path, str);
+        if (access(cur, F_OK | X_OK) == 0) {
+            printf("%s\n", cur);
             ret = 1;
         }
-        free(path);
+        free(cur);
     }
+    lvec_clear(paths, true);
+    lvec_drop(paths);
     return ret;
 }
 
 static int search(shell_t *shell, int i)
 {
-    char *str = 0;
     int ret = 1;
 
-    if ((str = get_alias_cmd(shell, shell->cur->av[i]))) {
+    char *str = get_alias_cmd(shell, shell->cur->av[i]);
+    if (str) {
         printf("%s is aliased to %s\n", shell->cur->av[i], str);
         free(str);
         ret = 0;
@@ -49,28 +43,24 @@ static int search(shell_t *shell, int i)
         printf("%s is a shell built-in\n", shell->cur->av[i]);
         ret = 0;
     }
-    if (shell->path)
-        if (find_cmd(shell, shell->cur->av[i]))
-            ret = 0;
+    char *path = getenv("PATH");
+    if (path && find_cmd(path, shell->cur->av[i]))
+        ret = 0;
     return ret;
 }
 
 int where(shell_t *shell, int args)
 {
-    int i = 0;
-    int ret = 0;
-
-    (void)args;
-    while (shell->cur->av[++i])
-        if (is_path(shell->cur->av[i])) {
-            printf("where: / in command makes no sense\n");
-            ret = 1;
-        }
-        else
-            ret |= search(shell, i);
-    if (i == 1) {
-        dprintf(2, "where: Too few arguments.\n");
+    if (args == 1) {
+        dprintf(2, "where: too few arguments.\n");
         return 1;
     }
-    return ret;
+    for (size_t i = 1; shell->cur->av[i]; i++) {
+        if (is_path(shell->cur->av[i])) {
+            return eputstr("where: argument is a path, not a command.\n"), 1;
+        } else {
+            return search(shell, i);
+        }
+    }
+    return 0;
 }

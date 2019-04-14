@@ -12,5 +12,5 @@ int unalias_b(shell_t *shell, int args)
     if (args >= 2)
         return unalias(shell, shell->cur->av + 1);
     else
-        return my_print_err("unalias: Too few arguments.\n");
+        return eputstr("unalias: too few arguments.\n"), 1;
 }

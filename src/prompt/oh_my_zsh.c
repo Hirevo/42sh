@@ -17,17 +17,24 @@ void oh_my_zsh(shell_t *shell)
 
     fflush(stdout);
     if (shell->exit_code == 0)
-        printf("%s", "\033[32;1m");
+        printf("%s", "\e[32;1m");
     else
-        printf("%s", "\033[31;1m");
+        printf("%s", "\e[31;1m");
     printf("%s", "→  ");
-    printf("%s", "\033[0m");
-    printf("\033[36;1m%s\033[0m ", basename(shell->current));
+    printf("%s", "\e[0m");
+    char *cwd = getcwd(0, 0);
+    if (cwd) {
+        printf("\e[36;1m%s\e[0m ", basename(cwd));
+        free(cwd);
+    } else {
+        printf("\e[36;1m?\e[0m ");
+    }
     git = show_cur_branch();
     if (git) {
-        printf("\033[34;1mgit:(\033[0m\033[31;1m\
-%s\033[0m\033[34;1m)\033[0m ",
-            git);
+        printf(
+            "\e[34;1mgit:(\e[0m\e[31;1m%s\e[0m\e[34;1m)\e[0m ",
+            git
+        );
         free(git);
     }
     fflush(stdout);

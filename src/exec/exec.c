@@ -40,22 +40,6 @@ void exec_child(shell_t *shell)
     exit(1);
 }
 
-int check_access(char **final, shell_t *shell)
-{
-    struct stat stats;
-
-    if (is_path(final[0])) {
-        if (stat(final[0], &stats) == 0)
-            return compare_stats(&stats);
-    } else {
-        for (size_t i = 0; shell->path && shell->path[i]; i++) {
-            if (stat(cat_path(shell->path, final[0], i), &stats) == 0)
-                return (compare_stats(&stats) == 0) ? i : -2;
-        }
-    }
-    return -1;
-}
-
 unsigned int exec_action(shell_t *shell, unsigned int args)
 {
     exec_status_t status = exec_pipeline(shell);
@@ -70,11 +54,6 @@ unsigned int exec_action(shell_t *shell, unsigned int args)
     free(shell->final);
     free_commands(shell);
     free(shell->line);
-    if (shell->exit_str)
-        free(shell->exit_str);
-    shell->exit_str = my_unsigned_to_char(status.code);
-    if (shell->exit_str == NULL)
-        exit(84);
     return status.code;
 }
 
@@ -88,6 +67,12 @@ int format_commands(shell_t *shell)
         }
     }
     return 0;
+}
+
+static int set_error(shell_t *shell, int ret)
+{
+    shell->exit_code = ret;
+    return ret;
 }
 
 unsigned int exec_line(shell_t *shell, unsigned int args)

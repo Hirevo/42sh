@@ -14,14 +14,24 @@ void tcsh_prompt(shell_t *shell)
 {
     OPTION(CharPtr) hostname = get_hostname();
 
+    (void)(shell);
     fflush(stdout);
     printf("\e[4m%s\e[0m", OPT_UNWRAP_OR(hostname, "???"));
     OPT_AND_THEN(hostname, free);
     printf("%s", ":");
-    if (shell->current)
-        printf("\e[1m%s\e[0m", shell->current);
-    else
-        printf("\e[1m???\e[0m");
+    char *cwd = getcwd(0, 0);
+    if (cwd) {
+        char *path = pretty_path(cwd);
+        free(cwd);
+        if (path) {
+            printf("\e[1m%s\e[0m", path);
+            free(path);
+        } else {
+            printf("\e[1m%s\e[0m", cwd);
+        }
+    } else {
+        printf("\e[1m?\e[0m");
+    }
     printf("%s", "> ");
     fflush(stdout);
 }

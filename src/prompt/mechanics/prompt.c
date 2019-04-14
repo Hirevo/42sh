@@ -50,9 +50,9 @@ void color_text(shell_t *shell)
     while (shell->w.cur-- != 0)
         my_putstr(shell->w.backw);
     if (shell->line) {
-        my_putstr("\033[1m\033[38;2;255;98;0m");
+        my_putstr("\e[1m\e[38;2;255;98;0m");
         my_putstr(shell->line);
-        my_putstr("\033[0m");
+        my_putstr("\e[0m");
     }
 }
 

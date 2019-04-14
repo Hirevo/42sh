@@ -14,14 +14,12 @@ int setenv_b(shell_t *shell, int args)
 
     r = 0;
     if (args == 3 && strcmp(shell->cur->av[0], "setenv") == 0)
-        r = set_env(shell->cur->av[1], shell->cur->av[2]);
+        return set_env(shell->cur->av[1], shell->cur->av[2]);
     else if (args == 1 && strcmp(shell->cur->av[0], "setenv") == 0)
-        r = disp_env();
+        return disp_env();
     else if (args == 2 && strcmp(shell->cur->av[0], "setenv") == 0)
-        r = set_env(shell->cur->av[1], "");
+        return set_env(shell->cur->av[1], "");
     else
-        r = my_print_err(shell->cur->av[0]) +
-            my_print_err(": Too many arguments.\n") - 1;
-    reload_shell(shell);
+        return eputstr("%s: too many arguments.\n", shell->cur->av[0]), 1;
     return r;
 }

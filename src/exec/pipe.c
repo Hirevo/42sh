@@ -71,11 +71,12 @@ exec_status_t exec_pipeline(shell_t *shell)
         fds[2] = 0;
         while (head->av[fds[2]])
             fds[2] += 1;
-        if (head->link == '|' && pipe(fds) == -1)
+        if (head->link == '|' && pipe(fds) == -1) {
             return (exec_status_t){
                 .ok = false,
-                .code = ret_error(shell, "Can't make pipe.\n"),
+                .code = (eputstr("can't create pipe.\n"), -1),
             };
+        }
         status = exec_branch(shell, &head, fds, &fd_carry);
         if (status.ok == false)
             break;
@@ -117,7 +118,8 @@ int get_return(shell_t *shell)
     int r = 0;
     int final = 0;
 
-    while (shell->fds[++i]);
+    while (shell->fds[++i])
+        ;
     i -= 1;
     while (i >= 0) {
         waitpid(shell->fds[i], &r, 0);

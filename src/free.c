@@ -45,17 +45,8 @@ void free_alias(shell_t *shell)
 
 void free_shell(shell_t *shell)
 {
-    int i;
-
-    i = -1;
-    if (shell->path != NULL) {
-        while (shell->path[++i] != NULL)
-            free(shell->path[i]);
-        free(shell->path);
-    }
     save_history(shell);
     save_alias(shell);
-    free(shell->current);
     free_shell2(shell);
 }
 
@@ -71,9 +62,7 @@ void free_shell2(shell_t *shell)
     }
     free_alias(shell);
     free(shell->last);
-    free(shell->prev);
     free(shell->line);
-    free(shell->exit_str);
     free_commands(shell);
     if (isatty(0))
         printf("exit\n");

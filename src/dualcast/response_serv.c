@@ -14,7 +14,7 @@ static void print_cmd(char *buf, char **prompt, int *nb_char)
 {
     del_prompt(*nb_char);
     printf("\r%s", buf + 4);
-    *prompt = strdup("(\033[32;1mDualCast\033[0m) $> ");
+    *prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
     *nb_char = strlen(*prompt);
     printf("%s", *prompt);
 }

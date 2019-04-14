@@ -44,18 +44,33 @@ void ps1_prompt(shell_t *shell)
             case 's':
                 my_putstr("42sh");
                 break;
-            case 'w':
-                OPT_AND_THEN(
-                    OPT_FROM_NULLABLE(CharPtr, shell->current), my_putstr);
-                break;
+            case 'w': {
+                OPTION(CharPtr) cwd = OPT_FROM_NULLABLE(CharPtr, getcwd(0, 0));
+                if (IS_SOME(cwd)) {
+                    char *ucwd = OPT_UNWRAP(cwd);
+                    OPTION(CharPtr)
+                    path = OPT_FROM_NULLABLE(CharPtr, pretty_path(ucwd));
+                    free(ucwd);
+                    if (IS_SOME(path)) {
+                        char *upath = OPT_UNWRAP(path);
+                        my_putstr(upath);
+                        free(upath);
+                    }
+                }
+            } break;
             case 'W': {
                 OPTION(CharPtr)
-                path = OPT_FROM_NULLABLE(CharPtr, shell->current);
-                path = OPT_AND_THEN_NULLABLE(CharPtr, path, strdup);
-                OPTION(CharPtr)
-                name = OPT_AND_THEN_NULLABLE(CharPtr, path, basename);
-                OPT_AND_THEN(name, my_putstr);
-                OPT_AND_THEN(path, free);
+                cwd = OPT_FROM_NULLABLE(CharPtr, getcwd(0, 0));
+                if (IS_SOME(cwd)) {
+                    char *ucwd = OPT_UNWRAP(cwd);
+                    OPTION(CharPtr)
+                    path = OPT_FROM_NULLABLE(CharPtr, basename(ucwd));
+                    if (IS_SOME(path)) {
+                        char *upath = OPT_UNWRAP(path);
+                        my_putstr(upath);
+                        free(ucwd);
+                    }
+                }
             } break;
             case 'u': {
                 OPTION(CharPtr)
