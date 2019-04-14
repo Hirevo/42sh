@@ -50,7 +50,9 @@ char *pretty_path(const char *path)
 
     if (home == 0)
         return strdup(path);
-    else if (lstr_starts_with(path, home)) {
+    else if (lstr_equals(path, home)) {
+        return strdup("~");
+    } else if (lstr_starts_with(path, home)) {
         char *ret = 0;
         const char *npath = path + strlen(home) + !lstr_ends_with(home, "/");
         if (asprintf(&ret, "~/%s", npath) == -1)

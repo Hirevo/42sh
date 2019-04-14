@@ -64,11 +64,17 @@ void ps1_prompt(shell_t *shell)
                 if (IS_SOME(cwd)) {
                     char *ucwd = OPT_UNWRAP(cwd);
                     OPTION(CharPtr)
-                    path = OPT_FROM_NULLABLE(CharPtr, basename(ucwd));
-                    if (IS_SOME(path)) {
-                        char *upath = OPT_UNWRAP(path);
-                        my_putstr(upath);
-                        free(ucwd);
+                    pretty = OPT_FROM_NULLABLE(CharPtr, pretty_path(ucwd));
+                    free(ucwd);
+                    if (IS_SOME(pretty)) {
+                        char *upretty = OPT_UNWRAP(pretty);
+                        OPTION(CharPtr)
+                        path = OPT_FROM_NULLABLE(CharPtr, basename(upretty));
+                        if (IS_SOME(path)) {
+                            char *upath = OPT_UNWRAP(path);
+                            my_putstr(upath);
+                            free(upretty);
+                        }
                     }
                 }
             } break;
