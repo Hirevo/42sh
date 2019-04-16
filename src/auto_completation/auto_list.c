@@ -33,18 +33,19 @@ void show_autolist(shell_t *shell, match_t *list)
 
     if (!list)
         return;
-    str = strdup("echo '");
+    str = strdup("echo \"");
     printf("\n");
     while (tmp) {
         if (strcmp(tmp->cmd, "..") && strcmp(tmp->cmd, ".")) {
-            if (asprintf(&cmd, "%s%s\\n", str, sanitize(tmp->cmd, 0)) == -1)
+            if (asprintf(&cmd, "%s%s\\\\n", str,
+                    sanitize_double_quotes(tmp->cmd, 0)) == -1)
                 handle_error("calloc");
             free(str);
             str = cmd;
         }
         tmp = tmp->next;
     }
-    if (asprintf(&cmd, "%s' | sort | column", str) == -1)
+    if (asprintf(&cmd, "%s\" | sort | column", str) == -1)
         handle_error("calloc");
     free(str);
     str = cmd;
