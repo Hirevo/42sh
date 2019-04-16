@@ -38,9 +38,8 @@ static void insert_inline(shell_t *shell, char **buffer, int i, int len)
         if (asprintf(&ret, "%.*s%s%s", i, shell->line, result,
                 shell->line + i + len + 2) == -1)
             handle_error("calloc");
-    }
-    else if (asprintf(&ret, "%.*s%s", i, shell->line,
-                 shell->line + i + len + 2) == -1)
+    } else if (asprintf(&ret, "%.*s%s", i, shell->line,
+                   shell->line + i + len + 2) == -1)
         handle_error("calloc");
     free(shell->line);
     shell->line = ret;
@@ -94,19 +93,19 @@ int magic(shell_t *shell)
     char *line;
 
     while (shell->line[++i])
-        if (shell->line[i] == '\'' || shell->line[i] == '"') {
+        if (shell->line[i] == '\\')
+            i += !!(shell->line[i + 1]);
+        else if (shell->line[i] == '\'' || shell->line[i] == '"') {
             len = shell->line[i++];
             while (shell->line[i] && shell->line[i] != len)
                 i += -1;
             i -= (shell->line[i] == 0);
-        }
-        else if (shell->line[i] == '`') {
+        } else if (shell->line[i] == '`') {
             if ((len = get_len(shell, i)) >= 0) {
                 line = strndup(shell->line + i + 1, len);
                 exec_magic(shell, line, i, len);
                 i = -1;
-            }
-            else if (len == -1)
+            } else if (len == -1)
                 return -1;
         }
     return 0;
