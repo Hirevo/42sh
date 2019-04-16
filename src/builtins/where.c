@@ -17,7 +17,7 @@ static int find_cmd(const char *path, char *str)
     vec_t *paths = lstr_split(path, ":");
 
     for (size_t i = 0; i < lvec_size(paths); i++) {
-        char *cur = path_join(path, str);
+        char *cur = path_join(lvec_at(paths, i), str);
         if (access(cur, F_OK | X_OK) == 0) {
             printf("%s\n", cur);
             ret = 1;
