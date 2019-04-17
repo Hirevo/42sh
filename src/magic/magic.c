@@ -25,20 +25,6 @@ static int get_len(shell_t *shell, int i)
     return (int)str;
 }
 
-static void *join_reducer(void *ctx, void *acc, void *elem, size_t idx)
-{
-    char *ret = 0;
-
-    if (idx == 0) {
-        return strdup(elem);
-    } else {
-        if (asprintf(&ret, "%s%s%s", acc, ctx, elem) == -1)
-            return 0;
-        free(acc);
-    }
-    return ret;
-}
-
 static char *read_all(int fd)
 {
     char buffer[1024] = {0};
@@ -72,18 +58,8 @@ static void exec_magic(shell_t *shell, char *line, int i, int len, bool quoted)
         handle_error("magic");
     close(save);
     lseek(fd, SEEK_SET, 0);
-    // vec_t *buffer = lvec_new();
-    // if (buffer == 0)
-    //     return;
-    // while ((str = get_next_line(fd))) {
-    //     lvec_push_back(buffer, 1, str);
-    // }
     char *subst = read_all(fd);
     close(fd);
-    eputstr("len: %lu\n", strlen(subst));
-    // char *subst = lvec_reduce(buffer, join_reducer, "\n", 0);
-    // lvec_clear(buffer, true);
-    // lvec_drop(buffer);
     if (subst == 0)
         return;
     char *ret = 0;
