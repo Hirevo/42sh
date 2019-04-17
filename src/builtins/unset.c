@@ -10,11 +10,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-int unset(shell_t *shell, int args)
+int unset(shell_t *shell, vec_t *args)
 {
-    if (args == 1)
+    if (lvec_size(args) == 1)
         return eputstr("unset: too few arguments.\n"), 1;
-    for (size_t i = 0; shell->cur->av[i]; i++)
-        free(lhmap_remove(shell->vars, shell->cur->av[i]));
+    for (size_t i = 1; i < lvec_size(args); i++)
+        free(lhmap_remove(shell->vars, lvec_at(args, i)));
     return 0;
 }

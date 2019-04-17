@@ -15,11 +15,11 @@
 
 int setup_right_redirect(command_t *head, int *fds, int i)
 {
-    int fd;
+    int fd = open(
+        head->r_name, O_WRONLY | O_CREAT | (i ? O_TRUNC : O_APPEND), 0644);
 
-    (void)fds;
-    if ((fd = open(head->r_name, O_WRONLY | O_CREAT | (i ? O_TRUNC : O_APPEND),
-             0644)) == -1) {
+    (void)(fds);
+    if (fd == -1) {
         if (errno == EISDIR) {
             return eputstr("%s: Is a directory.\n", head->r_name), -1;
         } else
@@ -46,16 +46,13 @@ int setup_left_redirect(char *name, int type)
     return fd;
 }
 
-int prepare_redirect(command_t *head, char **type, char **name, int i)
+int prepare_redirect(command_t *head, char **type, char **name, size_t i)
 {
-    *type = head->av[i];
-    if (!head->av[i + 1])
+    *type = lvec_remove(head->av, i);
+    if (lvec_size(head->av) <= i)
         return eputstr("missing name for redirect.\n"), -1;
-    *name = head->av[i + 1];
-    while (head->av[++i + 1])
-        head->av[i - 1] = head->av[i + 1];
-    head->av[i - 1] = NULL;
-    if (i == 1)
+    *name = lvec_remove(head->av, i);
+    if (lvec_size(head->av) == 0)
         return eputstr("invalid null command.\n"), -1;
     return 0;
 }
@@ -67,12 +64,13 @@ int check_redirects(command_t *head, command_t *last)
     int l;
 
     init_redirect(head, &r, &l, &i);
-    while (head->av[++i])
-        if (is_right_redirect(head->av[i]) || is_left_redirect(head->av[i])) {
-            if (head->av[i + 1] == NULL)
+    for (size_t i = 0; i < lvec_size(head->av); i++)
+        if (is_right_redirect(lvec_at(head->av, i)) ||
+            is_left_redirect(lvec_at(head->av, i))) {
+            if (lvec_size(head->av) <= i + 1)
                 return eputstr("missing name for redirect.\n"), -1;
             else
-                (is_left_redirect(head->av[i])) ? (l += 1) : (r += 1);
+                (is_left_redirect(lvec_at(head->av, i))) ? (l += 1) : (r += 1);
         }
     if (r > 1 || (r == 1 && head->link == '|'))
         return eputstr("ambiguous output redirect.\n"), -1;
@@ -83,7 +81,6 @@ int check_redirects(command_t *head, command_t *last)
 
 int set_redirects(shell_t *shell)
 {
-    int i;
     command_t *head;
     command_t *last;
 
@@ -92,16 +89,16 @@ int set_redirects(shell_t *shell)
     while (head) {
         if (check_redirects(head, last) == -1)
             return -1;
-        i = -1;
-        while (head->av[++i])
-            if (is_right_redirect(head->av[i])) {
+        for (size_t i = 0; i < lvec_size(head->av); i++) {
+            if (is_right_redirect(lvec_at(head->av, i))) {
                 if (prepare_redirect(
                         head, &head->r_type, &head->r_name, i--) == -1)
                     return -1;
-            } else if (is_left_redirect(head->av[i]))
+            } else if (is_left_redirect(lvec_at(head->av, i)))
                 if (prepare_redirect(
                         head, &head->l_type, &head->l_name, i--) == -1)
                     return -1;
+        }
         last = head;
         head = head->next;
     }

@@ -18,20 +18,20 @@ typedef struct parse_env_s {
     char **cmd;
 } parse_env_t;
 
-int alias(shell_t *, int);
-int cd_b(shell_t *, int);
-int config_b(shell_t *, int);
-int dualcast_b(shell_t *, int);
-int echo_b(shell_t *, int);
-int exit_b(shell_t *, int);
-int exec_b(shell_t *, int);
-int setenv_b(shell_t *, int);
-int unalias_b(shell_t *, int);
-int unsetenv_b(shell_t *, int);
-int prompt(shell_t *, int);
-int env_b(shell_t *, int);
-int call_parser_ll(shell_t *, int);
-parse_env_t *parse_env(char **);
+int alias(shell_t *, vec_t *);
+int cd_b(shell_t *, vec_t *);
+int config_b(shell_t *, vec_t *);
+int dualcast_b(shell_t *, vec_t *);
+int echo_b(shell_t *, vec_t *);
+int exit_b(shell_t *, vec_t *);
+int exec_b(shell_t *, vec_t *);
+int setenv_b(shell_t *, vec_t *);
+int unalias_b(shell_t *, vec_t *);
+int unsetenv_b(shell_t *, vec_t *);
+int prompt(shell_t *, vec_t *);
+int env_b(shell_t *, vec_t *);
+int call_parser_ll(shell_t *, vec_t *);
+parse_env_t *parse_env(vec_t *);
 
 /*
 ** check_file.c
@@ -52,7 +52,7 @@ void show_tab_env(char **);
 /*
 ** env_checkerror.c
 */
-int cherror_env_parse(char **);
+int cherror_env_parse(vec_t *);
 
 /*
 ** env_cherror.c
@@ -80,10 +80,10 @@ int show_signal(int);
 ** where.c
 */
 
-int where(shell_t *, int);
+int where(shell_t *, vec_t *);
 
 /*
 ** which.c
 */
 
-int which(shell_t *, int);
+int which(shell_t *, vec_t *);

@@ -157,7 +157,12 @@ void prepare_link(shell_t *shell, command_t *elem, int i, int last)
     else
         elem->link = shell->final[i][0];
     shell->final[i] = NULL;
-    elem->av = my_strarrdup(shell->final + last);
+    char **tab = shell->final + last;
+    size_t size = 0;
+    for (size = 0; tab[size]; size++);
+    lvec_reserve(elem->av, size);
+    for (size = 0; tab[size]; size++)
+        lvec_push_back(elem->av, 1, strdup(tab[size]));
     (elem->link != '0') ? insert_char(&(shell->final[i]), elem->link) : NULL;
     elem->count = -1;
 }
@@ -176,6 +181,7 @@ int set_commands(shell_t *shell)
         elem = calloc(1, sizeof(*elem));
         if (elem == NULL)
             return -1;
+        elem->av = lvec_new();
         elem->next = NULL;
         (head) ? (head->next = elem) : (shell->commands = elem);
         elem->prev = head;

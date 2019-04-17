@@ -17,23 +17,23 @@ void display_var(void *ctx, char *key, void *value)
     putstr("%s\t%s\n", key, (char *)(value));
 }
 
-int set(shell_t *shell, int args)
+int set(shell_t *shell, vec_t *args)
 {
     int ret = 0;
 
-    if (args == 1) {
+    if (lvec_size(args) == 1) {
         lhmap_for_each(shell->vars, display_var, NULL);
         return 0;
     } else {
-        for (size_t i = 1; shell->cur->av[i]; i++) {
-            ssize_t idx = lstr_index_of(shell->cur->av[i], 0, "=");
+        for (size_t i = 1; lvec_at(args, i); i++) {
+            ssize_t idx = lstr_index_of(lvec_at(args, i), 0, "=");
             if (idx == -1) {
                 eputstr("set: missing value\n");
                 ret = 1;
                 continue;
             }
-            char *key = lstr_substr(shell->cur->av[i], 0, idx);
-            char *val = strdup(shell->cur->av[i] + idx + 1);
+            char *key = lstr_substr(lvec_at(args, i), 0, idx);
+            char *val = strdup(lvec_at(args, i) + idx + 1);
             if (key == 0 || val == 0 || check_env_error("set", key))
                 ret = 1;
             else {

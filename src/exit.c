@@ -9,10 +9,10 @@
 #include "shell.h"
 #include <stdlib.h>
 
-int check_exit(shell_t *shell, int args)
+int check_exit(shell_t *shell, vec_t *args)
 {
-    if (args == 2) {
-        char *arg = shell->cur->av[1];
+    if (lvec_size(args) == 2) {
+        char *arg = lvec_at(args, 1);
         if (my_str_isnum(arg) && arg[0] != '-') {
             shell->is_done = 1;
             return get_unsigned_int(arg);
@@ -20,7 +20,7 @@ int check_exit(shell_t *shell, int args)
             eputstr("exit: invalid exit code.\n");
             return 1;
         }
-    } else if (args == 1) {
+    } else if (lvec_size(args) == 1) {
         shell->is_done = 1;
         return shell->exit_code;
     } else {

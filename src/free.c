@@ -70,16 +70,13 @@ void free_shell2(shell_t *shell)
 
 void free_commands(shell_t *shell)
 {
-    int i;
     command_t *head;
     command_t *last;
 
     head = shell->commands;
     while (head) {
-        i = -1;
-        while (head->av[++i])
-            free(head->av[i]);
-        free(head->av);
+        lvec_clear(head->av, true);
+        lvec_drop(head->av);
         free(head->r_type);
         free(head->r_name);
         free(head->l_type);

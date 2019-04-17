@@ -17,13 +17,12 @@
 #include <unistd.h>
 
 exec_status_t exec_branch(
-    shell_t *shell, command_t **head, int fds[3], int *fd_carry)
+    shell_t *shell, command_t **head, int fds[2], int *fd_carry)
 {
     const bool to_fork = is_to_fork((*head)->link) || (*head)->next == NULL;
 
     if (to_fork == true) {
-        const exec_status_t status =
-            exec_redirected_builtins(shell, fds[2], fds);
+        const exec_status_t status = exec_redirected_builtins(shell, fds);
         if (status.ok == true) {
             if (*fd_carry != 0)
                 close(*fd_carry);
@@ -36,16 +35,16 @@ exec_status_t exec_branch(
     if ((*head)->l_type != 0)
         *fd_carry =
             setup_left_redirect((*head)->l_name, (*head)->l_type[1] == 0);
-    fds[2] = fork();
-    if (fds[2] == -1)
+    pid_t pid = fork();
+    if (pid == -1)
         return (exec_status_t){
             .ok = false,
             .code = 1,
         };
 
     int code = 0;
-    if (fds[2]) {
-        code = father_action(head, fd_carry, fds, shell);
+    if (pid) {
+        code = father_action(head, fd_carry, fds, shell, pid);
     } else {
         exec_piped_child(*fd_carry, *head, fds, shell);
     }
@@ -57,7 +56,7 @@ exec_status_t exec_branch(
 
 exec_status_t exec_pipeline(shell_t *shell)
 {
-    int fds[3];
+    int fds[2];
     command_t *head;
     exec_status_t status;
     int fd_carry;
@@ -68,9 +67,6 @@ exec_status_t exec_pipeline(shell_t *shell)
     fd_carry = 0;
     while (head) {
         shell->cur = head;
-        fds[2] = 0;
-        while (head->av[fds[2]])
-            fds[2] += 1;
         if (head->link == '|' && pipe(fds) == -1) {
             return (exec_status_t){
                 .ok = false,
@@ -98,15 +94,13 @@ void exec_piped_child(int ret, command_t *head, int *fds, shell_t *shell)
         close(fds[0]);
         close(fds[1]);
     }
-    while (head->av[ret])
-        ret += 1;
-    if (is_path(shell->cur->av[0])) {
-        exec_child(shell);
+    if (is_path(lvec_front(head->av))) {
+        exec_process(head->av);
         exit(1);
     }
-    status = exec_builtins(shell, ret);
+    status = exec_builtins(shell, head->av);
     if (status.ok == false) {
-        exec_child(shell);
+        exec_process(head->av);
         exit(1);
     }
     exit(status.code);
@@ -134,12 +128,13 @@ int get_return(shell_t *shell)
     return final;
 }
 
-int father_action(command_t **head, int *ret, int *fds, shell_t *shell)
+int father_action(
+    command_t **head, int *ret, int *fds, shell_t *shell, pid_t pid)
 {
     int r = 0;
 
     if (shell->pgid == 0)
-        shell->pgid = fds[2];
+        shell->pgid = pid;
     if (*ret != 0)
         close(*ret);
     if ((*head)->link == '|') {
@@ -147,14 +142,13 @@ int father_action(command_t **head, int *ret, int *fds, shell_t *shell)
         close(fds[1]);
     } else
         *ret = 0;
-    insert_int(&shell->fds, fds[2]);
+    insert_int(&shell->fds, pid);
     if ((*head)->next == 0 || (*head)->link != '|') {
         r = get_return(shell);
         shell->pgid = 0;
-        fds[2] = -1;
     }
     skip_commands(head, WEXITSTATUS(r));
     if (*head)
         (*head) = (*head)->next;
-    return WIFEXITED(r) ? WEXITSTATUS(r) : (r % 128 + 128);
+    return WIFEXITED(r) ? WEXITSTATUS(r) : (WTERMSIG(r) + 128);
 }

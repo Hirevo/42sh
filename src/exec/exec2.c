@@ -23,7 +23,7 @@ int compare_stats(struct stat *stats)
         return -2;
 }
 
-exec_status_t exec_redirected_builtins(shell_t *shell, int count, int fds[2])
+exec_status_t exec_redirected_builtins(shell_t *shell, int fds[2])
 {
     int fd;
     int last;
@@ -31,7 +31,7 @@ exec_status_t exec_redirected_builtins(shell_t *shell, int count, int fds[2])
     exec_status_t ret;
 
     head = shell->cur;
-    if (indexof_builtin(head->av[0]) == -1)
+    if (indexof_builtin(lvec_front(head->av)) == -1)
         return (exec_status_t){
             .ok = false,
             .code = 1,
@@ -41,7 +41,7 @@ exec_status_t exec_redirected_builtins(shell_t *shell, int count, int fds[2])
         last = dup(1);
         fd = setup_right_redirect(head, fds, (head->r_type[1] == 0));
     }
-    ret = exec_builtins(shell, count);
+    ret = exec_builtins(shell, head->av);
     if (fd) {
         close(fd);
         dup2(last, 1);

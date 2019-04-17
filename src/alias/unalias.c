@@ -14,14 +14,11 @@ void remove_alias(shell_t *shell, char *alias)
     free(lhmap_remove(shell->alias, alias));
 }
 
-int unalias(shell_t *shell, char **aliases)
+int unalias(shell_t *shell, vec_t *aliases)
 {
-    int i;
-
-    i = -1;
     if (shell->alias == NULL)
         return 0;
-    while (aliases[++i])
-        remove_alias(shell, aliases[i]);
+    for (size_t i = 0; i < lvec_size(aliases); ++i)
+        remove_alias(shell, lvec_at(aliases, i));
     return 0;
 }

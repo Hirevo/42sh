@@ -18,14 +18,11 @@ int set_env(char *name, char *value)
     return (!setenv(name, value, 1)) ? 0 : -1;
 }
 
-int unset_env(char **names)
+int unset_env(vec_t *names)
 {
-    int ret;
-    int i;
+    int ret = 0;
 
-    ret = 0;
-    i = 0;
-    while (names[++i])
-        ret |= unsetenv(names[i]);
+    for (size_t i = 1; i < lvec_size(names); i++)
+        ret |= unsetenv(lvec_at(names, i));
     return ret;
 }

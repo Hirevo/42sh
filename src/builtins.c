@@ -35,7 +35,7 @@ static const char *g_built_tab[] = {
     NULL,
 };
 
-static int show_builtins(shell_t *shell, int args)
+static int show_builtins(shell_t *shell, vec_t *args)
 {
     (void)(args);
     if (isatty(1)) {
@@ -62,7 +62,7 @@ static int show_builtins(shell_t *shell, int args)
 }
 
 static void init_fnt_builtin(
-    int (*built_fnt[nb_built(g_built_tab)])(shell_t *, int))
+    int (*built_fnt[nb_built(g_built_tab)])(shell_t *, vec_t *))
 {
     built_fnt[0] = &alias;
     built_fnt[1] = &cd_b;
@@ -104,13 +104,13 @@ int indexof_builtin(char *cmd)
     return -1;
 }
 
-exec_status_t exec_builtins(shell_t *shell, int args)
+exec_status_t exec_builtins(shell_t *shell, vec_t *args)
 {
-    int (*built_fnt[nb_built(g_built_tab)])(shell_t *, int);
+    int (*built_fnt[nb_built(g_built_tab)])(shell_t *, vec_t *);
     int idx;
 
     init_fnt_builtin(built_fnt);
-    idx = indexof_builtin(shell->cur->av[0]);
+    idx = indexof_builtin(lvec_front(args));
     if (idx >= 0 && idx < nb_built(g_built_tab)) {
         return (exec_status_t){
             .ok = true,

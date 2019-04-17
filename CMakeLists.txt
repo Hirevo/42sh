@@ -37,23 +37,16 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins.c
     ${PROJECT_SOURCE_DIR}/src/builtins/alias.c
     ${PROJECT_SOURCE_DIR}/src/builtins/cd.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/char_double.c
     ${PROJECT_SOURCE_DIR}/src/builtins/config.c
     ${PROJECT_SOURCE_DIR}/src/builtins/dualcast.c
     ${PROJECT_SOURCE_DIR}/src/builtins/echo.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/env_checkerr.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/env_cherror_2.c
     ${PROJECT_SOURCE_DIR}/src/builtins/env.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exec.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exit.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/launch_soft.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/parse_env.c
     ${PROJECT_SOURCE_DIR}/src/builtins/parserll.c
     ${PROJECT_SOURCE_DIR}/src/builtins/prompt.c
     ${PROJECT_SOURCE_DIR}/src/builtins/set.c
     ${PROJECT_SOURCE_DIR}/src/builtins/setenv.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/show_signal.c
-    ${PROJECT_SOURCE_DIR}/src/builtins/shw_env_parse.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unalias.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unset.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unsetenv.c

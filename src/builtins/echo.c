@@ -7,8 +7,8 @@
 
 #include "shell.h"
 
-int echo_b(shell_t *shell, int args)
+int echo_b(shell_t *shell, vec_t *args)
 {
-    (void)args;
-    return echo_term(shell->cur->av + 1);
+    (void)(shell);
+    return echo_term(args);
 }

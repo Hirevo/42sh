@@ -43,7 +43,7 @@ typedef struct {
 } exec_status_t;
 
 typedef struct command_s {
-    char **av;
+    vec_t *av;
     char link;
     char *r_name;
     char *r_type;
@@ -137,7 +137,7 @@ unsigned int count_args(char *);
 int get_next_arg(char *, char **, int);
 char **bufferize(char *, int);
 char *cat_path(char **, char *, int);
-void exec_child(shell_t *);
+void exec_process(vec_t *);
 unsigned int exec_command(char **, shell_t *);
 unsigned int exec_line(shell_t *, unsigned int);
 void parse_rc(shell_t *);
@@ -146,12 +146,12 @@ int get_next_entry(char *, char **, int);
 char **init_path(char *);
 char **set_default_path(void);
 int disp_env(void);
-int move_dir(char **, int);
+int move_dir(vec_t *);
 unsigned int exec_action(shell_t *, unsigned int);
 unsigned int process_command(shell_t *, int);
 int is_char_alpha(char *);
 int set_env(char *, char *);
-int unset_env(char **);
+int unset_env(vec_t *);
 void free_shell(shell_t *);
 void free_shell2(shell_t *);
 void free_commands(shell_t *);
@@ -166,7 +166,7 @@ void my_print_command(shell_t *);
 char *detect_home(char *, char *);
 char *get_current(char *, char *);
 int indexof_builtin(char *);
-exec_status_t exec_builtins(shell_t *, int);
+exec_status_t exec_builtins(shell_t *, vec_t *);
 unsigned int get_unsigned_int(char *);
 int is_line_empty(char *);
 int init_shell(shell_t *);
@@ -183,7 +183,7 @@ void my_print_fd(char *, int);
 int set_commands(shell_t *);
 int check_access(char **, shell_t *);
 int check_env_error(char *, char *);
-int check_exit(shell_t *, int);
+int check_exit(shell_t *, vec_t *);
 int compare_stats(struct stat *);
 void check_exec(shell_t *, int, int *);
 void exec_piped_command(char *, command_t *, int[2], shell_t *);
@@ -209,7 +209,7 @@ int parse_alias(shell_t *);
 /*
 ** alias/unalias.c
 */
-int unalias(shell_t *, char **);
+int unalias(shell_t *, vec_t *);
 
 /*
 ** alias/loop.c
@@ -233,7 +233,7 @@ int config_http(shell_t *, t_config *);
 ** history.c
 */
 void save_history(shell_t *);
-int disp_hist(shell_t *, int);
+int disp_hist(shell_t *, vec_t *);
 void add_hist_elem(shell_t *, char *);
 void init_history(shell_t *);
 void skip_string(char *, int *);
@@ -262,7 +262,7 @@ char *sanitize_double_quotes(char *, bool);
 /*
 ** exec/exec2.c
 */
-exec_status_t exec_redirected_builtins(shell_t *, int, int[2]);
+exec_status_t exec_redirected_builtins(shell_t *, int[2]);
 void quick_exec(shell_t *, char *);
 
 /*
@@ -274,7 +274,7 @@ int close_pipes(int *);
 ** dualcast.c
 */
 
-int launch_dualcast(shell_t *, int);
+int launch_dualcast(shell_t *, vec_t *);
 
 /*
 ** dualcast/wait_connection.c
@@ -305,7 +305,7 @@ int launch_config(shell_t *);
 int setup_right_redirect(command_t *, int *, int);
 int setup_left_redirect(char *, int);
 int check_redirects(command_t *, command_t *);
-int prepare_redirect(command_t *, char **, char **, int);
+int prepare_redirect(command_t *, char **, char **, size_t);
 int set_redirects(shell_t *);
 
 /*
@@ -328,7 +328,7 @@ int check_error(shell_t *);
 ** exec/pipe.c
 */
 exec_status_t exec_pipeline(shell_t *);
-int father_action(command_t **, int *, int *, shell_t *);
+int father_action(command_t **, int *, int *, shell_t *, pid_t);
 void exec_piped_child(int, command_t *, int[2], shell_t *);
 
 /*
@@ -363,7 +363,7 @@ int parse_stars(shell_t *);
 ** echo.c
 */
 char get_escaped_char(char);
-int echo_term(char **);
+int echo_term(vec_t *);
 
 /*
 ** is.c
@@ -387,7 +387,7 @@ int is_num(char *);
 /*
 ** builtins/set.c
 */
-int set(shell_t *, int);
+int set(shell_t *, vec_t *);
 
 /*
 ** builtins_init.c
@@ -397,7 +397,7 @@ int nb_built(const char **);
 /*
 ** builtins/unset.c
 */
-int unset(shell_t *, int);
+int unset(shell_t *, vec_t *);
 
 /*
 ** char.c

@@ -15,11 +15,12 @@
 #include <string.h>
 #include <unistd.h>
 
-static bool last_500(void *ctx, char **elem, size_t idx)
+static bool hist_trim_list(void *ctx, void *_elem, size_t idx)
 {
-    bool kept = idx < 500;
+    size_t val = *(size_t *)(ctx);
+    bool kept = idx < val;
+    char **elem = _elem;
 
-    (void)(ctx);
     if (kept == false) {
         for (size_t i = 0; elem && elem[i]; i++)
             free(elem[i]);
@@ -31,9 +32,13 @@ static bool last_500(void *ctx, char **elem, size_t idx)
 void write_hist(shell_t *shell, int fd)
 {
     vec_t *hist = shell->hist.arr;
+    char *hist_size = getenv("HIST_SIZE");
+    size_t i = 0;
 
+    for (i = 0; hist_size && hist_size[i] >= '0' && hist_size[i] <= '9'; i++);
+    size_t val = (hist_size && hist_size[i] != 0) ? atoi(hist_size) : 500;
     lvec_reverse(hist);
-    lvec_filter(hist, (bool (*)(void *, void *, size_t))(last_500), 0);
+    lvec_filter(hist, hist_trim_list, &val);
     lvec_reverse(hist);
     for (size_t i = 0; i < hist->size; i++) {
         const char **payload = hist->arr[i];
@@ -59,7 +64,7 @@ void save_history(shell_t *shell)
     write_hist(shell, fd);
 }
 
-int disp_hist(shell_t *shell, int args)
+int disp_hist(shell_t *shell, vec_t *args)
 {
     vec_t *arr = shell->hist.arr;
 
@@ -68,10 +73,10 @@ int disp_hist(shell_t *shell, int args)
         return 0;
     for (size_t i = 0; i < arr->size; i++) {
         char **payload = arr->arr[i];
-        printf("%6lu\t", i);
+        putstr("%6lu\t", i);
         for (size_t j = 0; payload[j]; j++)
-            printf(i ? " %s" : "%s", payload[j]);
-        printf("\n");
+            putstr(i ? " %s" : "%s", payload[j]);
+        putstr("\n");
     }
     return 0;
 }
@@ -84,6 +89,14 @@ void add_hist_elem(shell_t *shell, char *line)
     if (payload == NULL)
         handle_error("calloc");
     lvec_push_back(shell->hist.arr, 1, payload);
+    char *hist_size = getenv("HIST_SIZE");
+    size_t i = 0;
+    for (i = 0; hist_size && hist_size[i] >= '0' && hist_size[i] <= '9'; i++)
+        ;
+    size_t val = (hist_size && hist_size[i] != 0) ? atoi(hist_size) : 500;
+    lvec_reverse(shell->hist.arr);
+    lvec_filter(shell->hist.arr, hist_trim_list, &val);
+    lvec_reverse(shell->hist.arr);
 }
 
 void init_history(shell_t *shell)

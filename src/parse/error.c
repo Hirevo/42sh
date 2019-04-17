@@ -13,7 +13,7 @@
 int check_error(shell_t *shell)
 {
     for (command_t *head = shell->commands; head; head = head->next) {
-        if (((head->av == NULL || head->av[0] == NULL) && head->next) ||
+        if ((lvec_front(head->av) == NULL && head->next) ||
             ((head->link == '|' || head->link == 'e' || head->link == 'o') &&
             !head->next)) {
             return eputstr("invalid null command.\n"), -1;

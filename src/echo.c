@@ -5,9 +5,10 @@
 ** echo
 */
 
-#include "my.h"
+#include "shell.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 
 char get_escaped_char(char c)
 {
@@ -32,59 +33,59 @@ char get_escaped_char(char c)
     return c;
 }
 
-void print_char(char *c, int *i)
+void print_char(char *c, size_t *i)
 {
     if (c[*i] == '\\')
         switch (c[++(*i)]) {
         case 'a':
-            my_putchar('\a');
+            putchar('\a');
             break;
         case 'b':
-            my_putchar('\b');
+            putchar('\b');
             break;
         case 'f':
-            my_putchar('\f');
+            putchar('\f');
             break;
         case 'n':
-            my_putchar('\n');
+            putchar('\n');
             break;
         case 'r':
-            my_putchar('\r');
+            putchar('\r');
             break;
         case 't':
-            my_putchar('\t');
+            putchar('\t');
             break;
         case 'v':
-            my_putchar('\v');
+            putchar('\v');
             break;
         case 'e':
-            my_putchar('\e');
+            putchar('\e');
             break;
         case '\\':
-            my_putchar('\\');
+            putchar('\\');
             break;
         default:
-            my_putchar('\\');
-            my_putchar(c[*i]);
+            putchar('\\');
+            putchar(c[*i]);
             break;
         }
     else
-        my_putchar(c[*i]);
+        putchar(c[*i]);
 }
 
-int echo_term(char **args)
+int echo_term(vec_t *args)
 {
-    int flag_n = (args[0] && !strcmp(args[0], "-n"));
-    int i = flag_n - 1;
+    bool flag_n = (lvec_at(args, 1) && !strcmp(lvec_at(args, 1), "-n"));
+    size_t first = flag_n + 1;
 
-    while (args[++i]) {
-        if (i - (flag_n))
-            my_putchar(' ');
-        int j = -1;
-        while (args[i][++j])
-            print_char(args[i], &j);
+    for (size_t i = first; i < lvec_size(args); i++) {
+        if (i != first)
+            putchar(' ');
+        char *arg = lvec_at(args, i);
+        for (size_t j = 0; arg[j]; j++)
+            print_char(arg, &j);
     }
     if (!flag_n)
-        my_putchar('\n');
+        putchar('\n');
     return 0;
 }

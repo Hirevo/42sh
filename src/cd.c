@@ -37,35 +37,39 @@ static int change_to(const char *path)
     return 0;
 }
 
-int move_dir2(char **final, int ac)
+static int move_dir2(vec_t *args, size_t count)
 {
     int check = 0;
 
-    if (ac == 2 && lstr_equals(final[1], "-")) {
+    if (count == 2 && lstr_equals(lvec_at(args, 1), "-")) {
         char *oldpwd = getenv("OLDPWD");
         if (oldpwd == NULL)
             return eputstr(": no such file or directory.\n"), 1;
         return change_to(oldpwd);
-    } else if ((check = check_dir((ac == 2) ? final[1] : final[2])) == 0) {
-        return change_to((ac == 2) ? final[1] : final[2]);
+    } else if ((check = check_dir(
+                    (count == 2) ? lvec_at(args, 1) : lvec_at(args, 2))) == 0) {
+        return change_to((count == 2) ? lvec_at(args, 1) : lvec_at(args, 2));
     } else {
         char *msg = ((check == -2) ? "%s: not a directory.\n" :
                                      "%s: no such file or directory.\n");
-        return eputstr(msg, (ac == 2) ? final[1] : final[2]), 1;
+        return eputstr(msg, (count == 2) ? lvec_at(args, 1) : lvec_at(args, 2)),
+               1;
     }
     return 0;
 }
 
-int move_dir(char **final, int ac)
+int move_dir(vec_t *args)
 {
-    if (ac > 3 || (ac == 3 && lstr_equals(final[1], "--") == false)) {
+    size_t count = lvec_size(args);
+    if (count > 3 ||
+        (count == 3 && lstr_equals(lvec_at(args, 1), "--") == false)) {
         return eputstr("cd: too many arguments.\n"), 1;
-    } else if (ac == 1 || (ac == 2 && lstr_equals(final[1], "--"))) {
+    } else if (count == 1 || (count == 2 && lstr_equals(lvec_at(args, 1), "--"))) {
         char *home = getenv("HOME");
         if (home == NULL)
             return eputstr("cd: no home directory.\n"), 1;
         return change_to(home);
-    } else if (move_dir2(final, ac))
+    } else if (move_dir2(args, count))
         return 1;
     return 0;
 }

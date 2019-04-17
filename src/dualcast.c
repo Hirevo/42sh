@@ -48,12 +48,13 @@ static int launch_dc_client(char *addr)
     return 0;
 }
 
-int launch_dualcast(shell_t *shell, int args)
+int launch_dualcast(shell_t *shell, vec_t *args)
 {
-    if (args >= 2 && !strcmp(shell->cur->av[1], "start"))
+    (void)(shell);
+    if (lvec_size(args) >= 2 && !strcmp(lvec_at(args, 1), "start"))
         launch_dc_server();
-    else if (args >= 3 && !strcmp(shell->cur->av[1], "connect"))
-        launch_dc_client(shell->cur->av[2]);
+    else if (lvec_size(args) >= 3 && !strcmp(lvec_at(args, 1), "connect"))
+        launch_dc_client(lvec_at(args, 2));
     else
         printf("Usage : dualcast [start | connect addr_ip]\n");
     return 0;

@@ -18,7 +18,7 @@ static int find_first_cmd(const char *path, char *str)
     for (size_t i = 0; i < lvec_size(paths); i++) {
         char *cur = path_join(lvec_at(paths, i), str);
         if (access(cur, F_OK | X_OK) == 0) {
-            printf("%s\n", cur);
+            putstr("%s\n", cur);
             lvec_clear(paths, true);
             lvec_drop(paths);
             return 1;
@@ -30,46 +30,46 @@ static int find_first_cmd(const char *path, char *str)
     return 0;
 }
 
-static int search(shell_t *shell, int i)
+static int search(shell_t *shell, vec_t *args, size_t i)
 {
     char *str;
     int ret = 1;
 
     ret = 1;
-    if ((str = get_alias_cmd(shell, shell->cur->av[i]))) {
-        printf("%s: \t aliased to %s\n", shell->cur->av[i], str);
+    if ((str = get_alias_cmd(shell, lvec_at(args, i)))) {
+        putstr("%s: \t aliased to %s\n", lvec_at(args, i), str);
         free(str);
         ret = 0;
     }
-    if (ret && indexof_builtin(shell->cur->av[i]) != -1) {
-        printf("%s: shell built-in command.\n", shell->cur->av[i]);
+    if (ret && indexof_builtin(lvec_at(args, i)) != -1) {
+        putstr("%s: shell built-in command.\n", lvec_at(args, i));
         ret = 0;
     }
     char *path = getenv("PATH");
-    if (ret && path && find_first_cmd(path, shell->cur->av[i]))
+    if (ret && path && find_first_cmd(path, lvec_at(args, i)))
         ret = 0;
     if (ret == 1)
-        printf("%s: command not found.\n", shell->cur->av[i]);
+        eputstr("%s: command not found.\n", lvec_at(args, i));
     return ret;
 }
 
-int which(shell_t *shell, int args)
+int which(shell_t *shell, vec_t *args)
 {
-    if (args == 1) {
+    if (lvec_size(args) == 1) {
         dprintf(2, "which: too few arguments.\n");
         return 1;
     }
-    for (size_t i = 1; shell->cur->av[i]; i++) {
-        if (is_path(shell->cur->av[i])) {
-            if (access(shell->cur->av[i], F_OK | X_OK) == 0) {
-                printf("%s\n", shell->cur->av[i]);
+    for (size_t i = 1; lvec_at(args, i); i++) {
+        if (is_path(lvec_at(args, i))) {
+            if (access(lvec_at(args, i), F_OK | X_OK) == 0) {
+                putstr("%s\n", lvec_at(args, i));
                 return 0;
             } else {
-                printf("%s: command not found.\n", shell->cur->av[i]);
+                eputstr("%s: command not found.\n", lvec_at(args, i));
                 return 1;
             }
         } else {
-            return search(shell, i);
+            return search(shell, args, i);
         }
     }
     return 0;

@@ -8,12 +8,11 @@
 #include "my.h"
 #include "shell.h"
 
-int unsetenv_b(shell_t *shell, int args)
+int unsetenv_b(shell_t *shell, vec_t *args)
 {
-    if (args == 1 && strcmp(shell->cur->av[0], "unsetenv") == 0)
+    (void)(shell);
+    if (lvec_size(args) == 1)
         return eputstr("unsetenv: Too few arguments.\n"), 1;
-    else if (strcmp(shell->cur->av[0], "unsetenv") == 0)
-        return unset_env(shell->cur->av);
     else
-        return eputstr("%s: Too many arguments.\n", shell->cur->av[0]), 1;
+        return unset_env(args);
 }

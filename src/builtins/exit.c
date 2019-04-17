@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-int exit_b(shell_t *shell, int args)
+int exit_b(shell_t *shell, vec_t *args)
 {
     return check_exit(shell, args);
 }

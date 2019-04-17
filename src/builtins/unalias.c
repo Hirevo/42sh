@@ -7,10 +7,10 @@
 
 #include "shell.h"
 
-int unalias_b(shell_t *shell, int args)
+int unalias_b(shell_t *shell, vec_t *args)
 {
-    if (args >= 2)
-        return unalias(shell, shell->cur->av + 1);
+    if (lvec_size(args) >= 2)
+        return unalias(shell, args);
     else
         return eputstr("unalias: too few arguments.\n"), 1;
 }

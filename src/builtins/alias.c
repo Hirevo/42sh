@@ -7,14 +7,15 @@
 
 #include "shell.h"
 
-int alias(shell_t *shell, int args)
+int alias(shell_t *shell, vec_t *args)
 {
-    if (args == 1)
+    size_t count = lvec_size(args);
+    if (count == 1)
         return disp_all_alias(shell);
-    else if (args == 2)
-        return disp_alias(shell, shell->cur->av[1]);
-    else if (args >= 3)
-        return (add_alias(
-            shell, shell->cur->av[1], construct_alias(shell->cur->av + 2)));
+    else if (count == 2)
+        return disp_alias(shell, lvec_at(args, 1));
+    else if (count >= 3)
+        return add_alias(shell, lvec_at(args, 1),
+            construct_alias((char **)(args->arr + 2)));
     return 1;
 }

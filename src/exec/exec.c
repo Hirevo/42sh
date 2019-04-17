@@ -18,23 +18,31 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-void exec_child(shell_t *shell)
+void exec_process(vec_t *args)
 {
+    size_t ac = lvec_size(args);
+    char **av = calloc(ac + 1, sizeof(char *));
+
+    if (av == 0) {
+        eputstr("could not allocate process' argv.\n");
+        exit(1);
+    }
+    memcpy(av, args->arr, sizeof(char *) * ac);
+    lvec_drop(args);
     errno = 0;
-    execvp(shell->cur->av[0], shell->cur->av);
+    execvp(av[0], av);
     switch (errno) {
     case ENOEXEC:
-        dprintf(2, "%s: Exec format error. Binary file not executable.\n",
-            shell->cur->av[0]);
+        eputstr("%s: Exec format error. Binary file not executable.\n", av[0]);
         break;
     case EPERM:
     case EACCES:
     case EISDIR:
-        dprintf(2, "%s: Permission denied.\n", shell->cur->av[0]);
+        eputstr("%s: Permission denied.\n", av[0]);
         break;
     case ENOENT:
     default:
-        dprintf(2, "%s: Command not found.\n", shell->cur->av[0]);
+        eputstr("%s: Command not found.\n", av[0]);
         break;
     }
     exit(1);
@@ -60,9 +68,9 @@ unsigned int exec_action(shell_t *shell, unsigned int args)
 int format_commands(shell_t *shell)
 {
     for (command_t *head = shell->commands; head; head = head->next) {
-        for (size_t i = 0; head->av[i]; i++) {
-            head->av[i] = format_arg(head->av[i]);
-            if (head->av[i] == NULL)
+        for (size_t i = 0; i < lvec_size(head->av); i++) {
+            lvec_set(head->av, i, format_arg(lvec_at(head->av, i)));
+            if (lvec_at(head->av, i) == NULL)
                 return -1;
         }
     }
