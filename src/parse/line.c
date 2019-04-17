@@ -26,12 +26,7 @@ char *my_epurstr(char *str)
                 i[0] += 1;
             i[0] -= 1;
         }
-        else if (str[i[0]] == b && b != 0)
-            b = 0;
-        else if ((str[i[0]] == '\'' || str[i[0]] == '"') && b == 0)
-            b = str[i[0]];
     }
-    ret[i[1]] = 0;
     free(str);
     return ret;
 }
@@ -69,8 +64,7 @@ void skip_and_copy_string(char *str, int *i, char *ret, int *t)
             ret[(*t)++] = '\\';
             ret[(*t)++] = str[(*i) + 1];
             *i += !!(str[(*i) + 1]);
-        }
-        else
+        } else
             ret[(*t)++] = str[*i];
         *i += 1;
     }
@@ -107,11 +101,9 @@ char *my_epurcommand(char *str)
             copy_escaped_char(str, &i, ret, &t);
         else if (is_space(str[i])) {
             ret[t++] = ' ';
-            while (is_space(str[++i]))
-                ;
+            while (is_space(str[++i]));
             i -= 1;
-        }
-        else if (str[i] == '"' || str[i] == '\'')
+        } else if (str[i] == '"' || str[i] == '\'')
             skip_and_copy_string(str, &i, ret, &t);
         else if (is_separator(str[i]))
             my_epur_sep(ret, str, &i, &t);

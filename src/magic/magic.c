@@ -8,6 +8,7 @@
 #include "get_next_line.h"
 #include "my.h"
 #include "shell.h"
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,66 +25,81 @@ static int get_len(shell_t *shell, int i)
     return (int)str;
 }
 
-static void insert_inline(shell_t *shell, char **buffer, int i, int len)
+static void *join_reducer(void *ctx, void *acc, void *elem, size_t idx)
 {
-    char *result;
-    char *ret;
-    int l[2];
+    char *ret = 0;
 
-    if (buffer) {
-        l[1] = -1;
-        while (buffer[++(l[1])])
-            buffer[l[1]] = sanitize(buffer[l[1]], 1);
-        result = construct_magic(buffer);
-        if (asprintf(&ret, "%.*s%s%s", i, shell->line, result,
-                shell->line + i + len + 2) == -1)
-            handle_error("calloc");
-    } else if (asprintf(&ret, "%.*s%s", i, shell->line,
-                   shell->line + i + len + 2) == -1)
-        handle_error("calloc");
-    free(shell->line);
-    shell->line = ret;
+    if (idx == 0) {
+        return strdup(elem);
+    } else {
+        if (asprintf(&ret, "%s%s%s", acc, ctx, elem) == -1)
+            return 0;
+        free(acc);
+    }
+    return ret;
 }
 
-static void add_line(char ***buffer, int *size, char *str)
+static char *read_all(int fd)
 {
-    (*buffer) = realloc(*buffer, sizeof(char *) * ++(*size));
-    if (*buffer == NULL)
-        handle_error("calloc");
-    (*buffer)[(*size) - 2] = str;
-    (*buffer)[(*size) - 1] = NULL;
+    char buffer[1024] = {0};
+    char *ret = strdup("");
+    ssize_t nb_bytes = 0;
+
+    while ((nb_bytes = read(fd, buffer, 1023)) > 0) {
+        buffer[nb_bytes] = 0;
+        char *tmp = 0;
+        if (asprintf(&tmp, "%s%s", ret, buffer) == -1) {
+            free(ret);
+            return 0;
+        }
+        free(ret);
+        ret = tmp;
+    }
+    return ret;
 }
 
-static void exec_magic(shell_t *shell, char *line, int i, int len)
+static void exec_magic(shell_t *shell, char *line, int i, int len, bool quoted)
 {
+    char name[] = "/tmp/42sh-magic-XXXXXX";
     int save = dup(1);
-    char **buffer = 0;
-    char *str;
-    int size = 1;
-    int fds[2];
+    int fd = ((save != -1) ? mkostemp(name, O_CLOEXEC | O_RDONLY) : -1);
 
-    if (save == -1 || pipe(fds) == -1 || dup2(fds[1], 1) == -1)
+    if (save == -1 || fd == -1 || dup2(fd, 1) == -1)
         handle_error("magic");
-    close(fds[1]);
-    str = calloc(strlen(line) + 2, sizeof(char));
-    strcpy(str, "\\");
-    strcat(str, line);
-    free(line);
+    char *str = strdup(line);
     quick_exec(shell, str);
     if (dup2(save, 1) == -1)
         handle_error("magic");
     close(save);
-    str = get_next_line(fds[0]);
-    while (str) {
-        add_line(&buffer, &size, str);
-        str = get_next_line(fds[0]);
+    lseek(fd, SEEK_SET, 0);
+    // vec_t *buffer = lvec_new();
+    // if (buffer == 0)
+    //     return;
+    // while ((str = get_next_line(fd))) {
+    //     lvec_push_back(buffer, 1, str);
+    // }
+    char *subst = read_all(fd);
+    close(fd);
+    eputstr("len: %lu\n", strlen(subst));
+    // char *subst = lvec_reduce(buffer, join_reducer, "\n", 0);
+    // lvec_clear(buffer, true);
+    // lvec_drop(buffer);
+    if (subst == 0)
+        return;
+    char *ret = 0;
+    if (quoted) {
+        subst = sanitize_double_quotes(subst, true);
+        if (asprintf(&ret, "%.*s%s%s", i, shell->line, subst,
+                shell->line + i + len + 2) == -1)
+            return;
+    } else {
+        subst = sanitize(subst, true);
+        if (asprintf(&ret, "%.*s%s%s", i, shell->line, subst,
+                shell->line + i + len + 2) == -1)
+            return;
     }
-    close(fds[0]);
-    insert_inline(shell, buffer, i, len);
-    save = -1;
-    while (buffer && buffer[++save])
-        free(buffer[save]);
-    free(buffer);
+    free(shell->line);
+    shell->line = ret;
 }
 
 int magic(shell_t *shell)
@@ -91,19 +107,22 @@ int magic(shell_t *shell)
     int i = -1;
     int len;
     char *line;
+    bool quoted = false;
 
     while (shell->line[++i])
         if (shell->line[i] == '\\')
             i += !!(shell->line[i + 1]);
-        else if (shell->line[i] == '\'' || shell->line[i] == '"') {
-            len = shell->line[i++];
-            while (shell->line[i] && shell->line[i] != len)
-                i += -1;
+        else if (shell->line[i] == '\'') {
+            i += 1;
+            while (shell->line[i] && shell->line[i] != '\'')
+                i += 1;
             i -= (shell->line[i] == 0);
+        } else if (shell->line[i] == '"') {
+            quoted = !quoted;
         } else if (shell->line[i] == '`') {
             if ((len = get_len(shell, i)) >= 0) {
                 line = strndup(shell->line + i + 1, len);
-                exec_magic(shell, line, i, len);
+                exec_magic(shell, line, i, len, quoted);
                 i = -1;
             } else if (len == -1)
                 return -1;

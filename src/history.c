@@ -78,6 +78,7 @@ int disp_hist(shell_t *shell, int args)
 
 void add_hist_elem(shell_t *shell, char *line)
 {
+    // TODO: Fix this (this splitting removes duplicate spaces, even in quotes)
     char **payload = my_split_mulchar(line, " \t");
 
     if (payload == NULL)

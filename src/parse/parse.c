@@ -36,11 +36,9 @@ unsigned int count_args(char *str)
         else if (str[i] == '\'' || str[i] == '"') {
             skip_string(str, &i);
             args += 1;
-        } else if (i == 0 && str[i] != ' ' && str[i] != '\t' &&
-            !is_separator(str[i]))
+        } else if (i == 0 && !is_space(str[i]) && !is_separator(str[i]))
             args += 1;
-        else if ((str[i] != ' ' && str[i] != '\t') &&
-            (str[i - 1] == ' ' || str[i - 1] == '\t'))
+        else if (!is_space(str[i]) && is_space(str[i - 1]))
             args += 1;
     return args + 1;
 }
@@ -66,7 +64,7 @@ int get_quoted_text(char *arg, char **final, int l, char c)
         (*final)[i] = arg[i + 1];
     }
     (*final)[i] = 0;
-    while (arg[j] && (arg[j] == ' ' || arg[j] == '\t'))
+    while (is_space(arg[j]))
         j += 1;
     if (arg[j] == 0)
         return -2;
@@ -79,12 +77,11 @@ int get_next_arg(char *arg, char **final, int l)
     int j = 0;
 
     arg += l;
-    while (*arg == ' ' || *arg == '\t')
+    while (is_space(*arg))
         arg += 1;
     if (*arg == '"' || *arg == '\'')
         return get_quoted_text(arg, final, l, *arg);
-    while (arg[j] != ' ' && arg[j] != '\t' && arg[j] != '\'' &&
-        arg[j] != '"' && arg[j] != 0)
+    while (!is_space(arg[j]) && arg[j] != '\'' && arg[j] != '"' && arg[j] != 0)
         j += 1;
     *final = calloc(j + 1, sizeof(char));
     if (*final == NULL)
@@ -92,7 +89,7 @@ int get_next_arg(char *arg, char **final, int l)
     while (++i < j)
         (*final)[i] = arg[i];
     (*final)[i] = 0;
-    while ((arg[j] == ' ' || arg[j] == '\t') && arg[j] != 0)
+    while (is_space(arg[j]))
         j += 1;
     if (arg[j] == 0)
         return -2;

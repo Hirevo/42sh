@@ -14,20 +14,18 @@
 
 void tmp_file(shell_t *shell)
 {
-    char *name;
-    char *edit;
-    char *exec;
-    int fd;
+    char name[] = "/tmp/42sh-edit-XXXXXX";
+    char *editor = getenv("EDITOR");
+    int fd = (editor ? mkstemp(name) : -1);
+    char *exec = 0;
 
-    if ((edit = getenv("EDITOR")) == NULL ||
-        (name = strdup("/tmp/42sh-tmpXXXXXX")) == NULL ||
-        (fd = mkstemp(name)) == -1 ||
-        asprintf(&exec, "%s %s", edit, name) == -1)
+    if (editor == NULL || fd == -1 ||
+        asprintf(&exec, "%s %s", editor, name) == -1)
         return;
     if (shell->line)
         dprintf(fd, "%s", shell->line);
     free(shell->line);
-    my_putchar(10);
+    my_putchar('\n');
     quick_exec(shell, exec);
     if (shell->exit_code == 1)
         return;
@@ -37,5 +35,6 @@ void tmp_file(shell_t *shell)
         exec_line(shell, 1);
     }
     close(fd);
+    remove(name);
     init_prompt(shell);
 }

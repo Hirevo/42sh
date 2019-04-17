@@ -14,7 +14,7 @@ int is_separator(char c)
 
 int is_space(char c)
 {
-    return c == ' ' || c == '\t';
+    return c == ' ' || c == '\t' || c == '\n';
 }
 
 int is_delimiter(char c)
