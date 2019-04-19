@@ -23,14 +23,17 @@ int launch_dc_server(void)
         return 1;
     if (init_dualcast(&socket) == -1)
         return 1;
-    printf("DualCast ready\nYour session token is : %s\n", code);
+    putstr("Dualcast ready !\n"
+           "Here is the session token: %s\n"
+           "Waiting for a client...\n",
+        code);
     if ((client = wait_connection(socket, &rdfs, code)) == -1)
         return 1;
     core_server_dc(socket, client, &rdfs);
     free(code);
     close(client);
     close(socket);
-    printf("End of session\n");
+    putstr("End of session.\n");
     return 0;
 }
 
@@ -51,11 +54,11 @@ static int launch_dc_client(char *addr)
 int launch_dualcast(shell_t *shell, vec_t *args)
 {
     (void)(shell);
-    if (lvec_size(args) >= 2 && !strcmp(lvec_at(args, 1), "start"))
+    if (lvec_size(args) >= 2 && lstr_equals(lvec_at(args, 1), "start"))
         launch_dc_server();
-    else if (lvec_size(args) >= 3 && !strcmp(lvec_at(args, 1), "connect"))
+    else if (lvec_size(args) >= 3 && lstr_equals(lvec_at(args, 1), "connect"))
         launch_dc_client(lvec_at(args, 2));
     else
-        printf("Usage : dualcast [start | connect addr_ip]\n");
+        putstr("Usage: %s [start | connect endpoint_uri]\n", lvec_front(args));
     return 0;
 }

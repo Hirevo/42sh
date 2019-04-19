@@ -39,8 +39,8 @@ void free_alias_entry(void *ctx, alias_t *elem, size_t idx)
 
 void free_alias(shell_t *shell)
 {
-    lhmap_clear(shell->alias, true);
-    lhmap_drop(shell->alias);
+    lhmap_clear(shell->aliases, true);
+    lhmap_drop(shell->aliases);
 }
 
 void free_shell(shell_t *shell)
@@ -61,7 +61,6 @@ void free_shell2(shell_t *shell)
         free(shell->final);
     }
     free_alias(shell);
-    free(shell->last);
     free(shell->line);
     free_commands(shell);
     if (isatty(0))

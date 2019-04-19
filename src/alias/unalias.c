@@ -11,12 +11,12 @@
 
 void remove_alias(shell_t *shell, char *alias)
 {
-    free(lhmap_remove(shell->alias, alias));
+    free(lhmap_remove(shell->aliases, alias));
 }
 
 int unalias(shell_t *shell, vec_t *aliases)
 {
-    if (shell->alias == NULL)
+    if (shell->aliases == NULL)
         return 0;
     for (size_t i = 0; i < lvec_size(aliases); ++i)
         remove_alias(shell, lvec_at(aliases, i));

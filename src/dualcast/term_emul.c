@@ -28,16 +28,16 @@ void add_char_dc(char **prompt, char c, int *len)
 
 void del_prompt(int nb_char)
 {
-    int i;
+    int i = 0;
     char space[nb_char + 1];
 
-    i = 0;
     while (i < nb_char) {
         space[i] = ' ';
         i += 1;
     }
     space[i] = '\0';
-    printf("\r%s", space);
+    putstr("\r%s", space);
+    fflush(stdout);
 }
 
 void send_char(t_socket sock, char c)

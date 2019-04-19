@@ -36,12 +36,11 @@ static int search(shell_t *shell, vec_t *args, size_t i)
     int ret = 1;
 
     ret = 1;
-    if ((str = get_alias_cmd(shell, lvec_at(args, i)))) {
-        putstr("%s: \t aliased to %s\n", lvec_at(args, i), str);
-        free(str);
+    if ((str = lhmap_get(shell->aliases, lvec_at(args, i)))) {
+        putstr("%s: aliased to %s.\n", lvec_at(args, i), str);
         ret = 0;
     }
-    if (ret && indexof_builtin(lvec_at(args, i)) != -1) {
+    if ((str = lhmap_get(shell->builtins, lvec_at(args, i)))) {
         putstr("%s: shell built-in command.\n", lvec_at(args, i));
         ret = 0;
     }
@@ -53,7 +52,7 @@ static int search(shell_t *shell, vec_t *args, size_t i)
     return ret;
 }
 
-int which(shell_t *shell, vec_t *args)
+int which_b(shell_t *shell, vec_t *args)
 {
     if (lvec_size(args) == 1) {
         dprintf(2, "which: too few arguments.\n");

@@ -17,7 +17,7 @@ void display_var(void *ctx, char *key, void *value)
     putstr("%s\t%s\n", key, (char *)(value));
 }
 
-int set(shell_t *shell, vec_t *args)
+int set_b(shell_t *shell, vec_t *args)
 {
     int ret = 0;
 

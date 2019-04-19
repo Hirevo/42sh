@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-int alias(shell_t *shell, vec_t *args)
+int alias_b(shell_t *shell, vec_t *args)
 {
     size_t count = lvec_size(args);
     if (count == 1)

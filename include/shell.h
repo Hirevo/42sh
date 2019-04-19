@@ -11,14 +11,14 @@
 #include "server.h"
 #include "str.h"
 #include "vec.h"
+#include <option.h>
+#include <result.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <termios.h>
-#include <option.h>
-#include <result.h>
 
 DEF_OPTION(CharPtr, char *);
 OPT_NULLABLE(CharPtr, char *);
@@ -94,26 +94,36 @@ typedef struct {
 } config_t;
 
 /*
-** This is the main structure that binds the shell together
+** This is the main structure that binds the shell together.
+** It serves as its internal state.
 **
-** av: av give in the main (for var $0, $1, ...)
-** script: is launch from script
-** current: the current working directory, for prompt
-** line: raw command input from user
-** final: parsed command from line
-** hist: last parsed command executed
-** hist_args: arg count from hist
-** exit: last exit status, for exit builtin
-** exit_str: last exit status converted to str, for prompt
-** last: used for alias processing, avoids loops
-** prev: last working directory, for cd builtin
+** NOTE: It is somewhat cluttered with fields we could remove.
+**       The removal of those fields will be done with time, as parts of
+**       shell gets revisited.
 **
+** av: argument list of the shell (for $0, $1, etc...).
+** prompt: current selected prompt ID.
+** line: raw command input from user.
+** final: parsed command from line.
+** is_done: flag to exit after the command execution ends (set by `exit`).
+** exit_code: last exit code (used for prompts and `exit`).
+** fds: list of current running process IDs, for execution pipelines.
+** tty: is the stdin interactive (to enable/disable prompt and autocompletion).
+** ioctl: is ioctl supported on the terminal.
+** pgid: current process group leader.
+** vars: internal variables of the shell (accessible via `set` and `unset`).
+** aliases: command aliases (accessible via `alias` and `unalias`).
+** builtins: list of builtins (listed via `builtins`).
+** subst: used for alias processing, avoids alias loops (used by `alias`).
+** hist: history management (for prompt arrow keys, globbing and `history`).
+** commands: current command list to execute.
+** cur: currently processed command (points into `shell_t::commands`).
+** w: interactive terminal data structure (for the interactive prompt)
+** config: a future potential configuration struct.
 */
 typedef struct {
     char **av;
-    int script;
     int prompt;
-    hmap_t *vars;
     char *line;
     char **final;
     char is_done;
@@ -123,14 +133,15 @@ typedef struct {
     int tty;
     int ioctl;
     pid_t pgid;
-    hmap_t *alias;
+    hmap_t *vars;
+    hmap_t *aliases;
+    hmap_t *builtins;
     subst_t subst;
     hist_ctrl_t hist;
     command_t *commands;
     command_t *cur;
     window_t w;
     config_t config;
-    int is_comp;
 } shell_t;
 
 unsigned int count_args(char *);
@@ -169,7 +180,7 @@ int indexof_builtin(char *);
 exec_status_t exec_builtins(shell_t *, vec_t *);
 unsigned int get_unsigned_int(char *);
 int is_line_empty(char *);
-int init_shell(shell_t *);
+void init_shell(shell_t *);
 int my_strlen_spe(char *, char);
 void init_aliases(shell_t *);
 void set_alias(shell_t *, char *);
@@ -386,19 +397,9 @@ int is_alphanum(char);
 int is_num(char *);
 
 /*
-** builtins/set.c
-*/
-int set(shell_t *, vec_t *);
-
-/*
 ** builtins_init.c
 */
 int nb_built(const char **);
-
-/*
-** builtins/unset.c
-*/
-int unset(shell_t *, vec_t *);
 
 /*
 ** char.c

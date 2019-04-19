@@ -6,7 +6,7 @@
 */
 
 #include "get_next_line.h"
-#include "my.h"
+#include "shell.h"
 #include "server.h"
 #include <netdb.h>
 #include <stdio.h>
@@ -33,7 +33,7 @@ static int check_correct_passwd(t_client *cli)
     char *ret;
 
     read_socket(cli->sock, &ret);
-    if (!strncmp(ret, "OK:", 3)) {
+    if (lstr_starts_with(ret, "OK:")) {
         cli->name = strdup(ret + 3);
         free(ret);
         return 1;
@@ -46,13 +46,14 @@ static int send_passwd(t_client *cli)
 {
     char *code;
 
-    printf("Entrer le code de session: ");
+    putstr("Enter session token: ");
+    fflush(stdout);
     if ((code = get_next_line(0)) == NULL) {
         close(cli->sock);
         return 0;
     }
     if (!is_valid_code(code)) {
-        printf("Ceci n'est pas un code valide\n");
+        putstr("Invalid session token format.\n");
         close(cli->sock);
         return 0;
     }
@@ -62,7 +63,7 @@ static int send_passwd(t_client *cli)
     }
     if (check_correct_passwd(cli))
         return 1;
-    printf("Mauvais code de session\n");
+    putstr("Invalid session token.\n");
     return 0;
 }
 
@@ -73,17 +74,13 @@ int init_connect_dc(char *addr, t_client *cli)
 
     if ((cli->sock = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         return 1;
-    if ((hostinfo = gethostbyname(addr)) == NULL) {
-        dprintf(2, "Impossible de trouver %s\n", addr);
-        return 1;
-    }
+    if ((hostinfo = gethostbyname(addr)) == NULL)
+        return eputstr("Could not find host '%s'.\n", addr), 1;
     sin.sin_addr = *(t_in_addr *)hostinfo->h_addr;
     sin.sin_port = htons(DUALCAST_PORT);
     sin.sin_family = AF_INET;
-    if (connect(cli->sock, (t_sockaddr *)&sin, sizeof(t_sockaddr)) == -1) {
-        dprintf(2, "Impossible de se connecter sur %s\n", addr);
-        return 1;
-    }
+    if (connect(cli->sock, (t_sockaddr *)&sin, sizeof(t_sockaddr)) == -1)
+        return eputstr("Could not connect to '%s'.\n", addr), 1;
     if (send_passwd(cli))
         return 0;
     close(cli->sock);

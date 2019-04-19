@@ -40,7 +40,7 @@ static void show_prompt(shell_t *shell)
     printf("\n\e[0m");
 }
 
-int prompt(shell_t *shell, int args)
+int prompt_b(shell_t *shell, int args)
 {
     (void)(args);
     show_prompt(shell);

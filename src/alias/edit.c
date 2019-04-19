@@ -42,11 +42,11 @@ int check_alias(shell_t *shell, int *i, char *last)
 
     len[0] = strcspn(shell->line + *i, " \t><;|");
     line = strndup(shell->line + *i, len[0]);
-    for (ssize_t j = 0; j < (ssize_t)(shell->alias->size); j++) {
-        char *name = shell->alias->key_table->arr[j];
+    for (ssize_t j = 0; j < (ssize_t)(shell->aliases->size); j++) {
+        char *name = shell->aliases->key_table->arr[j];
         if (lstr_equals(line, name)) {
             found.alias = name;
-            found.command = shell->alias->value_table->arr[j];
+            found.command = shell->aliases->value_table->arr[j];
             if (detect_loop(shell, line, *i) == -1 ||
                 insert_alias(shell, &found, len, *i) == -1)
                 return -1;

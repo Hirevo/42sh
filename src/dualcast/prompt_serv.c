@@ -40,7 +40,8 @@ void prompt_serv(t_socket sock, char c, char **prompt, int *nb_char)
         exc_cmd(sock, prompt, nb_char);
         *prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
         *nb_char = strlen(*prompt);
-        printf("\n%s", *prompt);
+        putstr("\n%s", *prompt);
+        fflush(stdout);
         return;
     }
     if (c >= 32 && c <= 126)
@@ -48,7 +49,8 @@ void prompt_serv(t_socket sock, char c, char **prompt, int *nb_char)
     else if (c == 127)
         del_last_char(25, prompt, nb_char);
     del_prompt(*nb_char);
-    printf("\r%s", *prompt);
+    putstr("\r%s", *prompt);
+    fflush(stdout);
     write_client(sock, "OK");
     return;
 }

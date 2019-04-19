@@ -93,8 +93,6 @@ unsigned int exec_line(shell_t *shell, unsigned int args)
         return set_error(shell, 1);
     if (is_line_empty(shell->line))
         return 0;
-    free(shell->last);
-    shell->last = NULL;
     args = count_args(shell->line);
     shell->final = bufferize(shell->line, args);
     if (shell->final == NULL || set_commands(shell) == -1 ||

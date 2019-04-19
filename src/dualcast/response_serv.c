@@ -13,17 +13,18 @@
 static void print_cmd(char *buf, char **prompt, int *nb_char)
 {
     del_prompt(*nb_char);
-    printf("\r%s", buf + 4);
+    putstr("\r%s", buf + 4);
     *prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
     *nb_char = strlen(*prompt);
-    printf("%s", *prompt);
+    putstr("%s", *prompt);
+    fflush(stdout);
 }
 
 int response_serv(t_socket sock, char *buf, char **prompt, int *nb_char)
 {
-    if (!strncmp(buf, "char:", 5))
+    if (lstr_starts_with(buf, "char:"))
         prompt_serv(sock, buf[5], prompt, nb_char);
-    if (!strncmp(buf, "cmd:", 4))
+    if (lstr_starts_with(buf, "cmd:"))
         print_cmd(buf, prompt, nb_char);
     free(buf);
     return 0;

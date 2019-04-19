@@ -32,14 +32,13 @@ static int find_cmd(const char *path, char *str)
 static int search(shell_t *shell, vec_t *args, size_t i)
 {
     int ret = 1;
+    char *str = 0;
 
-    char *str = get_alias_cmd(shell, lvec_at(args, i));
-    if (str) {
+    if ((str = lhmap_get(shell->aliases, lvec_at(args, i)))) {
         putstr("%s is aliased to %s\n", lvec_at(args, i), str);
-        free(str);
         ret = 0;
     }
-    if (indexof_builtin(lvec_at(args, i)) != -1) {
+    if ((str = lhmap_get(shell->builtins, lvec_at(args, i)))) {
         putstr("%s is a shell built-in\n", lvec_at(args, i));
         ret = 0;
     }
@@ -49,7 +48,7 @@ static int search(shell_t *shell, vec_t *args, size_t i)
     return ret;
 }
 
-int where(shell_t *shell, vec_t *args)
+int where_b(shell_t *shell, vec_t *args)
 {
     if (lvec_size(args) == 1) {
         dprintf(2, "where: too few arguments.\n");

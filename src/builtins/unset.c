@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int unset(shell_t *shell, vec_t *args)
+int unset_b(shell_t *shell, vec_t *args)
 {
     if (lvec_size(args) == 1)
         return eputstr("unset: too few arguments.\n"), 1;

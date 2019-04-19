@@ -13,10 +13,8 @@
 
 static void sanitize_glob(glob_t *list)
 {
-    int i = -1;
-
-    while (list->gl_pathv[++i])
-        list->gl_pathv[i] = sanitize(list->gl_pathv[i], 1);
+    for (size_t i = 0; list->gl_pathv[i]; i++)
+        list->gl_pathv[i] = sanitize_single_arg(list->gl_pathv[i], 1);
 }
 
 static void update_glob(shell_t *shell, char *arg, int *i, glob_t *list)
@@ -47,19 +45,17 @@ static void glob_stars(shell_t *shell, char *arg, int *i)
     if (list.gl_pathc == 0) {
         *i += strlen(arg);
         free(arg);
-    }
-    else
+    } else
         update_glob(shell, arg, i, &list);
     *i -= 1;
 }
 
 int parse_stars(shell_t *shell)
 {
-    int i;
+    int i = -1;
     int len;
 
-    i = -1;
-    while (shell->line[++i])
+    while (shell->line[++i]) {
         if (shell->line[i] == '\\')
             i += !!(shell->line[i + 1]);
         else if (shell->line[i] == '\'' || shell->line[i] == '"')
@@ -70,5 +66,6 @@ int parse_stars(shell_t *shell)
                 len += 1;
             glob_stars(shell, strndup(shell->line + i, len), &i);
         }
+    }
     return 0;
 }

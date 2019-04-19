@@ -6,6 +6,7 @@
 */
 
 #include "get_next_line.h"
+#include "shell.h"
 #include "my.h"
 #include "server.h"
 #include <stdio.h>
@@ -27,30 +28,32 @@ static void treat_serv_resp(
 {
     char *tmp;
 
-    if (str && strcmp(str, "OK")) {
+    if (str && lstr_equals(str, "OK") == false) {
         del_prompt(*nb_char);
-        printf("\r%s", str);
+        putstr("\r%s", str);
+        fflush(stdout);
         tmp = my_strcatdup("cmd:", str);
         write_socket(cli->sock, tmp);
         free(tmp);
         *prompt = get_prompt_cli(cli);
         *nb_char = strlen(*prompt);
-        my_putstr(*prompt);
+        putstr(*prompt);
+        fflush(stdout);
     }
 }
 
 static int read_term(t_client *cli, char **prompt, int *nb_char)
 {
-    char c;
+    char c = getch_c();
 
-    c = getch_c();
     if (c == 13) {
         *prompt = get_prompt_cli(cli);
         *nb_char = strlen(*prompt);
-        printf("\n%s", *prompt);
+        putstr("\n%s", *prompt);
+        fflush(stdout);
     }
     if (c == 3) {
-        my_putchar('\n');
+        putstr("\n");
         return 1;
     }
     if (c >= 32 && c <= 126)
@@ -58,7 +61,8 @@ static int read_term(t_client *cli, char **prompt, int *nb_char)
     else if (c == 127)
         del_last_char(cli->len_prompt, prompt, nb_char);
     del_prompt(*nb_char);
-    printf("\r%s", *prompt);
+    putstr("\r%s", *prompt);
+    fflush(stdout);
     send_char(cli->sock, c);
     return 0;
 }
@@ -66,11 +70,10 @@ static int read_term(t_client *cli, char **prompt, int *nb_char)
 static int read_sock(t_client *cli, char **prompt, int *nb_char)
 {
     char *buf;
-    int len;
+    int len = read_socket(cli->sock, &buf);
 
-    len = read_socket(cli->sock, &buf);
     if (len == 0) {
-        printf("Vous avez été déconnecté\n");
+        putstr("You've been disconnected.\n");
         return 1;
     }
     else
@@ -81,16 +84,14 @@ static int read_sock(t_client *cli, char **prompt, int *nb_char)
 
 int core_client_dc(t_client *cli)
 {
-    int stop;
+    int stop = 0;
+    char *prompt = get_prompt_cli(cli);
+    int nb_char = strlen(prompt);
     fd_set rdfs;
-    char *prompt;
     struct termios orig_termios;
-    int nb_char;
 
-    stop = 0;
-    prompt = get_prompt_cli(cli);
-    nb_char = strlen(prompt);
-    my_putstr(prompt);
+    putstr(prompt);
+    fflush(stdout);
     while (!stop) {
         set_conio_terminal_mode(&orig_termios);
         stop = init_select_dc(&(cli->sock), &rdfs);

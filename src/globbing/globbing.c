@@ -39,7 +39,7 @@ static OPTION(Var) get_gvar(char *str)
     size_t i = 0;
     char quotes[][2] = {
         {'{', '}'},
-        {'(', ')'},
+        {'[', ']'},
         {0, 0},
     };
 

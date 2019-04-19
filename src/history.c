@@ -64,23 +64,6 @@ void save_history(shell_t *shell)
     write_hist(shell, fd);
 }
 
-int disp_hist(shell_t *shell, vec_t *args)
-{
-    vec_t *arr = shell->hist.arr;
-
-    (void)(args);
-    if (arr == NULL)
-        return 0;
-    for (size_t i = 0; i < arr->size; i++) {
-        char **payload = arr->arr[i];
-        putstr("%6lu\t", i);
-        for (size_t j = 0; payload[j]; j++)
-            putstr(i ? " %s" : "%s", payload[j]);
-        putstr("\n");
-    }
-    return 0;
-}
-
 void add_hist_elem(shell_t *shell, char *line)
 {
     // TODO: Fix this (this splitting removes duplicate spaces, even in quotes)

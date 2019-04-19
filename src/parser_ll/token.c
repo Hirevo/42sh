@@ -36,6 +36,12 @@ static t_token *set_token(t_token *token, t_grammar *gram, char **tab, int *i)
     return token;
 }
 
+void my_free_tab(char **tab) {
+    for (size_t i = 0; tab[i]; i++)
+        free(tab[i]);
+    free(tab);
+}
+
 t_token *fill_token(t_token *token, char *str)
 {
     char **tab;

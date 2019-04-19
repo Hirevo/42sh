@@ -5,6 +5,7 @@
 ** init
 */
 
+#include "builtins.h"
 #include "my.h"
 #include "shell.h"
 #include <curses.h>
@@ -28,21 +29,65 @@ void set_raw(struct termios *oterm)
         handle_error("tcsetattr");
 }
 
-int init_shell(shell_t *shell)
+void init_builtins(shell_t *shell)
+{
+    shell->builtins = lhmap_with_capacity(19);
+    lhmap_set(shell->builtins, "alias", alias_b);
+    lhmap_set(shell->builtins, "unalias", unalias_b);
+    lhmap_set(shell->builtins, "builtins", builtins_b);
+    lhmap_set(shell->builtins, "cd", cd_b);
+    lhmap_set(shell->builtins, "config", config_b);
+    lhmap_set(shell->builtins, "dualcast", dualcast_b);
+    lhmap_set(shell->builtins, "echo", echo_b);
+    lhmap_set(shell->builtins, "env", env_b);
+    lhmap_set(shell->builtins, "exec", exec_b);
+    lhmap_set(shell->builtins, "exit", exit_b);
+    lhmap_set(shell->builtins, "history", history_b);
+    lhmap_set(shell->builtins, "parserll", parserll_b);
+    lhmap_set(shell->builtins, "prompt", prompt_b);
+    lhmap_set(shell->builtins, "set", set_b);
+    lhmap_set(shell->builtins, "setenv", setenv_b);
+    lhmap_set(shell->builtins, "unset", unset_b);
+    lhmap_set(shell->builtins, "unsetenv", unsetenv_b);
+    lhmap_set(shell->builtins, "where", where_b);
+    lhmap_set(shell->builtins, "which", which_b);
+}
+
+void init_vars(shell_t *shell)
+{
+    char *str = 0;
+
+    shell->vars = lhmap_with_capacity(5);
+    if (asprintf(&str, "%d", getpid()) == -1)
+        handle_error("calloc");
+    lhmap_set(shell->vars, "pid", str);
+    if (asprintf(&str, "%d", getppid()) == -1)
+        handle_error("calloc");
+    lhmap_set(shell->vars, "ppid", str);
+    if (asprintf(&str, "%d", getgid()) == -1)
+        handle_error("calloc");
+    lhmap_set(shell->vars, "gid", str);
+    if (asprintf(&str, "%d", getpgrp()) == -1)
+        handle_error("calloc");
+    lhmap_set(shell->vars, "pgid", str);
+    if (asprintf(&str, "%d", getsid(0)) == -1)
+        handle_error("calloc");
+    lhmap_set(shell->vars, "sid", str);
+}
+
+void init_shell(shell_t *shell)
 {
     srand(getpid() * time(NULL));
     shell->exit_code = 0;
-    shell->is_comp = 0;
-    shell->last = NULL;
     shell->fds = NULL;
     shell->is_done = 0;
+    parse_rc(shell);
     init_history(shell);
     init_aliases(shell);
-    parse_rc(shell);
     init_vars(shell);
+    init_builtins(shell);
     get_prompt(shell);
     init(shell);
-    return 0;
 }
 
 void init(shell_t *shell)

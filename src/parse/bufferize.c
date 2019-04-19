@@ -5,7 +5,6 @@
 ** bufferize
 */
 
-#include "auto_complete.h"
 #include "get_next_line.h"
 #include "my.h"
 #include "shell.h"

@@ -31,7 +31,7 @@ exec_status_t exec_redirected_builtins(shell_t *shell, int fds[2])
     exec_status_t ret;
 
     head = shell->cur;
-    if (indexof_builtin(lvec_front(head->av)) == -1)
+    if (lhmap_get(shell->builtins, lvec_front(head->av)) == 0)
         return (exec_status_t){
             .ok = false,
             .code = 1,

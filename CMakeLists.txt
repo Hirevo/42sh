@@ -26,12 +26,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/alias/loop.c
     ${PROJECT_SOURCE_DIR}/src/alias/parse.c
     ${PROJECT_SOURCE_DIR}/src/alias/unalias.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_complete.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_list.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/auto_token.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/free_dirent.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/match.c
-    ${PROJECT_SOURCE_DIR}/src/auto_completation/split_it.c
+    ${PROJECT_SOURCE_DIR}/src/autocompletion.c
     ${PROJECT_SOURCE_DIR}/src/buffer.c
     ${PROJECT_SOURCE_DIR}/src/builtins_init.c
     ${PROJECT_SOURCE_DIR}/src/builtins.c
@@ -48,6 +43,8 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins/set.c
     ${PROJECT_SOURCE_DIR}/src/builtins/setenv.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unalias.c
+    ${PROJECT_SOURCE_DIR}/src/builtins/history.c
+    ${PROJECT_SOURCE_DIR}/src/builtins/builtins.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unset.c
     ${PROJECT_SOURCE_DIR}/src/builtins/unsetenv.c
     ${PROJECT_SOURCE_DIR}/src/builtins/where.c
@@ -160,8 +157,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/prompt/tcsh.c
     ${PROJECT_SOURCE_DIR}/src/prompt/turbosh.c
     ${PROJECT_SOURCE_DIR}/src/redirects.c
-    ${PROJECT_SOURCE_DIR}/src/sanitizers/sanitizers.c
-    ${PROJECT_SOURCE_DIR}/src/vars.c
+    ${PROJECT_SOURCE_DIR}/src/sanitizers.c
 )
 target_link_libraries(42sh my json hmap vec str ncurses)
 target_include_directories(42sh PRIVATE

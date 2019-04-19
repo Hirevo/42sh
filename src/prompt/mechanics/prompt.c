@@ -5,7 +5,7 @@
 ** prompt
 */
 
-#include "auto_complete.h"
+#include "autocompletion.h"
 #include "my.h"
 #include "shell.h"
 #include <poll.h>
@@ -38,7 +38,7 @@ static void make_action(shell_t *shell, char c)
     } else if (c == 127)
         remove_char(shell);
     else if (shell->tty && c == '\t')
-        auto_complete(shell, getenv("PATH"));
+        autocomplete(shell);
     else if (shell->tty && c == '\e')
         move_cursor(shell, c);
     else
@@ -47,7 +47,7 @@ static void make_action(shell_t *shell, char c)
 
 void color_text(shell_t *shell)
 {
-    while (shell->w.cur-- != 0)
+    for (int i = 0; i < shell->w.cur; i++)
         my_putstr(shell->w.backw);
     if (shell->line) {
         my_putstr("\e[1m\e[38;2;255;98;0m");

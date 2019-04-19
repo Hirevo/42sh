@@ -52,7 +52,7 @@ void save_alias(shell_t *shell)
     if (fd == -1)
         return;
     lhmap_for_each(
-        shell->alias, (void (*)(void *, char *, void *))(write_alias), &fd);
+        shell->aliases, (void (*)(void *, char *, void *))(write_alias), &fd);
     close(fd);
 }
 
@@ -87,8 +87,8 @@ void init_aliases(shell_t *shell)
 {
     char *home = getenv("HOME");
 
-    shell->alias = lhmap_new();
-    if (shell->alias == NULL)
+    shell->aliases = lhmap_new();
+    if (shell->aliases == NULL)
         return;
     char *path = path_join(home, ALIAS_FILE);
     if (path == 0)

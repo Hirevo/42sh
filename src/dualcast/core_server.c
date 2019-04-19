@@ -6,6 +6,7 @@
 */
 
 #include "get_next_line.h"
+#include "shell.h"
 #include "my.h"
 #include "server.h"
 #include <stdio.h>
@@ -61,14 +62,14 @@ static int client_talk_dc(
 
 int core_server_dc(t_socket sock, t_socket client, fd_set *rdfs)
 {
-    int nb_char;
-    char *prompt;
-    int stop;
+    char *prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
+    int nb_char = prompt ? strlen(prompt) : 0;
+    int stop = 0;
 
-    stop = 0;
-    prompt = strdup("(\e[32;1mDualCast\e[0m) $> ");
-    my_putstr(prompt);
-    nb_char = strlen(prompt);
+    if (prompt == 0)
+        return 1;
+    putstr(prompt);
+    fflush(stdout);
     while (!stop) {
         stop = init_client_dc(rdfs, &sock, &client);
         if (FD_ISSET(STDIN_FILENO, rdfs) && !stop)

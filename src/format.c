@@ -37,7 +37,8 @@ void dputstr(const int fd, const char *fmt, ...)
 char *path_join(const char *p1, const char *p2)
 {
     char *path = 0;
-    char *add_slash = (lstr_ends_with(p1, "/") ? "" : "/");
+    char *add_slash =
+        ((lstr_ends_with(p1, "/") || lstr_equals(p1, "")) ? "" : "/");
 
     if (asprintf(&path, "%s%s%s", p1, add_slash, p2) == -1)
         return 0;

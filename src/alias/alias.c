@@ -14,8 +14,8 @@
 
 int add_alias(shell_t *shell, char *alias, char *command)
 {
-    free(lhmap_get(shell->alias, alias));
-    lhmap_set(shell->alias, alias, strdup(command));
+    free(lhmap_get(shell->aliases, alias));
+    lhmap_set(shell->aliases, alias, strdup(command));
     return 0;
 }
 
@@ -24,11 +24,11 @@ int disp_all_alias(shell_t *shell)
     vec_t *keys;
     vec_t *vals;
 
-    if (shell->alias == NULL)
+    if (shell->aliases == NULL)
         return 0;
-    keys = shell->alias->key_table;
-    vals = shell->alias->value_table;
-    for (size_t i = 0; i < shell->alias->size; i++) {
+    keys = shell->aliases->key_table;
+    vals = shell->aliases->value_table;
+    for (size_t i = 0; i < shell->aliases->size; i++) {
         const char *name = keys->arr[i];
         const char *command = vals->arr[i];
         printf("alias %s='%s'\n", name, command);
@@ -40,9 +40,9 @@ int disp_alias(shell_t *shell, char *alias)
 {
     char *found;
 
-    if (shell->alias == NULL)
+    if (shell->aliases == NULL)
         return 0;
-    found = lhmap_get(shell->alias, alias);
+    found = lhmap_get(shell->aliases, alias);
     if (found)
         printf("alias %s='%s'\n", alias, found);
     return 0;
@@ -70,9 +70,9 @@ char *get_alias_cmd(shell_t *shell, char *name)
 {
     char *found;
 
-    if (shell->alias == 0 || name == 0)
+    if (shell->aliases == 0 || name == 0)
         return 0;
-    found = lhmap_get(shell->alias, name);
+    found = lhmap_get(shell->aliases, name);
     if (found)
         return strdup(found);
     return 0;

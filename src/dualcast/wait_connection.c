@@ -6,6 +6,7 @@
 */
 
 #include "get_next_line.h"
+#include "shell.h"
 #include "my.h"
 #include "server.h"
 #include <stdio.h>
@@ -58,11 +59,11 @@ static int new_client_dc(
     FD_SET(*client, rdfs);
     recv_code = read_code(*client);
     if (!strcmp(recv_code, passwd)) {
-        printf("Connected.\n");
+        putstr("Connected.\n");
         send_login(*client);
         return 1;
     }
-    printf("Connection failed.\n");
+    putstr("Connection failed.\n");
     send(*client, "KO", 2, 0);
     close(*client);
     return 0;
