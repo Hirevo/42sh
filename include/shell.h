@@ -257,6 +257,7 @@ char *construct_magic(char **);
 ** sanitizers/sanitizers.c
 */
 char *sanitize(char *, bool);
+char *sanitize_single_arg(char *, bool);
 char *sanitize_double_quotes(char *, bool);
 
 /*

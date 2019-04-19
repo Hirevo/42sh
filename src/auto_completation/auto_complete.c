@@ -98,7 +98,7 @@ static void reprint_and_free(shell_t *shell, match_t **list, auto_t *t)
             if (shell->line)
                 printf("%s", shell->line);
         }
-        if (strcmp(s, t->token) != 0)
+        if (lstr_equals(s, t->token) == false)
             printf("%s", s);
     }
     shell->is_comp++;

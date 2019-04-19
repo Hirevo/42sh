@@ -33,7 +33,31 @@ char *sanitize(char *str, bool to_free)
         return NULL;
     for (size_t i1 = 0; str[i1]; i1++) {
         if (str[i1] == '\\' || is_separator(str[i1]) || str[i1] == '"' ||
-            str[i1] == '\'' || str[i1] == '`' ||
+            str[i1] == '\'' || str[i1] == '`' || str[i1] == '$' ||
+            str[i1] == '!') {
+            ret[i2++] = '\\';
+            ret[i2++] = str[i1];
+        } else {
+            ret[i2++] = str[i1];
+        }
+    }
+    ret[i2] = 0;
+    if (to_free)
+        free(str);
+    return ret;
+}
+
+char *sanitize_single_arg(char *str, bool to_free)
+{
+    int i2 = 0;
+    int size = count_separators(str);
+    char *ret = calloc(strlen(str) + (size * 2) + 1, sizeof(char));
+
+    if (ret == NULL)
+        return NULL;
+    for (size_t i1 = 0; str[i1]; i1++) {
+        if (str[i1] == '\\' || is_space(str[i1]) || is_separator(str[i1]) ||
+            str[i1] == '"' || str[i1] == '\'' || str[i1] == '`' ||
             str[i1] == '$' || str[i1] == '!') {
             ret[i2++] = '\\';
             ret[i2++] = str[i1];

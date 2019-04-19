@@ -93,8 +93,9 @@ static bool replace_var(shell_t *shell, int *cur, Var var, bool is_free)
         return true;
     } else if ((resolved = lhmap_get(shell->vars, var.name)) ||
         (resolved = getenv(var.name))) {
-        resolved =
-            (is_free ? sanitize : sanitize_double_quotes)(resolved, false);
+        char *(*sanitize_func)(char *, bool) =
+            is_free ? sanitize_single_arg : sanitize_double_quotes;
+        resolved = sanitize_func(resolved, false);
         ret = asprintf(&str, "%.*s%s%s", *cur, shell->line, resolved,
             shell->line + *cur + strlen(var.name) + (var.enclosed ? 3 : 1));
         free(resolved);
