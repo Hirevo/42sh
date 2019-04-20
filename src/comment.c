@@ -11,25 +11,25 @@
 
 int clear_comment(shell_t *shell)
 {
-    int i;
-    int quote;
+    bool quoted = false;
     char *tmp;
 
-    i = 0;
-    quote = 0;
-    while (shell->line[i]) {
-        if (shell->line[i] == '\'' && (quote == 0 || quote == 1))
-            quote = (quote == 0) ? 1 : 0;
-        if (shell->line[i] == '"' && (quote == 0 || quote == 2))
-            quote = (quote == 0) ? 2 : 0;
-        if (shell->line[i] == '#' && quote == 0 &&
-            (i == 0 || (i != 0 && (shell->line[i - 1] == ' ')))) {
-            tmp = strndup(shell->line, i);
+    for (size_t cur = 0; shell->line[cur]; cur++) {
+        if (shell->line[cur] == '\\') {
+            cur += !!(shell->line[cur + 1]);
+        } else if (shell->line[cur] == '\'') {
+            cur += 1;
+            while (shell->line[cur] && shell->line[cur] != '\'')
+                cur += 1;
+            cur -= (shell->line[cur] == 0);
+        } else if (shell->line[cur] == '"') {
+            quoted = !quoted;
+        } else if (shell->line[cur] == '#' && quoted == false) {
+            tmp = strndup(shell->line, cur);
             free(shell->line);
             shell->line = tmp;
             return 0;
         }
-        i += 1;
     }
     return 0;
 }

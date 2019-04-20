@@ -53,7 +53,7 @@ char *format_arg(char *str)
     for (size_t i1 = 0; str[i1]; i1++) {
         if (str[i1] == '\\') {
             if (str[i1 + 1] == 0) {
-                return NULL;
+                ret[i2++] = '\\';
             } else {
                 i1 += !!(str[i1 + 1]);
                 ret[i2++] = str[i1];

@@ -107,12 +107,10 @@ static int is_hist_sym(shell_t *shell, int i)
     if (strncmp(shell->line + i, "!!", 2) == 0) {
         if (insert_full_hist(shell, i) == -1)
             return -1;
-    }
-    else if (strncmp(shell->line + i, "!$", 2) == 0) {
+    } else if (strncmp(shell->line + i, "!$", 2) == 0) {
         if (insert_last_hist(shell, i) == -1)
             return -1;
-    }
-    else if (strncmp(shell->line + i, "!:", 2) == 0 &&
+    } else if (strncmp(shell->line + i, "!:", 2) == 0 &&
         (shell->line[i + 2] >= '0' && shell->line[i + 2] <= '9'))
         if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
             return -1;
@@ -121,20 +119,22 @@ static int is_hist_sym(shell_t *shell, int i)
 
 int subst_history(shell_t *shell, int save)
 {
-    int i;
-    char *last;
-    int quoted = 0;
+    int i = -1;
+    char *last = shell->line;
 
-    i = -1;
-    last = shell->line;
-    while (lvec_back(shell->hist.arr) && shell->line[++i])
-        if (shell->line[i] == '\\')
+    while (lvec_back(shell->hist.arr) && shell->line[++i]) {
+        if (shell->line[i] == '\\') {
             i += !!(shell->line[i + 1]);
-        else if (shell->line[i] == '\'')
-            quoted = !quoted;
-        else if (!quoted)
+        } else if (shell->line[i] == '\'') {
+            i += 1;
+            while (shell->line[i] && shell->line[i] != '\'')
+                i += 1;
+            i -= (shell->line[i] == 0);
+        } else {
             if (is_hist_sym(shell, i) == -1)
                 return -1;
+        }
+    }
     final_things(shell, last, save);
     return 0;
 }

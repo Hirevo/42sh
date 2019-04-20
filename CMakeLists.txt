@@ -28,7 +28,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/alias/unalias.c
     ${PROJECT_SOURCE_DIR}/src/autocompletion.c
     ${PROJECT_SOURCE_DIR}/src/buffer.c
-    ${PROJECT_SOURCE_DIR}/src/builtins_init.c
     ${PROJECT_SOURCE_DIR}/src/builtins.c
     ${PROJECT_SOURCE_DIR}/src/builtins/alias.c
     ${PROJECT_SOURCE_DIR}/src/builtins/cd.c
@@ -49,7 +48,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins/unsetenv.c
     ${PROJECT_SOURCE_DIR}/src/builtins/where.c
     ${PROJECT_SOURCE_DIR}/src/builtins/which.c
-    ${PROJECT_SOURCE_DIR}/src/cd.c
     ${PROJECT_SOURCE_DIR}/src/char.c
     ${PROJECT_SOURCE_DIR}/src/comment.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/add_env_http.c
@@ -88,7 +86,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/dualcast/term_emul.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/termio.c
     ${PROJECT_SOURCE_DIR}/src/dualcast/wait_connection.c
-    ${PROJECT_SOURCE_DIR}/src/echo.c
     ${PROJECT_SOURCE_DIR}/src/env/env.c
     ${PROJECT_SOURCE_DIR}/src/env/env2.c
     ${PROJECT_SOURCE_DIR}/src/exec/close.c
@@ -96,7 +93,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/exec/exec2.c
     ${PROJECT_SOURCE_DIR}/src/exec/pipe.c
     ${PROJECT_SOURCE_DIR}/src/exec/setup.c
-    ${PROJECT_SOURCE_DIR}/src/exit.c
     ${PROJECT_SOURCE_DIR}/src/format.c
     ${PROJECT_SOURCE_DIR}/src/free.c
     ${PROJECT_SOURCE_DIR}/src/get_next_line.c

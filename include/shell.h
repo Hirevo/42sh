@@ -397,11 +397,6 @@ int is_alphanum(char);
 int is_num(char *);
 
 /*
-** builtins_init.c
-*/
-int nb_built(const char **);
-
-/*
 ** char.c
 */
 void insert_char(char **, char);

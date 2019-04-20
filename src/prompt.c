@@ -52,9 +52,9 @@ void print_prompt(shell_t *shell)
 
 void get_prompt(shell_t *shell)
 {
-    char *str;
+    char *str = getenv("PROMPT");
 
     shell->prompt = 0;
-    if ((str = getenv("PROMPT")) != NULL)
+    if (str != NULL)
         shell->prompt = strtol(str, NULL, 10);
 }

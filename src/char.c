@@ -15,8 +15,7 @@ void insert_char(char **str, char c)
     if (*str == NULL)
         i = 0;
     else
-        while ((*str)[++i])
-            ;
+        while ((*str)[++i]);
     new = calloc(i + 2, sizeof(char));
     if (new == NULL)
         return;
@@ -38,8 +37,7 @@ void insert_int(int **str, int c)
     if (*str == NULL)
         i = 0;
     else
-        while ((*str)[++i])
-            ;
+        while ((*str)[++i]);
     new = calloc(i + 2, sizeof(int));
     if (new == NULL)
         return;

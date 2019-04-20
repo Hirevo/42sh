@@ -113,13 +113,14 @@ int parse_vars(shell_t *shell)
 {
     bool is_free = true;
 
-    for (int cur = 0; shell->line[cur]; cur += 1)
+    for (int cur = 0; shell->line[cur]; cur += 1) {
         if (shell->line[cur] == '\\')
             cur += !!(shell->line[cur + 1]);
-        else if (shell->line[cur] == '\'' && is_free)
-            while (shell->line[cur + 1] && shell->line[cur + 1] != '\'')
+        else if (shell->line[cur] == '\'' && is_free) {
+            cur += 1;
+            while (shell->line[cur] && shell->line[cur] != '\'')
                 cur += 1;
-        else if (shell->line[cur] == '"')
+        } else if (shell->line[cur] == '"')
             is_free = !is_free;
         else if (shell->line[cur] == '$' && shell->line[cur + 1] &&
             !is_separator(shell->line[cur + 1]) &&
@@ -130,5 +131,6 @@ int parse_vars(shell_t *shell)
             if (replace_var(shell, &cur, OPT_UNWRAP(var), is_free) == false)
                 return -1;
         }
+    }
     return 0;
 }
