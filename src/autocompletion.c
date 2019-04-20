@@ -71,7 +71,8 @@ static vec_t *find_path_matches(shell_t *shell, char *token)
 
     for (struct dirent *entry = readdir(dir); entry; entry = readdir(dir)) {
         if (lstr_equals(entry->d_name, "..") ||
-            lstr_equals(entry->d_name, "."))
+            lstr_equals(entry->d_name, ".") ||
+            lstr_equals(entry->d_name, ".DS_Store"))
             continue;
         else if (lstr_starts_with(entry->d_name, token_name)) {
             char *pathname = path_join(token_dir, entry->d_name);
@@ -138,7 +139,8 @@ static vec_t *find_commands_matches(shell_t *shell, char *token)
         for (struct dirent *entry = readdir(dir); entry;
              entry = readdir(dir)) {
             if (lstr_equals(entry->d_name, "..") ||
-                lstr_equals(entry->d_name, "."))
+                lstr_equals(entry->d_name, ".") ||
+                lstr_equals(entry->d_name, ".DS_Store"))
                 continue;
             else if (lstr_starts_with(entry->d_name, token)) {
                 char *cmd = strdup(entry->d_name);
@@ -294,8 +296,11 @@ OPTION(Token) extract_token(char *line, size_t cur)
         else if (is_space(line[i]) || is_separator(line[i])) {
             if (is_delimiter(line[i])) {
                 is_command = true;
-                while (is_space(line[++i]));
+                while (is_space(line[++i]))
+                    ;
                 i -= 1;
+            } else {
+                is_command = false;
             }
             start = i + 1;
         }
