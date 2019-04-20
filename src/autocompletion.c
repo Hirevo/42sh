@@ -292,7 +292,11 @@ OPTION(Token) extract_token(char *line, size_t cur)
         if (line[i] == '\\')
             i += !!(line[i + 1]);
         else if (is_space(line[i]) || is_separator(line[i])) {
-            is_command = is_delimiter(line[i]);
+            if (is_delimiter(line[i])) {
+                is_command = true;
+                while (is_space(line[++i]));
+                i -= 1;
+            }
             start = i + 1;
         }
     }
