@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ketchup_prompt(shell_t *shell)
+void ketchup_prompt(Shell *shell)
 {
     char *login;
 

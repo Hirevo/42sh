@@ -21,7 +21,7 @@ typedef struct {
 
 DEF_OPTION(Var, Var);
 
-static int get_arg(shell_t *shell, char **str, int *cur)
+static int get_arg(Shell *shell, char **str, int *cur)
 {
     int nb = atoi(shell->line + *cur + 1);
     int len = 0;
@@ -68,7 +68,7 @@ static OPTION(Var) get_gvar(char *str)
     return SOME(Var, ret);
 }
 
-static void final_checks(shell_t *shell, char *str, int *cur, int i)
+static void final_checks(Shell *shell, char *str, int *cur, int i)
 {
     if (i == -1 || str == NULL)
         handle_error("calloc");
@@ -77,7 +77,7 @@ static void final_checks(shell_t *shell, char *str, int *cur, int i)
     shell->line = str;
 }
 
-static bool replace_var(shell_t *shell, int *cur, Var var, bool is_free)
+static bool replace_var(Shell *shell, int *cur, Var var, bool is_free)
 {
     char *str;
     char *resolved;
@@ -109,7 +109,7 @@ static bool replace_var(shell_t *shell, int *cur, Var var, bool is_free)
     return true;
 }
 
-int parse_vars(shell_t *shell)
+int parse_vars(Shell *shell)
 {
     bool is_free = true;
 

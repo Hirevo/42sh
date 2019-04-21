@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void bigmac_prompt(shell_t *shell)
+void bigmac_prompt(Shell *shell)
 {
     OPTION(CharPtr) login = OPT_FROM_NULLABLE(CharPtr, getenv("LOGNAME"));
     OPTION(CharPtr) hostname = get_hostname();

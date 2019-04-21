@@ -17,7 +17,7 @@ static void sanitize_glob(glob_t *list)
         list->gl_pathv[i] = sanitize_single_arg(list->gl_pathv[i], 1);
 }
 
-static void update_glob(shell_t *shell, char *arg, int *i, glob_t *list)
+static void update_glob(Shell *shell, char *arg, int *i, glob_t *list)
 {
     char *tmp;
     char *file;
@@ -34,7 +34,7 @@ static void update_glob(shell_t *shell, char *arg, int *i, glob_t *list)
     free_tab(list->gl_pathv);
 }
 
-static void glob_stars(shell_t *shell, char *arg, int *i)
+static void glob_stars(Shell *shell, char *arg, int *i)
 {
     glob_t list;
 
@@ -50,7 +50,7 @@ static void glob_stars(shell_t *shell, char *arg, int *i)
     *i -= 1;
 }
 
-int parse_stars(shell_t *shell)
+int parse_stars(Shell *shell)
 {
     int i = -1;
     int len;

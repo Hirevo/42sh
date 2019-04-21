@@ -29,7 +29,7 @@ static bool hist_trim_list(void *ctx, void *_elem, size_t idx)
     return kept;
 }
 
-void write_hist(shell_t *shell, int fd)
+void write_hist(Shell *shell, int fd)
 {
     vec_t *hist = shell->hist.arr;
     char *hist_size = getenv("HIST_SIZE");
@@ -50,7 +50,7 @@ void write_hist(shell_t *shell, int fd)
     free_hist(shell);
 }
 
-void save_history(shell_t *shell)
+void save_history(Shell *shell)
 {
     char *home = getenv("HOME");
 
@@ -64,7 +64,7 @@ void save_history(shell_t *shell)
     write_hist(shell, fd);
 }
 
-void add_hist_elem(shell_t *shell, char *line)
+void add_hist_elem(Shell *shell, char *line)
 {
     // TODO: Fix this (this splitting removes duplicate spaces, even in quotes)
     char **payload = my_split_mulchar(line, " \t");
@@ -82,7 +82,7 @@ void add_hist_elem(shell_t *shell, char *line)
     lvec_reverse(shell->hist.arr);
 }
 
-void init_history(shell_t *shell)
+void init_history(Shell *shell)
 {
     char *home = getenv("HOME");
 

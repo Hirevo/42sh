@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void ps1_prompt(shell_t *shell)
+void ps1_prompt(Shell *shell)
 {
     char *ps1 = OPT_UNWRAP_OR(OPT_FROM_NULLABLE(CharPtr, getenv("PS1")), "");
 

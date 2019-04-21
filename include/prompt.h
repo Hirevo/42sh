@@ -9,15 +9,15 @@
 
 #include "shell.h"
 
-void turbosh_prompt(shell_t *);
-void bash_prompt(shell_t *);
-void tcsh_prompt(shell_t *);
-void minimalist_prompt(shell_t *);
-void ketchup_prompt(shell_t *);
-void bigmac_prompt(shell_t *);
-void oh_my_zsh(shell_t *);
-void mysh(shell_t *);
-void mysh_lambda(shell_t *);
-void mysh_256(shell_t *);
-void mysh_arrow(shell_t *);
-void ps1_prompt(shell_t *);
+void turbosh_prompt(Shell *);
+void bash_prompt(Shell *);
+void tcsh_prompt(Shell *);
+void minimalist_prompt(Shell *);
+void ketchup_prompt(Shell *);
+void bigmac_prompt(Shell *);
+void oh_my_zsh(Shell *);
+void mysh(Shell *);
+void mysh_lambda(Shell *);
+void mysh_256(Shell *);
+void mysh_arrow(Shell *);
+void ps1_prompt(Shell *);

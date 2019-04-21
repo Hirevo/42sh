@@ -23,25 +23,19 @@ int compare_stats(struct stat *stats)
         return -2;
 }
 
-exec_status_t exec_redirected_builtins(shell_t *shell, int fds[2])
+OPTION(Int) exec_redirected_builtins(Shell *shell, int fds[2])
 {
-    int fd;
     int last;
-    command_t *head;
-    exec_status_t ret;
+    Command *head = shell->cur;
 
-    head = shell->cur;
     if (lhmap_get(shell->builtins, lvec_front(head->av)) == 0)
-        return (exec_status_t){
-            .ok = false,
-            .code = 1,
-        };
-    fd = 0;
+        return NONE(Int);
+    int fd = 0;
     if (head->r_type) {
         last = dup(1);
         fd = setup_right_redirect(head, fds, (head->r_type[1] == 0));
     }
-    ret = exec_builtins(shell, head->av);
+    OPTION(Int) ret = exec_builtins(shell, head->av);
     if (fd) {
         close(fd);
         dup2(last, 1);
@@ -50,11 +44,11 @@ exec_status_t exec_redirected_builtins(shell_t *shell, int fds[2])
     return ret;
 }
 
-void quick_exec(shell_t *shell, char *str)
+void quick_exec(Shell *shell, char *str)
 {
     char *save = shell->line;
     char **final = shell->final;
-    command_t *cmds = shell->commands;
+    Command *cmds = shell->commands;
 
     if (is_line_empty(str))
         return;

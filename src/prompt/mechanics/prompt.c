@@ -24,7 +24,7 @@ static void wait_input(void)
     poll(&events, 1, -1);
 }
 
-static void make_action(shell_t *shell, char c)
+static void make_action(Shell *shell, char c)
 {
     if (c == 12)
         clear_term(shell);
@@ -45,7 +45,7 @@ static void make_action(shell_t *shell, char c)
         add_char(shell, c);
 }
 
-void color_text(shell_t *shell)
+void color_text(Shell *shell)
 {
     for (int i = 0; i < shell->w.cur; i++)
         my_putstr(shell->w.backw);
@@ -56,7 +56,7 @@ void color_text(shell_t *shell)
     }
 }
 
-void prompt_line(shell_t *shell)
+void prompt_line(Shell *shell)
 {
     char c = -1;
 

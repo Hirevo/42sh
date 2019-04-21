@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-int setup_right_redirect(command_t *head, int *fds, int i)
+int setup_right_redirect(Command *head, int *fds, int i)
 {
     int fd = open(
         head->r_name, O_WRONLY | O_CREAT | (i ? O_TRUNC : O_APPEND), 0644);
@@ -46,7 +46,7 @@ int setup_left_redirect(char *name, int type)
     return fd;
 }
 
-int prepare_redirect(command_t *head, char **type, char **name, size_t i)
+int prepare_redirect(Command *head, char **type, char **name, size_t i)
 {
     *type = lvec_remove(head->av, i);
     if (lvec_size(head->av) <= i)
@@ -57,7 +57,7 @@ int prepare_redirect(command_t *head, char **type, char **name, size_t i)
     return 0;
 }
 
-int check_redirects(command_t *head, command_t *last)
+int check_redirects(Command *head, Command *last)
 {
     int i;
     int r;
@@ -79,10 +79,10 @@ int check_redirects(command_t *head, command_t *last)
     return 0;
 }
 
-int set_redirects(shell_t *shell)
+int set_redirects(Shell *shell)
 {
-    command_t *head;
-    command_t *last;
+    Command *head;
+    Command *last;
 
     last = NULL;
     head = shell->commands;

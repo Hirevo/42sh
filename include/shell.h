@@ -31,18 +31,16 @@ DEF_RESULT(CharPtrPtr, char **, char *);
 DEF_OPTION(SizeT, size_t);
 DEF_RESULT(SizeT, size_t, char *);
 
+DEF_OPTION(Int, int);
+DEF_RESULT(Int, int, char *);
+
 #define RC_FILE ".42shrc"
 #define HIST_FILE ".42sh_history"
 #define ALIAS_FILE ".42sh_alias"
 
 extern char **environ;
 
-typedef struct {
-    bool ok;
-    int code;
-} exec_status_t;
-
-typedef struct command_s {
+typedef struct Command {
     vec_t *av;
     char link;
     char *r_name;
@@ -50,25 +48,25 @@ typedef struct command_s {
     char *l_name;
     char *l_type;
     int count;
-    struct command_s *prev;
-    struct command_s *next;
-} command_t;
+    struct Command *prev;
+    struct Command *next;
+} Command;
 
 typedef struct {
     char *alias;
     char *command;
-} alias_t;
+} Alias;
 
 typedef struct {
     int idx;
     char **list;
-} subst_t;
+} Subst;
 
 typedef struct {
     vec_t *arr;
     long cur;
     char *cur_line;
-} hist_ctrl_t;
+} History;
 
 typedef struct {
     struct termios oterm;
@@ -84,14 +82,14 @@ typedef struct {
     char *left;
     char *right;
     int cur;
-} window_t;
+} Window;
 
 typedef struct {
     char *rc_file;
     char *alias_file;
     char *history_file;
     char *prompt;
-} config_t;
+} Config;
 
 /*
 ** This is the main structure that binds the shell together.
@@ -117,7 +115,7 @@ typedef struct {
 ** subst: used for alias processing, avoids alias loops (used by `alias`).
 ** hist: history management (for prompt arrow keys, globbing and `history`).
 ** commands: current command list to execute.
-** cur: currently processed command (points into `shell_t::commands`).
+** cur: currently processed command (points into `Shell::commands`).
 ** w: interactive terminal data structure (for the interactive prompt)
 ** config: a future potential configuration struct.
 */
@@ -136,68 +134,68 @@ typedef struct {
     hmap_t *vars;
     hmap_t *aliases;
     hmap_t *builtins;
-    subst_t subst;
-    hist_ctrl_t hist;
-    command_t *commands;
-    command_t *cur;
-    window_t w;
-    config_t config;
-} shell_t;
+    Subst subst;
+    History hist;
+    Command *commands;
+    Command *cur;
+    Window w;
+    Config config;
+} Shell;
 
 unsigned int count_args(char *);
 int get_next_arg(char *, char **, int);
 char **bufferize(char *, int);
 char *cat_path(char **, char *, int);
 void exec_process(vec_t *);
-unsigned int exec_command(char **, shell_t *);
-unsigned int exec_line(shell_t *, unsigned int);
-void parse_rc(shell_t *);
+unsigned int exec_command(char **, Shell *);
+unsigned int exec_line(Shell *, unsigned int);
+void parse_rc(Shell *);
 int count_entries(char *);
 int get_next_entry(char *, char **, int);
 char **init_path(char *);
 char **set_default_path(void);
 int disp_env(void);
 int move_dir(vec_t *);
-unsigned int exec_action(shell_t *, unsigned int);
-unsigned int process_command(shell_t *, int);
+unsigned int exec_action(Shell *, unsigned int);
+unsigned int process_command(Shell *, int);
 int is_char_alpha(char *);
 int set_env(char *, char *);
 int unset_env(vec_t *);
-void free_shell(shell_t *);
-void free_shell2(shell_t *);
-void free_commands(shell_t *);
+void free_shell(Shell *);
+void free_shell2(Shell *);
+void free_commands(Shell *);
 int my_print_err(char *);
 int my_print_ret(char *, int);
 int is_path(char *);
 int is_valid_path(char *);
 void diagnose_status(unsigned int);
-int check_wave(shell_t *);
-void add_hist(shell_t *);
-void my_print_command(shell_t *);
+int check_wave(Shell *);
+void add_hist(Shell *);
+void my_print_command(Shell *);
 char *detect_home(char *, char *);
 char *get_current(char *, char *);
 int indexof_builtin(char *);
-exec_status_t exec_builtins(shell_t *, vec_t *);
+OPTION(Int) exec_builtins(Shell *, vec_t *);
 unsigned int get_unsigned_int(char *);
 int is_line_empty(char *);
-void init_shell(shell_t *);
+void init_shell(Shell *);
 int my_strlen_spe(char *, char);
-void init_aliases(shell_t *);
-void set_alias(shell_t *, char *);
-void free_alias(shell_t *);
-void free_hist(shell_t *);
-int disp_alias(shell_t *, char *);
-int disp_all_alias(shell_t *);
-int add_alias(shell_t *, char *, char *);
-void save_alias(shell_t *);
+void init_aliases(Shell *);
+void set_alias(Shell *, char *);
+void free_alias(Shell *);
+void free_hist(Shell *);
+int disp_alias(Shell *, char *);
+int disp_all_alias(Shell *);
+int add_alias(Shell *, char *, char *);
+void save_alias(Shell *);
 void my_print_fd(char *, int);
-int set_commands(shell_t *);
-int check_access(char **, shell_t *);
+int set_commands(Shell *);
+int check_access(char **, Shell *);
 int check_env_error(char *, char *);
-int check_exit(shell_t *, vec_t *);
+int check_exit(Shell *, vec_t *);
 int compare_stats(struct stat *);
-void check_exec(shell_t *, int, int *);
-void exec_piped_command(char *, command_t *, int[2], shell_t *);
+void check_exec(Shell *, int, int *);
+void exec_piped_command(char *, Command *, int[2], Shell *);
 char *format_arg(char *);
 
 void putstr(const char *fmt, ...);
@@ -210,54 +208,52 @@ char *pretty_path(const char *path);
 ** alias/alias.c
 */
 char *construct_alias(char **);
-char *get_alias_cmd(shell_t *, char *);
+char *get_alias_cmd(Shell *, char *);
 
 /*
 ** alias/edit.c
 */
-int parse_alias(shell_t *);
+int parse_alias(Shell *);
 
 /*
 ** alias/unalias.c
 */
-int unalias(shell_t *, vec_t *);
+int unalias(Shell *, vec_t *);
 
 /*
 ** alias/loop.c
 */
-void free_subst(shell_t *);
-int detect_loop(shell_t *, char *, int);
+void free_subst(Shell *);
+int detect_loop(Shell *, char *, int);
 
 /*
 ** comment.c
 */
-
-int clear_comment(shell_t *);
+int clear_comment(Shell *);
 
 /*
 ** config.c
 */
-
-int config_http(shell_t *, t_config *);
+int config_http(Shell *, t_config *);
 
 /*
 ** history.c
 */
-void save_history(shell_t *);
-int disp_hist(shell_t *, vec_t *);
-void add_hist_elem(shell_t *, char *);
-void init_history(shell_t *);
+void save_history(Shell *);
+int disp_hist(Shell *, vec_t *);
+void add_hist_elem(Shell *, char *);
+void init_history(Shell *);
 void skip_string(char *, int *);
 
 /*
 ** history2.c
 */
-int subst_history(shell_t *, int);
+int subst_history(Shell *, int);
 
 /*
 ** magic/magic.c
 */
-int magic(shell_t *);
+int magic(Shell *);
 
 /*
 ** magic/construct.c
@@ -274,8 +270,8 @@ char *sanitize_double_quotes(char *, bool);
 /*
 ** exec/exec2.c
 */
-exec_status_t exec_redirected_builtins(shell_t *, int[2]);
-void quick_exec(shell_t *, char *);
+OPTION(Int) exec_redirected_builtins(Shell *, int[2]);
+void quick_exec(Shell *, char *);
 
 /*
 ** exec/close.c
@@ -285,19 +281,16 @@ int close_pipes(int *);
 /*
 ** dualcast.c
 */
-
-int launch_dualcast(shell_t *, vec_t *);
+int launch_dualcast(Shell *, vec_t *);
 
 /*
 ** dualcast/wait_connection.c
 */
-
 t_socket wait_connection(t_socket, fd_set *, char *);
 
 /*
 ** dualcast/init_dualcast.c
 */
-
 int init_dualcast(t_socket *);
 
 /*
@@ -308,17 +301,16 @@ char *get_password(void);
 /*
 ** launch_config.c
 */
-
-int launch_config(shell_t *);
+int launch_config(Shell *);
 
 /*
 ** redirects.c
 */
-int setup_right_redirect(command_t *, int *, int);
+int setup_right_redirect(Command *, int *, int);
 int setup_left_redirect(char *, int);
-int check_redirects(command_t *, command_t *);
-int prepare_redirect(command_t *, char **, char **, size_t);
-int set_redirects(shell_t *);
+int check_redirects(Command *, Command *);
+int prepare_redirect(Command *, char **, char **, size_t);
+int set_redirects(Shell *);
 
 /*
 ** buffer.c
@@ -334,42 +326,42 @@ char *my_epurcommand(char *);
 /*
 ** parse/error.c
 */
-int check_error(shell_t *);
+int check_error(Shell *);
 
 /*
 ** exec/pipe.c
 */
-exec_status_t exec_pipeline(shell_t *);
-int father_action(command_t **, int *, int *, shell_t *, pid_t);
-void exec_piped_child(int, command_t *, int[2], shell_t *);
+OPTION(Int) exec_pipeline(Shell *);
+int father_action(Command **, int *, int *, Shell *, pid_t);
+void exec_piped_child(int, Command *, int[2], Shell *);
 
 /*
 ** exec/tmp.c
 */
-void tmp_file(shell_t *);
+void tmp_file(Shell *);
 
 /*
 ** exec/setup.c
 */
-void init_redirect(command_t *, int *, int *, int *);
-void setup_exec(command_t *, int *, int);
-void skip_commands(command_t **, unsigned char);
-void set_fground(shell_t *);
+void init_redirect(Command *, int *, int *, int *);
+void setup_exec(Command *, int *, int);
+void skip_commands(Command **, unsigned char);
+void set_fground(Shell *);
 
 /*
 ** globbing/globbing.c
 */
-int parse_vars(shell_t *);
+int parse_vars(Shell *);
 
 /*
 ** globbing/.c
 */
-void replace_home(shell_t *);
+void replace_home(Shell *);
 
 /*
 ** globbing/stars.c
 */
-int parse_stars(shell_t *);
+int parse_stars(Shell *);
 
 /*
 ** echo.c
@@ -405,27 +397,26 @@ void insert_int(int **, int);
 /*
 ** print.c
 */
-int ret_error(shell_t *, char *);
+int ret_error(Shell *, char *);
 
 /*
 ** prompt.c
 */
 OPTION(CharPtr) get_hostname(void);
-void print_prompt(shell_t *);
-void get_prompt(shell_t *);
+void print_prompt(Shell *);
+void get_prompt(Shell *);
 
 /*
 ** vars.c
 */
-void init_vars(shell_t *);
+void init_vars(Shell *);
 
 /*
 ** init.c
 */
-
 void set_raw(struct termios *);
-void init(shell_t *);
-void init_prompt(shell_t *);
+void init(Shell *);
+void init_prompt(Shell *);
 
 /*
 ** misc.c
@@ -436,7 +427,6 @@ void handle_error(char *);
 /*
 ** prompt/get_cur_branch.c
 */
-
 char *show_cur_branch(void);
 
 /*
@@ -448,48 +438,46 @@ void delete_char(char **, int);
 /*
 ** prompt/mechanics/sauv.c
 */
-
-void sauv_prompt(shell_t *);
+void sauv_prompt(Shell *);
 
 /*
 ** prompt/mechanics/load_file.c
 */
-
 void free_tab(char **);
 char **load_file(int);
 
 /*
 ** prompt/mechanics/actions.c
 */
-void remove_char(shell_t *);
-void add_char(shell_t *, char);
-void move_cursor(shell_t *, char);
-void clear_term(shell_t *);
-void pos_cursor(shell_t *);
+void remove_char(Shell *);
+void add_char(Shell *, char);
+void move_cursor(Shell *, char);
+void clear_term(Shell *);
+void pos_cursor(Shell *);
 
 /*
 ** prompt/mechanics/cursor.c
 */
-void buffer_seq(shell_t *, char **, int *, char);
-void move_forw(shell_t *);
-void move_backw(shell_t *);
-void move_upw(shell_t *);
-void move_downw(shell_t *);
+void buffer_seq(Shell *, char **, int *, char);
+void move_forw(Shell *);
+void move_backw(Shell *);
+void move_upw(Shell *);
+void move_downw(Shell *);
 
 /*
 ** prompt/mechanics/advanced.c
 */
-void move_home(shell_t *);
-void move_end(shell_t *);
-void set_hist_line(shell_t *);
-void suppress_line(shell_t *);
+void move_home(Shell *);
+void move_end(Shell *);
+void set_hist_line(Shell *);
+void suppress_line(Shell *);
 
 /*
 ** prompt/mechanics/fct.c
 */
-void get_cur_fcts(void (*[6])(shell_t *));
+void get_cur_fcts(void (*[6])(Shell *));
 
 /*
 ** prompt/mechanics/prompt.c
 */
-void prompt_line(shell_t *);
+void prompt_line(Shell *);

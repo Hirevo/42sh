@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int get_len(shell_t *shell, int i)
+static int get_len(Shell *shell, int i)
 {
     long str = (long)(strstr(shell->line + i + 1, "`"));
 
@@ -44,7 +44,7 @@ static char *read_all(int fd)
     return ret;
 }
 
-static void exec_magic(shell_t *shell, char *line, int i, int len, bool quoted)
+static void exec_magic(Shell *shell, char *line, int i, int len, bool quoted)
 {
     char name[] = "/tmp/42sh-magic-XXXXXX";
     int save = dup(1);
@@ -78,7 +78,7 @@ static void exec_magic(shell_t *shell, char *line, int i, int len, bool quoted)
     shell->line = ret;
 }
 
-int magic(shell_t *shell)
+int magic(Shell *shell)
 {
     int i = -1;
     int len;

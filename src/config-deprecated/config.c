@@ -67,7 +67,7 @@ static int core(t_socket sock, t_config *config, int actual)
     return 0;
 }
 
-int config_http(shell_t *shell, t_config *config)
+int config_http(Shell *shell, t_config *config)
 {
     int port;
     t_socket serv;

@@ -48,26 +48,26 @@ void exec_process(vec_t *args)
     exit(1);
 }
 
-unsigned int exec_action(shell_t *shell, unsigned int args)
+unsigned int exec_action(Shell *shell, unsigned int args)
 {
-    exec_status_t status = exec_pipeline(shell);
+    OPTION(Int) status = exec_pipeline(shell);
 
     (void)(args);
     if (shell->is_done) {
         free_shell(shell);
-        exit(status.code);
+        exit(OPT_UNWRAP_OR(status, 1));
     }
     for (size_t i = 0; shell->final[i]; i++)
         free(shell->final[i]);
     free(shell->final);
     free_commands(shell);
     free(shell->line);
-    return status.code;
+    return OPT_UNWRAP_OR(status, 1);
 }
 
-int format_commands(shell_t *shell)
+int format_commands(Shell *shell)
 {
-    for (command_t *head = shell->commands; head; head = head->next) {
+    for (Command *head = shell->commands; head; head = head->next) {
         for (size_t i = 0; i < lvec_size(head->av); i++) {
             lvec_set(head->av, i, format_arg(lvec_at(head->av, i)));
             if (lvec_at(head->av, i) == NULL)
@@ -77,13 +77,13 @@ int format_commands(shell_t *shell)
     return 0;
 }
 
-static int set_error(shell_t *shell, int ret)
+static int set_error(Shell *shell, int ret)
 {
     shell->exit_code = ret;
     return ret;
 }
 
-unsigned int exec_line(shell_t *shell, unsigned int args)
+unsigned int exec_line(Shell *shell, unsigned int args)
 {
     if (subst_history(shell, args) == -1 || parse_alias(shell) == -1 ||
         parse_vars(shell) == -1 || magic(shell) == -1 ||

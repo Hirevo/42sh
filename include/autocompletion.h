@@ -17,4 +17,4 @@ typedef struct {
 
 DEF_OPTION(Token, Token);
 
-void autocomplete(shell_t *shell);
+void autocomplete(Shell *shell);

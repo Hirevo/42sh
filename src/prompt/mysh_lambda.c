@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void mysh_lambda(shell_t *shell)
+void mysh_lambda(Shell *shell)
 {
     char *git = 0;
 

@@ -10,9 +10,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int check_error(shell_t *shell)
+int check_error(Shell *shell)
 {
-    for (command_t *head = shell->commands; head; head = head->next) {
+    for (Command *head = shell->commands; head; head = head->next) {
         if ((lvec_front(head->av) == NULL && head->next) ||
             ((head->link == '|' || head->link == 'e' || head->link == 'o') &&
             !head->next)) {

@@ -11,7 +11,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void buffer_seq(shell_t *shell, char **str, int *dir, char c)
+void buffer_seq(Shell *shell, char **str, int *dir, char c)
 {
     *str = NULL;
     *dir = -1;
@@ -41,7 +41,7 @@ void buffer_seq(shell_t *shell, char **str, int *dir, char c)
     }
 }
 
-void move_forw(shell_t *shell)
+void move_forw(Shell *shell)
 {
     if (shell->line && shell->w.cur < ((int)strlen(shell->line))) {
         shell->w.cur += 1;
@@ -49,7 +49,7 @@ void move_forw(shell_t *shell)
     }
 }
 
-void move_backw(shell_t *shell)
+void move_backw(Shell *shell)
 {
     if (shell->w.cur) {
         shell->w.cur -= 1;
@@ -57,7 +57,7 @@ void move_backw(shell_t *shell)
     }
 }
 
-void move_upw(shell_t *shell)
+void move_upw(Shell *shell)
 {
     suppress_line(shell);
     if (shell->hist.cur == -1) {
@@ -77,7 +77,7 @@ void move_upw(shell_t *shell)
     }
 }
 
-void move_downw(shell_t *shell)
+void move_downw(Shell *shell)
 {
     if (shell->hist.cur == -1)
         return;

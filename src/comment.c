@@ -9,7 +9,7 @@
 #include "shell.h"
 #include <stdlib.h>
 
-int clear_comment(shell_t *shell)
+int clear_comment(Shell *shell)
 {
     bool quoted = false;
     char *tmp;

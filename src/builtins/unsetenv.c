@@ -8,7 +8,7 @@
 #include "my.h"
 #include "shell.h"
 
-int unsetenv_b(shell_t *shell, vec_t *args)
+int unsetenv_b(Shell *shell, vec_t *args)
 {
     (void)(shell);
     if (lvec_size(args) == 1)

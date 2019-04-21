@@ -76,7 +76,7 @@ void print_char(char *c, size_t *i)
         putchar(c[*i]);
 }
 
-int echo_b(shell_t *shell, vec_t *args)
+int echo_b(Shell *shell, vec_t *args)
 {
     (void)(shell);
     bool flag_n = (lvec_size(args) > 1 && lstr_equals(lvec_at(args, 1), "-n"));

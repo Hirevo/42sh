@@ -29,7 +29,7 @@ static int find_cmd(const char *path, char *str)
     return ret;
 }
 
-static int search(shell_t *shell, vec_t *args, size_t i)
+static int search(Shell *shell, vec_t *args, size_t i)
 {
     int ret = 1;
     char *str = 0;
@@ -48,7 +48,7 @@ static int search(shell_t *shell, vec_t *args, size_t i)
     return ret;
 }
 
-int where_b(shell_t *shell, vec_t *args)
+int where_b(Shell *shell, vec_t *args)
 {
     if (lvec_size(args) == 1) {
         dprintf(2, "where: too few arguments.\n");

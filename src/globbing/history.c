@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int insert_one_hist(shell_t *shell, int i, int n)
+static int insert_one_hist(Shell *shell, int i, int n)
 {
     int len = -1;
     char **last = lvec_back(shell->hist.arr);
@@ -36,7 +36,7 @@ static int insert_one_hist(shell_t *shell, int i, int n)
     return 0;
 }
 
-static int insert_full_hist(shell_t *shell, int i)
+static int insert_full_hist(Shell *shell, int i)
 {
     int len = 0;
     int l = -1;
@@ -61,7 +61,7 @@ static int insert_full_hist(shell_t *shell, int i)
     return 0;
 }
 
-static int insert_last_hist(shell_t *shell, int i)
+static int insert_last_hist(Shell *shell, int i)
 {
     int len = 0;
     int l = -1;
@@ -86,7 +86,7 @@ static int insert_last_hist(shell_t *shell, int i)
     return 0;
 }
 
-static void final_things(shell_t *shell, char *last, int save)
+static void final_things(Shell *shell, char *last, int save)
 {
     char *str;
     char **l = lvec_back(shell->hist.arr);
@@ -102,7 +102,7 @@ static void final_things(shell_t *shell, char *last, int save)
     free(str);
 }
 
-static int is_hist_sym(shell_t *shell, int i)
+static int is_hist_sym(Shell *shell, int i)
 {
     if (strncmp(shell->line + i, "!!", 2) == 0) {
         if (insert_full_hist(shell, i) == -1)
@@ -117,7 +117,7 @@ static int is_hist_sym(shell_t *shell, int i)
     return 0;
 }
 
-int subst_history(shell_t *shell, int save)
+int subst_history(Shell *shell, int save)
 {
     int i = -1;
     char *last = shell->line;

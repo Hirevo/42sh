@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-int env_b(shell_t *shell, vec_t *args)
+int env_b(Shell *shell, vec_t *args)
 {
     (void)(shell);
     if (lvec_size(args) == 1) {

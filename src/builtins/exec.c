@@ -8,7 +8,7 @@
 #include "shell.h"
 #include <errno.h>
 
-int exec_b(shell_t *shell, vec_t *args)
+int exec_b(Shell *shell, vec_t *args)
 {
     (void)(shell);
     free(lvec_pop_front(args));

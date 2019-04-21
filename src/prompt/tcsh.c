@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void tcsh_prompt(shell_t *shell)
+void tcsh_prompt(Shell *shell)
 {
     OPTION(CharPtr) hostname = get_hostname();
 

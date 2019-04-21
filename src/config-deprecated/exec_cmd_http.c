@@ -26,7 +26,7 @@ char *get_cmd_exc(char *cmd_path, char *cmd)
 
 static int execute_http(t_socket client, char *cmd)
 {
-    shell_t shell;
+    Shell shell;
     int sauv;
     int sauv2;
 

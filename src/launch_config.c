@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int launch_config(shell_t *shell)
+int launch_config(Shell *shell)
 {
     int ret;
     char *prompt;

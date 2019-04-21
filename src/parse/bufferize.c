@@ -145,7 +145,7 @@ int count_link(char **final)
     return i;
 }
 
-void prepare_link(shell_t *shell, command_t *elem, int i, int last)
+void prepare_link(Shell *shell, Command *elem, int i, int last)
 {
     if (shell->final[i] == NULL)
         elem->link = '0';
@@ -166,10 +166,10 @@ void prepare_link(shell_t *shell, command_t *elem, int i, int last)
     elem->count = -1;
 }
 
-int set_commands(shell_t *shell)
+int set_commands(Shell *shell)
 {
-    command_t *elem;
-    command_t *head;
+    Command *elem;
+    Command *head;
     int i;
     int last;
 

@@ -9,12 +9,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-void remove_alias(shell_t *shell, char *alias)
+void remove_alias(Shell *shell, char *alias)
 {
     free(lhmap_remove(shell->aliases, alias));
 }
 
-int unalias(shell_t *shell, vec_t *aliases)
+int unalias(Shell *shell, vec_t *aliases)
 {
     if (shell->aliases == NULL)
         return 0;

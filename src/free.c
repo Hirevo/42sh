@@ -21,14 +21,14 @@ void free_hist_entry(void *ctx, char **elem, size_t idx)
     free(elem);
 }
 
-void free_hist(shell_t *shell)
+void free_hist(Shell *shell)
 {
     lvec_for_each(shell->hist.arr,
         (void (*)(void *, void *, size_t))(free_hist_entry), 0);
     lvec_drop(shell->hist.arr);
 }
 
-void free_alias_entry(void *ctx, alias_t *elem, size_t idx)
+void free_alias_entry(void *ctx, Alias *elem, size_t idx)
 {
     (void)(ctx);
     (void)(idx);
@@ -37,20 +37,20 @@ void free_alias_entry(void *ctx, alias_t *elem, size_t idx)
     free(elem);
 }
 
-void free_alias(shell_t *shell)
+void free_alias(Shell *shell)
 {
     lhmap_clear(shell->aliases, true);
     lhmap_drop(shell->aliases);
 }
 
-void free_shell(shell_t *shell)
+void free_shell(Shell *shell)
 {
     save_history(shell);
     save_alias(shell);
     free_shell2(shell);
 }
 
-void free_shell2(shell_t *shell)
+void free_shell2(Shell *shell)
 {
     int i;
 
@@ -67,10 +67,10 @@ void free_shell2(shell_t *shell)
         printf("exit\n");
 }
 
-void free_commands(shell_t *shell)
+void free_commands(Shell *shell)
 {
-    command_t *head;
-    command_t *last;
+    Command *head;
+    Command *last;
 
     head = shell->commands;
     while (head) {

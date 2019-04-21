@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-int exit_b(shell_t *shell, vec_t *args)
+int exit_b(Shell *shell, vec_t *args)
 {
     if (lvec_size(args) == 2) {
         char *arg = lvec_at(args, 1);

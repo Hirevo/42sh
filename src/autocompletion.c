@@ -47,7 +47,7 @@ static char *custom_dirname(char const *path)
         return strndup(path, found - path);
 }
 
-static vec_t *find_path_matches(shell_t *shell, char *token)
+static vec_t *find_path_matches(Shell *shell, char *token)
 {
     (void)(shell);
     vec_t *output = lvec_new();
@@ -92,7 +92,7 @@ static vec_t *find_path_matches(shell_t *shell, char *token)
     return output;
 }
 
-static vec_t *find_commands_matches(shell_t *shell, char *token)
+static vec_t *find_commands_matches(Shell *shell, char *token)
 {
     if (lstr_includes(token, "/"))
         return find_path_matches(shell, token);
@@ -162,7 +162,7 @@ end:
     return output;
 }
 
-static vec_t *find_matches(shell_t *shell, Token token)
+static vec_t *find_matches(Shell *shell, Token token)
 {
     if (token.is_command) {
         return find_commands_matches(shell, token.token);
@@ -171,7 +171,7 @@ static vec_t *find_matches(shell_t *shell, Token token)
     }
 }
 
-static void complete_forward(shell_t *shell, Token token, char *match)
+static void complete_forward(Shell *shell, Token token, char *match)
 {
     char *sanitized_token = sanitize_single_arg(token.token, false);
     if (sanitized_token == 0)
@@ -249,7 +249,7 @@ static void *prefix_match(void *ctx, void *acc, void *elem, size_t idx)
     }
 }
 
-static void complete_choices(shell_t *shell, Token token, vec_t *matches)
+static void complete_choices(Shell *shell, Token token, vec_t *matches)
 {
     char *prefix = lvec_reduce(matches, prefix_match, 0, 0);
     complete_forward(shell, token, prefix);
@@ -313,7 +313,7 @@ OPTION(Token) extract_token(char *line, size_t cur)
     return SOME(Token, ret);
 }
 
-void autocomplete(shell_t *shell)
+void autocomplete(Shell *shell)
 {
     OPTION(Token) opt_token = extract_token(shell->line, shell->w.cur);
     if (IS_NONE(opt_token))

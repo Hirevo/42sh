@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void minimalist_prompt(shell_t *shell)
+void minimalist_prompt(Shell *shell)
 {
     char *user;
 

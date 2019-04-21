@@ -15,7 +15,7 @@ static void exc_cmd(t_socket sock, char **str, int *nb_char)
 {
     int sauv;
     int sauv2;
-    shell_t shell;
+    Shell shell;
 
     (void)nb_char;
     init_shell(&shell);

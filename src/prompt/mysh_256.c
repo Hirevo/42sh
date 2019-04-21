@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void mysh_256(shell_t *shell)
+void mysh_256(Shell *shell)
 {
     char *git = 0;
 

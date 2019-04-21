@@ -43,7 +43,7 @@ void diagnose_status(unsigned int status)
     dprintf(2, (WCOREDUMP(status)) ? " (core dumped)\n" : "\n");
 }
 
-void execute(shell_t *shell)
+void execute(Shell *shell)
 {
     char *str;
 
@@ -65,7 +65,7 @@ void execute(shell_t *shell)
     }
 }
 
-static int start_standard_shell(shell_t *shell)
+static int start_standard_shell(Shell *shell)
 {
     signal(SIGINT, SIG_IGN);
     signal(SIGTTOU, SIG_IGN);
@@ -85,7 +85,7 @@ static int start_standard_shell(shell_t *shell)
     return shell->exit_code;
 }
 
-static int treat_arg(shell_t *shell, int ac, char **av)
+static int treat_arg(Shell *shell, int ac, char **av)
 {
     if (lstr_equals(av[1], "-c")) {
         if (ac >= 3) {
@@ -119,7 +119,7 @@ void increase_shell_level(void)
 
 int main(int ac, char **av)
 {
-    shell_t shell;
+    Shell shell;
 
     setenv("SHELL", av[0], 1);
     increase_shell_level();

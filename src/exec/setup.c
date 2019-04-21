@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void init_redirect(command_t *head, int *r, int *l, int *i)
+void init_redirect(Command *head, int *r, int *l, int *i)
 {
     *r = 0;
     *l = 0;
@@ -20,7 +20,7 @@ void init_redirect(command_t *head, int *r, int *l, int *i)
     head->l_type = NULL;
 }
 
-void setup_exec(command_t *head, int *fds, int ret)
+void setup_exec(Command *head, int *fds, int ret)
 {
     dup2(ret, 0);
     if (ret != 0)
@@ -32,7 +32,7 @@ void setup_exec(command_t *head, int *fds, int ret)
             exit(1);
 }
 
-void skip_commands(command_t **head, unsigned char ret)
+void skip_commands(Command **head, unsigned char ret)
 {
     char last;
 
@@ -50,7 +50,7 @@ void skip_commands(command_t **head, unsigned char ret)
     }
 }
 
-void set_fground(shell_t *shell)
+void set_fground(Shell *shell)
 {
     setpgid(0, shell->pgid);
     if (shell->tty && shell->pgid == 0)

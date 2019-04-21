@@ -8,7 +8,7 @@
 #include "my.h"
 #include "shell.h"
 
-int setenv_b(shell_t *shell, vec_t *args)
+int setenv_b(Shell *shell, vec_t *args)
 {
     size_t count = lvec_size(args);
     int r = 0;

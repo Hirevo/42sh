@@ -38,7 +38,7 @@ void write_alias(int *fd, char *name, char *command)
     dprintf(*fd, "alias %s='%s'\n", name, command);
 }
 
-void save_alias(shell_t *shell)
+void save_alias(Shell *shell)
 {
     char *home = getenv("HOME");
 
@@ -56,9 +56,9 @@ void save_alias(shell_t *shell)
     close(fd);
 }
 
-void set_alias(shell_t *shell, char *path)
+void set_alias(Shell *shell, char *path)
 {
-    alias_t alias;
+    Alias alias;
     int i = -1;
     int obj = my_strlen_spe(path + 6, '=');
 
@@ -83,7 +83,7 @@ void set_alias(shell_t *shell, char *path)
     free(alias.command);
 }
 
-void init_aliases(shell_t *shell)
+void init_aliases(Shell *shell)
 {
     char *home = getenv("HOME");
 

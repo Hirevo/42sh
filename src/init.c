@@ -29,7 +29,7 @@ void set_raw(struct termios *oterm)
         handle_error("tcsetattr");
 }
 
-void init_builtins(shell_t *shell)
+void init_builtins(Shell *shell)
 {
     shell->builtins = lhmap_with_capacity(19);
     lhmap_set(shell->builtins, "alias", alias_b);
@@ -53,7 +53,7 @@ void init_builtins(shell_t *shell)
     lhmap_set(shell->builtins, "which", which_b);
 }
 
-void init_vars(shell_t *shell)
+void init_vars(Shell *shell)
 {
     char *str = 0;
 
@@ -75,7 +75,7 @@ void init_vars(shell_t *shell)
     lhmap_set(shell->vars, "sid", str);
 }
 
-void init_shell(shell_t *shell)
+void init_shell(Shell *shell)
 {
     srand(getpid() * time(NULL));
     shell->exit_code = 0;
@@ -90,7 +90,7 @@ void init_shell(shell_t *shell)
     init(shell);
 }
 
-void init(shell_t *shell)
+void init(Shell *shell)
 {
     shell->tty = isatty(0);
     if (shell->tty) {
@@ -118,7 +118,7 @@ void init(shell_t *shell)
     }
 }
 
-void init_prompt(shell_t *shell)
+void init_prompt(Shell *shell)
 {
     shell->hist.cur = -1;
     shell->hist.cur_line = NULL;

@@ -11,7 +11,7 @@
 #include <string.h>
 #include <unistd.h>
 
-void remove_char(shell_t *shell)
+void remove_char(Shell *shell)
 {
     if (!shell->line || !strlen(shell->line) || !shell->w.cur)
         return;
@@ -28,7 +28,7 @@ void remove_char(shell_t *shell)
     }
 }
 
-void add_char(shell_t *shell, char c)
+void add_char(Shell *shell, char c)
 {
     insert_char_cur(&shell->line, c, shell->w.cur);
     if (shell->tty) {
@@ -39,7 +39,7 @@ void add_char(shell_t *shell, char c)
         shell->w.cur += 1;
 }
 
-void pos_cursor(shell_t *shell)
+void pos_cursor(Shell *shell)
 {
     int c;
 
@@ -50,11 +50,11 @@ void pos_cursor(shell_t *shell)
         my_putstr(shell->w.backw);
 }
 
-void move_cursor(shell_t *shell, char c)
+void move_cursor(Shell *shell, char c)
 {
     char *str;
     int dir;
-    void (*cur_fct[6])(shell_t *);
+    void (*cur_fct[6])(Shell *);
 
     buffer_seq(shell, &str, &dir, c);
     if (dir == -1) {
@@ -66,7 +66,7 @@ void move_cursor(shell_t *shell, char c)
     free(str);
 }
 
-void clear_term(shell_t *shell)
+void clear_term(Shell *shell)
 {
     if (shell->tty) {
         my_putstr(shell->w.clear);

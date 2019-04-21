@@ -61,7 +61,7 @@ char **init_path(char *str)
     return path;
 }
 
-void set_path(shell_t *shell, char *path)
+void set_path(Shell *shell, char *path)
 {
     int i = -1;
     int obj = my_strlen_spe(path, '=');
@@ -89,7 +89,7 @@ void set_path(shell_t *shell, char *path)
     free(entry);
 }
 
-void parse_rc(shell_t *shell)
+void parse_rc(Shell *shell)
 {
     char *home = getenv("HOME");
     if (home == NULL)

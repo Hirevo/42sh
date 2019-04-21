@@ -12,14 +12,14 @@
 #include <string.h>
 #include <unistd.h>
 
-int add_alias(shell_t *shell, char *alias, char *command)
+int add_alias(Shell *shell, char *alias, char *command)
 {
     free(lhmap_get(shell->aliases, alias));
     lhmap_set(shell->aliases, alias, strdup(command));
     return 0;
 }
 
-int disp_all_alias(shell_t *shell)
+int disp_all_alias(Shell *shell)
 {
     vec_t *keys;
     vec_t *vals;
@@ -36,7 +36,7 @@ int disp_all_alias(shell_t *shell)
     return 0;
 }
 
-int disp_alias(shell_t *shell, char *alias)
+int disp_alias(Shell *shell, char *alias)
 {
     char *found;
 
@@ -66,7 +66,7 @@ char *construct_alias(char **tab)
     return ret;
 }
 
-char *get_alias_cmd(shell_t *shell, char *name)
+char *get_alias_cmd(Shell *shell, char *name)
 {
     char *found;
 

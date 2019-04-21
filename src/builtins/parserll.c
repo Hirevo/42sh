@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int parserll_b(shell_t *shell, int args)
+int parserll_b(Shell *shell, int args)
 {
     (void)(shell);
     (void)(args);

@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void move_end(shell_t *shell)
+void move_end(Shell *shell)
 {
     int len;
 
@@ -22,7 +22,7 @@ void move_end(shell_t *shell)
     }
 }
 
-void move_home(shell_t *shell)
+void move_home(Shell *shell)
 {
     while (shell->w.cur > 0) {
         my_putstr(shell->w.backw);
@@ -30,7 +30,7 @@ void move_home(shell_t *shell)
     }
 }
 
-void set_hist_line(shell_t *shell)
+void set_hist_line(Shell *shell)
 {
     free(shell->line);
     if (shell->hist.cur_line)
@@ -44,7 +44,7 @@ void set_hist_line(shell_t *shell)
     shell->hist.cur = -1;
 }
 
-void suppress_line(shell_t *shell)
+void suppress_line(Shell *shell)
 {
     int len;
 

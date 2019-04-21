@@ -30,7 +30,7 @@ static int find_first_cmd(const char *path, char *str)
     return 0;
 }
 
-static int search(shell_t *shell, vec_t *args, size_t i)
+static int search(Shell *shell, vec_t *args, size_t i)
 {
     char *str;
     int ret = 1;
@@ -52,7 +52,7 @@ static int search(shell_t *shell, vec_t *args, size_t i)
     return ret;
 }
 
-int which_b(shell_t *shell, vec_t *args)
+int which_b(Shell *shell, vec_t *args)
 {
     if (lvec_size(args) == 1) {
         dprintf(2, "which: too few arguments.\n");

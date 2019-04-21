@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int insert_alias(shell_t *shell, alias_t *e, int *len, int i)
+int insert_alias(Shell *shell, Alias *e, int *len, int i)
 {
     char *replace;
 
@@ -34,11 +34,11 @@ static int replace(char *last, int len[2], char *line, int *i)
     return 0;
 }
 
-int check_alias(shell_t *shell, int *i, char *last)
+int check_alias(Shell *shell, int *i, char *last)
 {
     int len[2];
     char *line;
-    alias_t found;
+    Alias found;
 
     len[0] = strcspn(shell->line + *i, " \t><;|");
     line = strndup(shell->line + *i, len[0]);
@@ -62,13 +62,13 @@ int check_alias(shell_t *shell, int *i, char *last)
     return replace(last, len, line, i);
 }
 
-int parse_alias(shell_t *shell)
+int parse_alias(Shell *shell)
 {
     int i = -1;
     char *last = 0;
     int c = 1;
 
-    memset(&shell->subst, 0, sizeof(subst_t));
+    memset(&shell->subst, 0, sizeof(Subst));
     while (shell->line[++i])
         if (shell->line[i] == '\\')
             i += !!(shell->line[i + 1]);

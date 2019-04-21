@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void turbosh_prompt(shell_t *shell)
+void turbosh_prompt(Shell *shell)
 {
     char *str;
 

@@ -72,7 +72,7 @@ int move_dir(vec_t *args)
     return 0;
 }
 
-int cd_b(shell_t *shell, vec_t *args)
+int cd_b(Shell *shell, vec_t *args)
 {
     int i = move_dir(args);
     char *str = get_alias_cmd(shell, "cwdcmd");

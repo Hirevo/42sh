@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static void show_prompt(shell_t *shell)
+static void show_prompt(Shell *shell)
 {
     printf("\e[0m 0: TurboSh        : ");
     turbosh_prompt(shell);
@@ -40,7 +40,7 @@ static void show_prompt(shell_t *shell)
     printf("\n\e[0m");
 }
 
-int prompt_b(shell_t *shell, int args)
+int prompt_b(Shell *shell, int args)
 {
     (void)(args);
     show_prompt(shell);

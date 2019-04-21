@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void tmp_file(shell_t *shell)
+void tmp_file(Shell *shell)
 {
     char name[] = "/tmp/42sh-edit-XXXXXX";
     char *editor = getenv("EDITOR");

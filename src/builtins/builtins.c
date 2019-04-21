@@ -18,7 +18,7 @@ static void *render_key(void *ctx, void *acc, void *elem, size_t idx)
     }
 }
 
-int builtins_b(shell_t *shell, vec_t *args)
+int builtins_b(Shell *shell, vec_t *args)
 {
     (void)(args);
     vec_t *keys = lhmap_keys(shell->builtins);

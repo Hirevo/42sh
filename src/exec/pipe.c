@@ -16,17 +16,17 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-exec_status_t exec_branch(
-    shell_t *shell, command_t **head, int fds[2], int *fd_carry)
+OPTION(Int)
+exec_branch(Shell *shell, Command **head, int fds[2], int *fd_carry)
 {
     const bool to_fork = is_to_fork((*head)->link) || (*head)->next == NULL;
 
     if (to_fork == true) {
-        const exec_status_t status = exec_redirected_builtins(shell, fds);
-        if (status.ok == true) {
+        const OPTION(Int) status = exec_redirected_builtins(shell, fds);
+        if (IS_SOME(status)) {
             if (*fd_carry != 0)
                 close(*fd_carry);
-            skip_commands(head, status.code);
+            skip_commands(head, OPT_UNWRAP(status));
             if (*head)
                 (*head) = (*head)->next;
             return status;
@@ -37,10 +37,7 @@ exec_status_t exec_branch(
             setup_left_redirect((*head)->l_name, (*head)->l_type[1] == 0);
     pid_t pid = fork();
     if (pid == -1)
-        return (exec_status_t){
-            .ok = false,
-            .code = 1,
-        };
+        return NONE(Int);
 
     int code = 0;
     if (pid) {
@@ -48,33 +45,24 @@ exec_status_t exec_branch(
     } else {
         exec_piped_child(*fd_carry, *head, fds, shell);
     }
-    return (exec_status_t){
-        .ok = true,
-        .code = code,
-    };
+    return SOME(Int, code);
 }
 
-exec_status_t exec_pipeline(shell_t *shell)
+OPTION(Int) exec_pipeline(Shell *shell)
 {
     int fds[2];
-    command_t *head;
-    exec_status_t status;
-    int fd_carry;
+    Command *head = shell->commands;
+    OPTION(Int) status = NONE(Int);
+    int fd_carry = 0;
 
     shell->fds = NULL;
     shell->pgid = 0;
-    head = shell->commands;
-    fd_carry = 0;
     while (head) {
         shell->cur = head;
-        if (head->link == '|' && pipe(fds) == -1) {
-            return (exec_status_t){
-                .ok = false,
-                .code = (eputstr("can't create pipe.\n"), -1),
-            };
-        }
+        if (head->link == '|' && pipe(fds) == -1)
+            return eputstr("can't create pipe.\n"), NONE(Int);
         status = exec_branch(shell, &head, fds, &fd_carry);
-        if (status.ok == false)
+        if (IS_NONE(status))
             break;
     }
     if (shell->tty && tcsetpgrp(0, getpgid(getpid())) == -1)
@@ -82,10 +70,8 @@ exec_status_t exec_pipeline(shell_t *shell)
     return status;
 }
 
-void exec_piped_child(int ret, command_t *head, int *fds, shell_t *shell)
+void exec_piped_child(int ret, Command *head, int *fds, Shell *shell)
 {
-    exec_status_t status;
-
     signal(SIGINT, SIG_DFL);
     set_fground(shell);
     setup_exec(head, fds, ret);
@@ -98,15 +84,15 @@ void exec_piped_child(int ret, command_t *head, int *fds, shell_t *shell)
         exec_process(head->av);
         exit(1);
     }
-    status = exec_builtins(shell, head->av);
-    if (status.ok == false) {
+    OPTION(Int) status = exec_builtins(shell, head->av);
+    if (IS_NONE(status)) {
         exec_process(head->av);
         exit(1);
     }
-    exit(status.code);
+    exit(OPT_UNWRAP(status));
 }
 
-int get_return(shell_t *shell)
+int get_return(Shell *shell)
 {
     int i = -1;
     int r = 0;
@@ -128,8 +114,7 @@ int get_return(shell_t *shell)
     return final;
 }
 
-int father_action(
-    command_t **head, int *ret, int *fds, shell_t *shell, pid_t pid)
+int father_action(Command **head, int *ret, int *fds, Shell *shell, pid_t pid)
 {
     int r = 0;
 

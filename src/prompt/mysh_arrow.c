@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void mysh_arrow(shell_t *shell)
+void mysh_arrow(Shell *shell)
 {
     OPTION(CharPtr) git = OPT_FROM_NULLABLE(CharPtr, show_cur_branch());
 

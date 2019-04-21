@@ -23,7 +23,7 @@ OPTION(CharPtr) get_hostname(void)
     return OPT_FROM_NULLABLE(CharPtr, strdup(ret));
 }
 
-static void get_tab_prompt(void (*tab_prompt[12])(shell_t *))
+static void get_tab_prompt(void (*tab_prompt[12])(Shell *))
 {
     tab_prompt[0] = &turbosh_prompt;
     tab_prompt[1] = &bash_prompt;
@@ -39,9 +39,9 @@ static void get_tab_prompt(void (*tab_prompt[12])(shell_t *))
     tab_prompt[11] = &ps1_prompt;
 }
 
-void print_prompt(shell_t *shell)
+void print_prompt(Shell *shell)
 {
-    void (*tab_prompt[12])(shell_t *);
+    void (*tab_prompt[12])(Shell *);
 
     get_tab_prompt(tab_prompt);
     if (shell->prompt >= 0 && shell->prompt < 12)
@@ -50,7 +50,7 @@ void print_prompt(shell_t *shell)
         tab_prompt[0](shell);
 }
 
-void get_prompt(shell_t *shell)
+void get_prompt(Shell *shell)
 {
     char *str = getenv("PROMPT");
 

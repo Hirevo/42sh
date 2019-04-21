@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-int history_b(shell_t *shell, vec_t *args)
+int history_b(Shell *shell, vec_t *args)
 {
     (void)(args);
     for (size_t i = 1; i < lvec_size(shell->hist.arr); i++) {

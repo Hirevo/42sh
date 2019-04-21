@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void oh_my_zsh(shell_t *shell)
+void oh_my_zsh(Shell *shell)
 {
     char *git;
 

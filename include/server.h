@@ -13,11 +13,13 @@
 #include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
+
 #define INVALID_SOCKET -1
 #define SOCKET_ERROR -1
 #define DUALCAST_PORT 33000
 #define SIZE_SOCK 4096
 #define closesocket(s) close(s)
+
 typedef int t_socket;
 typedef struct sockaddr_in t_sockaddr_in;
 typedef struct sockaddr t_sockaddr;
@@ -83,7 +85,6 @@ Access-Control-Allow-Origin: *\r\n"
 /*
 ** add_env_http.c
 */
-
 void add_env_http(t_socket, t_config *, char **);
 void del_env_http(t_socket, t_config *, char **);
 void update_env_http(t_socket, t_config *, char **);
@@ -91,14 +92,12 @@ void update_env_http(t_socket, t_config *, char **);
 /*
 ** char_double.c
 */
-
 char **add_to_chardouble(char *, char **);
 char **del_to_chardouble(char *, char **);
 
 /*
 ** client.c
 */
-
 void remove_client(t_socket *, int, int *);
 int new_client(t_socket *, int *, fd_set *, t_socket);
 int client_talk(t_socket *, int *, fd_set *, t_config *);
@@ -106,68 +105,57 @@ int client_talk(t_socket *, int *, fd_set *, t_config *);
 /*
 ** com_serv.c
 */
-
 int read_client(t_socket, char *);
 void write_client(t_socket, char *);
 
 /*
 ** decode.c
 */
-
 int urldecode(char *, char *);
 
 /*
 ** exec_cmd_http.c
 */
-
 void exec_cmd_http(t_socket, t_config *, char **);
 
 /*
 ** exit.c
 */
-
 void exit_config(t_socket, t_config *, char **);
 
 /*
 ** init_connection.c
 */
-
 int init_connection(t_socket *);
 
 /*
 ** indexof.c
 */
-
 int indexof(char **, char *);
 
 /*
 ** int_toc.c
 */
-
 char *int_toc(int);
 
 /*
 ** get_env.c
 */
-
 char *get_env(char *);
 
 /*
 ** get_info.c
 */
-
 t_info_pc *get_info(void);
 
 /*
 ** get_file_http.c
 */
-
 char *get_file_http(char *);
 
 /*
 ** get_request.c
 */
-
 int nb_request(void);
 int indexof_request(char *);
 void get_tab_request(void (**)(t_socket, t_config *, char **));
@@ -175,116 +163,97 @@ void get_tab_request(void (**)(t_socket, t_config *, char **));
 /*
 ** my_split.c
 */
-
 char **my_split(char *, char *);
 
 /*
 ** my_split_char.c
 */
-
 char **my_split_char(char *, char);
 
 /*
 ** my_split_mulchar.c
 */
-
 char **my_split_mulchar(char *, char *);
 
 /*
 ** navigator.c
 */
-
 char *find_navigator(char **);
 int launch_nav(char *, int, char **);
 
 /*
 ** prompt.c
 */
-
 void send_prompt_sel(t_socket, t_config *, char **);
 void update_prompt_sel(t_socket, t_config *, char **);
 
 /*
 ** response.c
 */
-
 int response(t_socket, char *, t_config *);
 
 /*
 ** send_env.c
 */
-
 void send_env(t_socket, t_config *, char **);
 
 /*
 ** send_info.c
 */
-
 void send_info(t_socket, t_config *, char **);
 
 /*
 ** send_file_http.c
 */
-
 void send_file_http(t_socket, char *);
 
 /*
 ** send_mime.c
 */
-
 void send_mime(t_socket, char *);
 
 /*
 ** DUALCAST
 */
-
 /*
 ** connect.c
 */
-
 t_socket init_connect_dc(char *, t_client *);
 
 /*
 ** core_client.c
 */
-
 int core_client_dc(t_client *);
 
 /*
 ** core_server.c
 */
-
 int core_server_dc(t_socket, t_socket, fd_set *);
 
 /*
 ** com_sock.c
 */
-
 int read_socket(t_socket, char **);
 void write_socket(t_socket, char *);
 
 /*
 ** prompt_client.c
 */
-
 char *get_prompt_cli(t_client *);
 
 /*
 ** prompt_serv.c
 */
-
 void prompt_serv(t_socket, char, char **, int *);
 
 /*
 ** response_serv.c
 */
-
 int response_serv(t_socket, char *, char **, int *);
 
 /*
 ** termio.c
 */
-
 void reset_terminal_mode(struct termios *);
 void set_conio_terminal_mode(struct termios *);
 int kbhit(void);
@@ -293,7 +262,6 @@ int getch_c(void);
 /*
 ** term_emul.c
 */
-
 void del_last_char(int, char **, int *);
 void add_char_dc(char **, char, int *);
 void del_prompt(int);

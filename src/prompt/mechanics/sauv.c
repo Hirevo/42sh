@@ -33,7 +33,7 @@ static char **add_to_cdouble(char *str, char **list)
     return ret;
 }
 
-static void update_prompt(char ***file, shell_t *shell)
+static void update_prompt(char ***file, Shell *shell)
 {
     int stop = 0;
     char *add;
@@ -78,7 +78,7 @@ static void write_file(char **env)
     close(fd);
 }
 
-void sauv_prompt(shell_t *shell)
+void sauv_prompt(Shell *shell)
 {
     char *home = get_env("HOME");
     char *path = home ?  my_strcatdup(home, "/") : 0;

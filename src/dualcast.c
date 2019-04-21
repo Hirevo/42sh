@@ -51,7 +51,7 @@ static int launch_dc_client(char *addr)
     return 0;
 }
 
-int launch_dualcast(shell_t *shell, vec_t *args)
+int launch_dualcast(Shell *shell, vec_t *args)
 {
     (void)(shell);
     if (lvec_size(args) >= 2 && lstr_equals(lvec_at(args, 1), "start"))

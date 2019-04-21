@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int can_replace(shell_t *shell, char *line)
+static int can_replace(Shell *shell, char *line)
 {
     int i;
     char **ret;
@@ -37,7 +37,7 @@ static int can_replace(shell_t *shell, char *line)
     return 1;
 }
 
-void free_subst(shell_t *shell)
+void free_subst(Shell *shell)
 {
     int i;
 
@@ -47,7 +47,7 @@ void free_subst(shell_t *shell)
     free(shell->subst.list);
 }
 
-int detect_loop(shell_t *shell, char *line, int i)
+int detect_loop(Shell *shell, char *line, int i)
 {
     if (!can_replace(shell, line) && i == shell->subst.idx) {
         dprintf(2, "Error: Command denied due to alias loop\n");
