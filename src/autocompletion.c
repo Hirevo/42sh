@@ -213,9 +213,9 @@ static void *render_match(void *ctx, void *acc, void *elem, size_t idx)
 
     if (idx == 0) {
         if (token->is_command) {
-            return strdup(elem);
+            return sanitize_double_quotes(elem, false);
         } else {
-            return strdup(basename(elem));
+            return sanitize_double_quotes(basename(elem), false);
         }
     } else {
         acc = lstr_append(acc, "\\\\n");
