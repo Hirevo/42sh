@@ -25,6 +25,23 @@ static int sort_matches(void *a, size_t idx_a, void *b, size_t idx_b)
     return strcmp(a, b);
 }
 
+static bool find_match(void *ctx, void *elem, size_t idx)
+{
+    (void)(idx);
+    return lstr_equals(ctx, elem);
+}
+
+static bool filter_duplicate_matches(void *ctx, void *elem, size_t idx)
+{
+    vec_t *arr = ctx;
+    size_t first = (size_t)(lvec_find_index(arr, find_match, elem));
+    if (first != idx) {
+        free(elem);
+        return false;
+    }
+    return true;
+}
+
 // Accounts for trailing slashes
 static char *custom_basename(char const *path)
 {
@@ -156,7 +173,7 @@ static vec_t *find_commands_matches(Shell *shell, char *token)
     lvec_drop(paths);
 
 end:
-    // TODO: remove duplicate matches
+    lvec_filter(output, filter_duplicate_matches, output);
     lvec_sort(output, sort_matches);
 
     return output;
@@ -253,6 +270,7 @@ static void complete_choices(Shell *shell, Token token, vec_t *matches)
 {
     char *prefix = lvec_reduce(matches, prefix_match, 0, 0);
     complete_forward(shell, token, prefix);
+    free(prefix);
 
     char *rendered_matches = lvec_reduce(matches, render_match, &token, 0);
 
