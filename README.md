@@ -33,9 +33,9 @@ It also accepts to evaluate a single line with **`-c`** followed by the command.
     - Redirections (**`<`**, **`>`**, **`<<`**, **`>>`**)
     - Conditionals (**`||`**, **`&&`**)
 - Quote types:
-    - Double quotes (Expands variables like **`$PATH`** and **`${PATH}`**, disables file globbing such as **`*`** and **`?`**)
-    - Single quotes (Disables everything)
-    - Magic quotes / Backticks (Evaluates the sub-command and replace with the results in-place)
+    - Double quotes: Expands variables like **`$PATH`** and **`${PATH}`**, disables file globbing such as **`*`** and **`?`**
+    - Single quotes: Disables everything, even backslashes
+    - Magic quotes (aka. backticks, aka. backquotes): Triggers **Command substitution**
 - Line Editing:
     - Auto-completion for commands and filenames
     - Advanced line edition with cursor, arrow-keys if terminal supported, will fallback to standard stdin read otherwise
@@ -44,8 +44,9 @@ It also accepts to evaluate a single line with **`-c`** followed by the command.
     - Shell PID (**`$$`**)
     - Last argument from last command (**`$!`**)
     - Whole last command (**`!!`**)
-    - n-th argument from last command (**`!:n`**)
+    - N-th argument from last command (**`!:n`**)
     - File globbing with **`*`**, **`?`**, **`[a-z]`** and **`{foo,bar}`**
+    - Command substitution with **`` `...` ``** and **`$(...)`**
 - Aliases:
     - **`alias`** and **`unalias`** built-in commands
     - Aliases all the commands in the evaluated line
