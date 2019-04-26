@@ -7,6 +7,7 @@
 
 #include "my.h"
 #include "shell.h"
+#include "reports.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,20 +34,20 @@ char *my_epurstr(char *str)
 
 int count_links(char *str)
 {
-    int i = -1;
     int count = 0;
-    char buf;
 
-    while (str[++i]) {
+    for (size_t i = 0; str[i]; i++) {
         if (str[i] == '\\')
             i += !!(str[i + 1]);
         else if (str[i] == '\'' || str[i] == '"') {
-            buf = str[i];
+            char buf = str[i];
+            size_t start = i;
             i += 1;
             while (str[i] && str[i] != buf)
                 i += (str[i] == '\\' && buf != '\'') + 1;
             if (str[i] == 0) {
-                return eputstr("%c: invalid quotes.\n", buf), -1;
+                report_unmatched_quote(str, start);
+                return -1;
             }
         }
         count += is_separator(str[i]);

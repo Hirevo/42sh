@@ -7,6 +7,7 @@
 
 #include "my.h"
 #include "shell.h"
+#include "reports.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -49,8 +50,9 @@ int setup_left_redirect(char *name, int type)
 int prepare_redirect(Command *head, char **type, char **name, size_t i)
 {
     *type = lvec_remove(head->av, i);
-    if (lvec_size(head->av) <= i)
+    if (lvec_size(head->av) <= i) {
         return eputstr("missing name for redirect.\n"), -1;
+    }
     *name = lvec_remove(head->av, i);
     if (lvec_size(head->av) == 0)
         return eputstr("invalid null command.\n"), -1;

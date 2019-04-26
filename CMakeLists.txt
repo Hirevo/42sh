@@ -153,6 +153,9 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/prompt/tcsh.c
     ${PROJECT_SOURCE_DIR}/src/prompt/turbosh.c
     ${PROJECT_SOURCE_DIR}/src/redirects.c
+    ${PROJECT_SOURCE_DIR}/src/reports/quotes.c
+    ${PROJECT_SOURCE_DIR}/src/reports/parentheses.c
+    ${PROJECT_SOURCE_DIR}/src/reports/redirects.c
     ${PROJECT_SOURCE_DIR}/src/sanitizers.c
 )
 target_link_libraries(42sh my json hmap vec str ncurses)

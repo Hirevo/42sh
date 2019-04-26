@@ -5,6 +5,7 @@
 ** exit
 */
 
+#include "my.h"
 #include "shell.h"
 
 int exit_b(Shell *shell, vec_t *args)
