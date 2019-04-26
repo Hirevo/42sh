@@ -25,7 +25,8 @@ int set_b(Shell *shell, vec_t *args)
         lhmap_for_each(shell->vars, display_var, NULL);
         return 0;
     } else {
-        for (size_t i = 1; lvec_at(args, i); i++) {
+        for (size_t i = 1; i < lvec_size(args); i++) {
+            // printf("arg: '%zu'\n", strlen(lvec_at(args, 1)));
             ssize_t idx = lstr_index_of(lvec_at(args, i), 0, "=");
             if (idx == -1) {
                 eputstr("set: missing value\n");
