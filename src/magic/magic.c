@@ -89,20 +89,21 @@ static void exec_magic(Shell *shell, char *line, size_t i, size_t len,
     close(fd);
     if (subst == 0)
         return;
-    char *ret = 0;
+    char *ret = lstr_trim(subst);
+    free(subst);
     if (quoted) {
-        subst = sanitize_double_quotes(subst, true);
-        if (asprintf(&ret, "%.*s%s%s", (int)(i), shell->line, subst,
+        ret = sanitize_double_quotes(ret, true);
+        if (asprintf(&subst, "%.*s%s%s", (int)(i), shell->line, ret,
                 shell->line + i + len + 2 + type) == -1)
             return;
     } else {
-        subst = sanitize(subst, true);
-        if (asprintf(&ret, "%.*s%s%s", (int)(i), shell->line, subst,
+        ret = sanitize(ret, true);
+        if (asprintf(&subst, "%.*s%s%s", (int)(i), shell->line, ret,
                 shell->line + i + len + 2 + type) == -1)
             return;
     }
     free(shell->line);
-    shell->line = ret;
+    shell->line = subst;
 }
 
 int magic(Shell *shell)
