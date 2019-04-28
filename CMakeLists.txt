@@ -117,8 +117,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_lvl_build_branch.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_lvl.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast.c
-    ${PROJECT_SOURCE_DIR}/src/parser_ll/lib/my_str_to_wordtab.c
-    ${PROJECT_SOURCE_DIR}/src/parser_ll/lib/my_strcat.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/parse.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/print_ast.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/set/arg.c

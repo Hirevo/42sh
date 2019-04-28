@@ -5,8 +5,8 @@
 ** ast_lvl_build_branch
 */
 
-#include "bs.h"
 #include "parser_ll.h"
+#include "shell.h"
 
 t_ast *rebuild_branch(t_ast *ast, t_ast *new, int count_ast)
 {
@@ -36,12 +36,10 @@ t_ast *create_simple_branch(t_ast *ast, t_ast *new)
     if (!ast->left) {
         ast->left = new;
         ast = ast->left;
-    }
-    else if (!ast->right) {
+    } else if (!ast->right) {
         ast->right = new;
         ast = ast->right;
-    }
-    else {
+    } else {
         new->left = ast->right;
         ast->right->father = new->left;
         ast->right = new;

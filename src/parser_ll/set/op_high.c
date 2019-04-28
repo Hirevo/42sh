@@ -5,8 +5,8 @@
 ** op_high
 */
 
-#include "bs.h"
 #include "parser_ll.h"
+#include "shell.h"
 
 int check_op_high(t_token **new, t_grammar *gram, char **tab, int *i)
 {

@@ -17,15 +17,14 @@ void tmp_file(Shell *shell)
     char name[] = "/tmp/42sh-edit-XXXXXX";
     char *editor = getenv("EDITOR");
     int fd = (editor ? mkstemp(name) : -1);
-    char *exec = 0;
+    char *exec = ((fd != -1) ? fmtstr("%s %s", editor, name) : 0);
 
-    if (editor == NULL || fd == -1 ||
-        asprintf(&exec, "%s %s", editor, name) == -1)
+    if (editor == NULL || fd == -1 || exec == 0)
         return;
     if (shell->line)
         dprintf(fd, "%s", shell->line);
     free(shell->line);
-    my_putchar('\n');
+    writechar('\n');
     quick_exec(shell, exec);
     if (shell->exit_code == 1)
         return;

@@ -1,20 +1,17 @@
 /*
-** my_strcpy.c for my_strcpy in /home/nicolas.polomack/CPool_Day06
-** 
-** Made by Nicolas POLOMACK
-** Login   <nicolas.polomack@epitech.net>
-** 
-** Started on  Mon Oct 10 09:09:04 2016 Nicolas POLOMACK
-** Last update Tue Feb 21 20:32:06 2017 
+** EPITECH PROJECT, 2019
+** 42sh
+** File description:
+** my_strcpy
 */
 
-char	*my_strcpy(char *dest, char *src)
+char *my_strcpy(char *dest, char *src)
 {
-  int	count;
+    int count;
 
-  count = -1;
-  while (src[++count])
-    dest[count] = src[count];
-  dest[count] = 0;
-  return (dest);
+    count = -1;
+    while (src[++count])
+        dest[count] = src[count];
+    dest[count] = 0;
+    return (dest);
 }

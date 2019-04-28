@@ -6,9 +6,9 @@
 */
 
 #include "get_next_line.h"
-#include "shell.h"
 #include "my.h"
 #include "server.h"
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -32,7 +32,7 @@ static void treat_serv_resp(
         del_prompt(*nb_char);
         putstr("\r%s", str);
         fflush(stdout);
-        tmp = my_strcatdup("cmd:", str);
+        tmp = fmtstr("cmd:%s", str);
         write_socket(cli->sock, tmp);
         free(tmp);
         *prompt = get_prompt_cli(cli);
@@ -75,9 +75,9 @@ static int read_sock(t_client *cli, char **prompt, int *nb_char)
     if (len == 0) {
         putstr("You've been disconnected.\n");
         return 1;
-    }
-    else
+    } else {
         treat_serv_resp(cli, buf, prompt, nb_char);
+    }
     free(buf);
     return 0;
 }

@@ -47,16 +47,16 @@ OPTION(Int) exec_redirected_builtins(Shell *shell, int fds[2])
 void quick_exec(Shell *shell, char *str)
 {
     char *save = shell->line;
-    char **final = shell->final;
+    vec_t *fragments = shell->fragments;
     Command *cmds = shell->commands;
 
     if (is_line_empty(str))
         return;
     shell->commands = NULL;
-    shell->final = NULL;
+    shell->fragments = NULL;
     shell->line = str;
     exec_line(shell, 0);
     shell->line = save;
-    shell->final = final;
+    shell->fragments = fragments;
     shell->commands = cmds;
 }

@@ -5,8 +5,8 @@
 ** client
 */
 
-#include "my.h"
 #include "server.h"
+#include "shell.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -20,13 +20,12 @@ void remove_client(t_socket *clients, int to_remove, int *actual)
 static int limit_client(int actual, t_socket csock)
 {
     if (actual >= MAX_CLIENTS) {
-        my_putstr("Too many clients in the same time\
-: Automatic deconnexion\n");
+        writestr("too many simultaneous clients, disconnecting.\n");
         close(csock);
         return 1;
-    }
-    else
+    } else {
         return 0;
+    }
 }
 
 int new_client(t_socket *clients, int *actual, fd_set *rdfs, t_socket sock)

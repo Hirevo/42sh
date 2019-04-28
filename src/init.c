@@ -55,24 +55,12 @@ void init_builtins(Shell *shell)
 
 void init_vars(Shell *shell)
 {
-    char *str = 0;
-
     shell->vars = lhmap_with_capacity(5);
-    if (asprintf(&str, "%d", getpid()) == -1)
-        handle_error("calloc");
-    lhmap_set(shell->vars, "pid", str);
-    if (asprintf(&str, "%d", getppid()) == -1)
-        handle_error("calloc");
-    lhmap_set(shell->vars, "ppid", str);
-    if (asprintf(&str, "%d", getgid()) == -1)
-        handle_error("calloc");
-    lhmap_set(shell->vars, "gid", str);
-    if (asprintf(&str, "%d", getpgrp()) == -1)
-        handle_error("calloc");
-    lhmap_set(shell->vars, "pgid", str);
-    if (asprintf(&str, "%d", getsid(0)) == -1)
-        handle_error("calloc");
-    lhmap_set(shell->vars, "sid", str);
+    lhmap_set(shell->vars, "pid", fmtstr("%d", getpid()));
+    lhmap_set(shell->vars, "ppid", fmtstr("%d", getppid()));
+    lhmap_set(shell->vars, "gid", fmtstr("%d", getgid()));
+    lhmap_set(shell->vars, "pgid", fmtstr("%d", getpgrp()));
+    lhmap_set(shell->vars, "sid", fmtstr("%d", getsid(0)));
 }
 
 void init_shell(Shell *shell)

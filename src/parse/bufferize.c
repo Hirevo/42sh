@@ -97,10 +97,7 @@ OPTION(SizeT) arg_length(char *str)
             }
         }
         size_t i = 0;
-        for (; str[i] && !is_space(str[i]); i++) {
-            for (size_t i2 = 0; delim[i2]; i2++)
-                if (lstr_starts_with(str + i, delim[i2]))
-                    return SOME(SizeT, i);
+        for (; str[i] && !is_space(str[i]) && !is_separator(str[i]); i++) {
             if (str[i] == '\\')
                 i += !!(str[i + 1]);
         }
@@ -108,75 +105,71 @@ OPTION(SizeT) arg_length(char *str)
     }
 }
 
-char **bufferize(char *str, int n)
+vec_t *bufferize(char *str, int estimate)
 {
-    size_t i = 0;
-    size_t args = 0;
-    char **final = calloc(n + 1, sizeof(char *));
-    OPTION(SizeT) len = NONE(SizeT);
-
-    if (final == NULL)
+    vec_t *fragments = lvec_with_capacity(estimate);
+    if (fragments == NULL)
         return NULL;
+    size_t i = 0;
     while (str[i])
-        if (is_space(str[i]))
+        if (is_space(str[i])) {
             i += 1;
-        else {
-            len = arg_length(str + i);
+        } else {
+            OPTION(SizeT) len = arg_length(str + i);
             if (IS_NONE(len))
                 return NULL;
-            final[args] = strndup(str + i, OPT_UNWRAP(len));
-            if (final[args] == NULL)
+            char *arg = strndup(str + i, OPT_UNWRAP(len));
+            if (arg == NULL) {
+                lvec_clear(fragments, true);
+                lvec_drop(fragments);
                 return NULL;
+            }
+            lvec_push_back(fragments, 1, arg);
             i += OPT_UNWRAP(len);
-            args += 1;
         }
-    final[args] = NULL;
-    return final;
+    return fragments;
 }
 
-int count_link(char **final)
+int count_link(vec_t *fragments, size_t idx)
 {
-    int i = 0;
+    size_t size = idx;
 
-    while (final[i] &&
-        (strcmp(final[i], "|") && strcmp(final[i], ";") &&
-            strcmp(final[i], "||") && strcmp(final[i], "&&")))
-        i += 1;
-    return i;
+    while (size < lvec_size(fragments)) {
+        char *fragment = lvec_at(fragments, size);
+        if (!fragment || fragment[0] == '|' || fragment[0] == ';' ||
+            fragment[0] == '&')
+            return size - idx;
+        size += 1;
+    }
+    return size - idx;
 }
 
-void prepare_link(Shell *shell, Command *elem, int i, int last)
+void prepare_link(Shell *shell, Command *elem, size_t i, size_t last)
 {
-    if (shell->final[i] == NULL)
+    if (i >= lvec_size(shell->fragments))
         elem->link = '0';
-    else if (strcmp(shell->final[i], "&&") == 0)
+    else if (lstr_equals(lvec_at(shell->fragments, i), "&&"))
         elem->link = 'e';
-    else if (strcmp(shell->final[i], "||") == 0)
+    else if (lstr_equals(lvec_at(shell->fragments, i), "||"))
         elem->link = 'o';
     else
-        elem->link = shell->final[i][0];
-    shell->final[i] = NULL;
-    char **tab = shell->final + last;
-    size_t size = 0;
-    for (size = 0; tab[size]; size++);
+        elem->link = ((char *)(lvec_at(shell->fragments, i)))[0];
+    size_t size = i - last;
     lvec_reserve(elem->av, size);
-    for (size = 0; tab[size]; size++)
-        lvec_push_back(elem->av, 1, strdup(tab[size]));
-    (elem->link != '0') ? insert_char(&(shell->final[i]), elem->link) : NULL;
+    for (size = 0; size < lvec_capacity(elem->av); size++)
+        lvec_push_back(
+            elem->av, 1, strdup(lvec_at(shell->fragments, last + size)));
     elem->count = -1;
 }
 
 int set_commands(Shell *shell)
 {
-    Command *elem;
-    Command *head;
-    int i;
-    int last;
+    Command *elem = NULL;
+    Command *head = NULL;
+    size_t last = 0;
 
     shell->commands = NULL;
-    head = NULL;
-    i = -1;
-    while (shell->final[++i]) {
+    for (size_t i = 0; i < lvec_size(shell->fragments); i++) {
         elem = calloc(1, sizeof(*elem));
         if (elem == NULL)
             return -1;
@@ -185,7 +178,7 @@ int set_commands(Shell *shell)
         (head) ? (head->next = elem) : (shell->commands = elem);
         elem->prev = head;
         last = i;
-        i += count_link(shell->final + i);
+        i += count_link(shell->fragments, i);
         if (i == last)
             return eputstr("invalid null command.\n"), -1;
         prepare_link(shell, elem, i, last);

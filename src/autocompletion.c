@@ -202,9 +202,9 @@ static void complete_forward(Shell *shell, Token token, char *match)
     size_t len = strlen(sanitized_token);
     char *to_add = sanitized_match + len;
 
-    char *ret = 0;
-    if (asprintf(&ret, "%.*s%s%s", shell->w.cur, shell->line, to_add,
-            shell->line + shell->w.cur) == -1) {
+    char *ret = fmtstr("%.*s%s%s", shell->w.cur, shell->line, to_add,
+        shell->line + shell->w.cur);
+    if (ret == 0) {
         free(sanitized_match);
         free(sanitized_token);
         return;
@@ -269,31 +269,36 @@ static void *prefix_match(void *ctx, void *acc, void *elem, size_t idx)
 static void complete_choices(Shell *shell, Token token, vec_t *matches)
 {
     char *prefix = lvec_reduce(matches, prefix_match, 0, 0);
-    complete_forward(shell, token, prefix);
+    if (strlen(prefix) > strlen(token.token))
+        complete_forward(shell, token, prefix);
     free(prefix);
 
     char *rendered_matches = lvec_reduce(matches, render_match, &token, 0);
 
-    char *rendered = 0;
     static const char *command = "echo \"%s\" | sort | column";
-    if (asprintf(&rendered, command, rendered_matches) == -1) {
-        free(rendered_matches);
-        return;
-    }
+    char *rendered = fmtstr(command, rendered_matches);
     free(rendered_matches);
+    if (rendered == 0)
+        return;
 
-    size_t len = strlen(shell->line + shell->w.cur);
-    for (size_t i = 0; i < len; i++)
-        putstr(shell->w.forw);
-    putstr("\n");
+    size_t len = 0;
+    if (shell->line) {
+        len = strlen(shell->line + shell->w.cur);
+        for (size_t i = 0; i < len; i++)
+            putstr(shell->w.forw);
+        putstr("\n");
+        fflush(stdout);
+    }
 
     quick_exec(shell, rendered);
     print_prompt(shell);
-    putstr(shell->line);
+    if (shell->line) {
+        putstr(shell->line);
 
-    for (size_t i = 0; i < len; i++)
-        putstr(shell->w.backw);
-    fflush(stdout);
+        for (size_t i = 0; i < len; i++)
+            putstr(shell->w.backw);
+        fflush(stdout);
+    }
 }
 
 OPTION(Token) extract_token(char *line, size_t cur)

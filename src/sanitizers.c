@@ -17,7 +17,7 @@ static int count_separators(char *str)
     for (size_t i = 0; str[i]; i++) {
         if (is_separator(str[i]) || is_space(str[i]) || str[i] == '\\' ||
             str[i] == '"' || str[i] == '\'' || str[i] == '`' ||
-            str[i] == '$' || str[i] == '!')
+            str[i] == '$' || str[i] == '!' || str[i] == '#')
             count += 1;
     }
     return count;
@@ -34,7 +34,7 @@ char *sanitize(char *str, bool to_free)
     for (size_t i1 = 0; str[i1]; i1++) {
         if (str[i1] == '\\' || is_separator(str[i1]) || str[i1] == '"' ||
             str[i1] == '\'' || str[i1] == '`' || str[i1] == '$' ||
-            str[i1] == '!') {
+            str[i1] == '!' || str[i1] == '#') {
             ret[i2++] = '\\';
             ret[i2++] = str[i1];
         } else {
@@ -58,7 +58,7 @@ char *sanitize_single_arg(char *str, bool to_free)
     for (size_t i1 = 0; str[i1]; i1++) {
         if (str[i1] == '\\' || is_space(str[i1]) || is_separator(str[i1]) ||
             str[i1] == '"' || str[i1] == '\'' || str[i1] == '`' ||
-            str[i1] == '$' || str[i1] == '!') {
+            str[i1] == '$' || str[i1] == '!' || str[i1] == '#') {
             ret[i2++] = '\\';
             ret[i2++] = str[i1];
         } else {
@@ -81,7 +81,7 @@ char *sanitize_double_quotes(char *str, bool to_free)
         return NULL;
     for (size_t i1 = 0; str[i1]; i1++) {
         if (str[i1] == '\\' || str[i1] == '"' || str[i1] == '`' ||
-            str[i1] == '$' || str[i1] == '!') {
+            str[i1] == '$' || str[i1] == '!' || str[i1] == '#') {
             ret[i2++] = '\\';
             ret[i2++] = str[i1];
         } else {

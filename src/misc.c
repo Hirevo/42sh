@@ -72,3 +72,20 @@ int my_strlen_spe(char *path, char stop)
         i += 1;
     return i;
 }
+
+char *read_all(int fd)
+{
+    char buffer[1024] = {0};
+    char *ret = strdup("");
+    ssize_t nb_bytes = 0;
+
+    while ((nb_bytes = read(fd, buffer, 1023)) > 0) {
+        buffer[nb_bytes] = 0;
+        char *tmp = fmtstr("%s%s", ret, buffer);
+        free(ret);
+        if (tmp == 0)
+            return 0;
+        ret = tmp;
+    }
+    return ret;
+}

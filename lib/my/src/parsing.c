@@ -1,11 +1,8 @@
 /*
-** parsing.c for parsing in /home/nicolaspolomack/psu/PSU_2016_my_printf/
-**
-** Made by Nicolas Polomack
-** Login   <nicolas.polomack@epitech.eu>
-**
-** Started on  Fri Nov 18 10:06:59 2016 Nicolas Polomack
-** Last update Wed Nov 23 10:37:13 2016 Nicolas Polomack
+** EPITECH PROJECT, 2019
+** 42sh
+** File description:
+** parsing
 */
 
 #include "my.h"
@@ -28,8 +25,7 @@ char *geflags_t(char *str, flags_t *flags, va_list ap, int *count)
                 flags->precision = flags->precision * 10 + (*(str++) - '0');
         else if (*str == '*')
             flags->precision += va_arg(ap, int) + *(str++) * 0;
-    }
-    else
+    } else
         str += (flags->precision = ((*str == '.') ? 0 : -1)) + 1;
     if (*str == 'h' || *str == 'l')
         flags->length = *(str++);

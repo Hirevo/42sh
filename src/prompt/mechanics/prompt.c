@@ -48,11 +48,11 @@ static void make_action(Shell *shell, char c)
 void color_text(Shell *shell)
 {
     for (int i = 0; i < shell->w.cur; i++)
-        my_putstr(shell->w.backw);
+        writestr(shell->w.backw);
     if (shell->line) {
-        my_putstr("\e[1m\e[38;2;255;98;0m");
-        my_putstr(shell->line);
-        my_putstr("\e[0m");
+        writestr("\e[1m\e[38;2;255;98;0m");
+        writestr(shell->line);
+        writestr("\e[0m");
     }
 }
 
@@ -63,7 +63,7 @@ void prompt_line(Shell *shell)
     if (shell->tty)
         set_raw(&shell->w.oterm);
     if (shell->ioctl)
-        my_putstr(shell->w.smkx);
+        writestr(shell->w.smkx);
     shell->hist.cur = -1;
     while (c != '\n') {
         wait_input();
@@ -73,7 +73,7 @@ void prompt_line(Shell *shell)
                 continue;
             else {
                 if (shell->ioctl)
-                    my_putstr(shell->w.rmkx);
+                    writestr(shell->w.rmkx);
                 return;
             }
         }
@@ -88,5 +88,5 @@ void prompt_line(Shell *shell)
     if (shell->tty && tcsetattr(0, TCSANOW, &shell->w.oterm) == -1)
         handle_error("tcsetattr");
     if (shell->ioctl)
-        my_putstr(shell->w.rmkx);
+        writestr(shell->w.rmkx);
 }

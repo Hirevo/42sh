@@ -22,7 +22,7 @@ void ps1_prompt(Shell *shell)
             case 0:
                 i -= 1;
             case '\\':
-                my_putchar('\\');
+                writechar('\\');
                 break;
             case 'h': {
                 OPTION(CharPtr) hostname = get_hostname();
@@ -30,7 +30,7 @@ void ps1_prompt(Shell *shell)
                     char *hostname_u = OPT_UNWRAP(hostname);
                     ssize_t idx = lstr_index_of(hostname_u, 0, ".");
                     if (idx == -1)
-                        my_putstr(hostname_u);
+                        writestr(hostname_u);
                     else
                         write(1, hostname_u, idx);
                     free(hostname_u);
@@ -38,11 +38,11 @@ void ps1_prompt(Shell *shell)
             } break;
             case 'H': {
                 OPTION(CharPtr) hostname = get_hostname();
-                OPT_AND_THEN(hostname, my_putstr);
+                OPT_AND_THEN(hostname, writestr);
                 OPT_AND_THEN(hostname, free);
             } break;
             case 's':
-                my_putstr("42sh");
+                writestr("42sh");
                 break;
             case 'w': {
                 OPTION(CharPtr) cwd = OPT_FROM_NULLABLE(CharPtr, getcwd(0, 0));
@@ -53,7 +53,7 @@ void ps1_prompt(Shell *shell)
                     free(ucwd);
                     if (IS_SOME(path)) {
                         char *upath = OPT_UNWRAP(path);
-                        my_putstr(upath);
+                        writestr(upath);
                         free(upath);
                     }
                 }
@@ -72,7 +72,7 @@ void ps1_prompt(Shell *shell)
                         path = OPT_FROM_NULLABLE(CharPtr, basename(upretty));
                         if (IS_SOME(path)) {
                             char *upath = OPT_UNWRAP(path);
-                            my_putstr(upath);
+                            writestr(upath);
                             free(upretty);
                         }
                     }
@@ -81,33 +81,33 @@ void ps1_prompt(Shell *shell)
             case 'u': {
                 OPTION(CharPtr)
                 login = OPT_FROM_NULLABLE(CharPtr, getenv("LOGNAME"));
-                OPT_AND_THEN(login, my_putstr);
+                OPT_AND_THEN(login, writestr);
             } break;
             case '$':
-                my_putchar(getuid() ? '$' : '#');
+                writechar(getuid() ? '$' : '#');
                 break;
             case '?':
                 my_put_nbr(shell->exit_code);
                 break;
             case 'n':
-                my_putchar('\n');
+                writechar('\n');
                 break;
             case 't':
-                my_putchar('\t');
+                writechar('\t');
                 break;
             case 'a':
-                my_putchar('\a');
+                writechar('\a');
                 break;
             case 'r':
-                my_putchar('\r');
+                writechar('\r');
                 break;
             case 'e':
-                my_putchar('\e');
+                writechar('\e');
                 break;
             case 'g': {
                 OPTION(CharPtr)
                 branch = OPT_FROM_NULLABLE(CharPtr, show_cur_branch());
-                OPT_AND_THEN(branch, my_putstr);
+                OPT_AND_THEN(branch, writestr);
                 OPT_AND_THEN(branch, free);
             } break;
             case '[':
@@ -116,7 +116,7 @@ void ps1_prompt(Shell *shell)
                 break;
             }
         } else {
-            my_putchar(ps1[i]);
+            writechar(ps1[i]);
         }
     }
     fflush(stdout);

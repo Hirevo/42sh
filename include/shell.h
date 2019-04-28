@@ -123,7 +123,7 @@ typedef struct {
     char **av;
     int prompt;
     char *line;
-    char **final;
+    vec_t *fragments;
     char is_done;
     unsigned int exit_code;
     char *last;
@@ -144,7 +144,7 @@ typedef struct {
 
 unsigned int count_args(char *);
 int get_next_arg(char *, char **, int);
-char **bufferize(char *, int);
+vec_t *bufferize(char *, int);
 char *cat_path(char **, char *, int);
 void exec_process(vec_t *);
 unsigned int exec_command(char **, Shell *);
@@ -198,6 +198,13 @@ void check_exec(Shell *, int, int *);
 void exec_piped_command(char *, Command *, int[2], Shell *);
 char *format_arg(char *);
 
+void writechar(const char chr);
+void ewritechar(const char chr);
+void dwritechar(const int fd, const char chr);
+void writestr(const char *str);
+void ewritestr(const char *str);
+void dwritestr(const int fd, const char *str);
+char *fmtstr(const char *fmt, ...);
 void putstr(const char *fmt, ...);
 void eputstr(const char *fmt, ...);
 void dputstr(const int fd, const char *fmt, ...);
@@ -423,6 +430,7 @@ void init_prompt(Shell *);
 */
 char get_input(void);
 void handle_error(char *);
+char *read_all(int);
 
 /*
 ** prompt/get_cur_branch.c

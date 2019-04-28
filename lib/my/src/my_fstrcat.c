@@ -1,11 +1,8 @@
 /*
-** my_strcatdup.c for my_strcatdup in /home/arthur/delivery/PSU/PSU_2016_tetris
-**
-** Made by
-** Login   <arthur@epitech.net>
-**
-** Started on  Tue Feb 21 10:22:56 2017
-** Last update Tue May 16 10:06:30 2017 Arthur Knoepflin
+** EPITECH PROJECT, 2019
+** 42sh
+** File description:
+** my_fstrcat
 */
 
 #include "my.h"

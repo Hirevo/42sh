@@ -7,6 +7,36 @@
 
 #include "shell.h"
 
+void writechar(const char chr)
+{
+    write(1, &chr, 1);
+}
+
+void ewritechar(const char chr)
+{
+    write(2, &chr, 1);
+}
+
+void dwritechar(const int fd, const char chr)
+{
+    write(fd, &chr, 1);
+}
+
+void writestr(const char *str)
+{
+    write(1, str, strlen(str));
+}
+
+void ewritestr(const char *str)
+{
+    write(2, str, strlen(str));
+}
+
+void dwritestr(const int fd, const char *str)
+{
+    write(fd, str, strlen(str));
+}
+
 void putstr(const char *fmt, ...)
 {
     va_list list;
@@ -34,15 +64,23 @@ void dputstr(const int fd, const char *fmt, ...)
     va_end(list);
 }
 
+char *fmtstr(const char *fmt, ...)
+{
+    va_list list;
+    char *ret = 0;
+
+    va_start(list, fmt);
+    vasprintf(&ret, fmt, list);
+    va_end(list);
+    return ret;
+}
+
 char *path_join(const char *p1, const char *p2)
 {
-    char *path = 0;
     char *add_slash =
         ((lstr_ends_with(p1, "/") || lstr_equals(p1, "")) ? "" : "/");
 
-    if (asprintf(&path, "%s%s%s", p1, add_slash, p2) == -1)
-        return 0;
-    return path;
+    return fmtstr("%s%s%s", p1, add_slash, p2);
 }
 
 char *pretty_path(const char *path)
@@ -54,11 +92,8 @@ char *pretty_path(const char *path)
     else if (lstr_equals(path, home)) {
         return strdup("~");
     } else if (lstr_starts_with(path, home)) {
-        char *ret = 0;
         const char *npath = path + strlen(home) + !lstr_ends_with(home, "/");
-        if (asprintf(&ret, "~/%s", npath) == -1)
-            return 0;
-        return ret;
+        return fmtstr("~/%s", npath);
     } else {
         return strdup(path);
     }

@@ -12,12 +12,10 @@
 
 void exit_config(t_socket client, t_config *config, char **arg)
 {
-    char *str;
-
     (void)config;
     (void)arg;
-    my_putstr("Configuration finished\n");
-    str = my_strcatdup(BASE_RESP, "quit");
+    writestr("Configuration finished\n");
+    char *str = fmtstr(BASE_RESP "%s", "quit");
     write_client(client, str);
     free(str);
 }

@@ -57,9 +57,8 @@ unsigned int exec_action(Shell *shell, unsigned int args)
         free_shell(shell);
         exit(OPT_UNWRAP_OR(status, 1));
     }
-    for (size_t i = 0; shell->final[i]; i++)
-        free(shell->final[i]);
-    free(shell->final);
+    lvec_clear(shell->fragments, true);
+    lvec_drop(shell->fragments);
     free_commands(shell);
     free(shell->line);
     return OPT_UNWRAP_OR(status, 1);
@@ -85,17 +84,23 @@ static int set_error(Shell *shell, int ret)
 
 unsigned int exec_line(Shell *shell, unsigned int args)
 {
-    if (subst_history(shell, args) == -1 || parse_alias(shell) == -1 ||
-        parse_vars(shell) == -1 || magic(shell) == -1 ||
-        (shell->line = my_epurcommand(shell->line)) == NULL ||
+    if (
+        // clang-format off
+        subst_history(shell, args) == -1 ||
+        magic(shell) == -1 ||
+        parse_alias(shell) == -1 ||
+        parse_vars(shell) == -1 ||
         parse_stars(shell) == 1 ||
-        (shell->line = my_epurstr(shell->line)) == NULL)
+        (shell->line = my_epurcommand(shell->line)) == NULL ||
+        (shell->line = my_epurstr(shell->line)) == NULL
+        // clang-format on
+    )
         return set_error(shell, 1);
     if (is_line_empty(shell->line))
         return 0;
     args = count_args(shell->line);
-    shell->final = bufferize(shell->line, args);
-    if (shell->final == NULL || set_commands(shell) == -1 ||
+    shell->fragments = bufferize(shell->line, args);
+    if (shell->fragments == NULL || set_commands(shell) == -1 ||
         set_redirects(shell) == -1 || check_error(shell) == -1 ||
         format_commands(shell) == -1)
         return set_error(shell, 1);

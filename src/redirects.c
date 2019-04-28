@@ -6,8 +6,8 @@
 */
 
 #include "my.h"
-#include "shell.h"
 #include "reports.h"
+#include "shell.h"
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -40,7 +40,7 @@ int setup_left_redirect(char *name, int type)
             return -1;
         fd = i[0];
         if (isatty(0))
-            my_putstr("> ");
+            writestr("> ");
         return buffer_input(name, i);
     } else if ((fd = open(name, O_RDONLY)) == -1)
         return -1;
@@ -49,10 +49,12 @@ int setup_left_redirect(char *name, int type)
 
 int prepare_redirect(Command *head, char **type, char **name, size_t i)
 {
+    free(*type);
     *type = lvec_remove(head->av, i);
     if (lvec_size(head->av) <= i) {
         return eputstr("missing name for redirect.\n"), -1;
     }
+    free(*name);
     *name = lvec_remove(head->av, i);
     if (lvec_size(head->av) == 0)
         return eputstr("invalid null command.\n"), -1;
@@ -83,11 +85,9 @@ int check_redirects(Command *head, Command *last)
 
 int set_redirects(Shell *shell)
 {
-    Command *head;
-    Command *last;
+    Command *head = shell->commands;
+    Command *last = NULL;
 
-    last = NULL;
-    head = shell->commands;
     while (head) {
         if (check_redirects(head, last) == -1)
             return -1;

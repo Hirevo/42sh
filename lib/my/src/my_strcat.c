@@ -1,11 +1,8 @@
 /*
-** my_strcat.c for my_strcat in /home/nicolas.polomack/CPool_Day07
-**
-** Made by Nicolas POLOMACK
-** Login   <nicolas.polomack@epitech.net>
-**
-** Started on  Tue Oct 11 10:30:59 2016 Nicolas POLOMACK
-** Last update Mon Feb 20 23:27:07 2017
+** EPITECH PROJECT, 2019
+** 42sh
+** File description:
+** my_strcat
 */
 
 char *my_strcat(char *dest, char *src)

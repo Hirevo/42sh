@@ -19,4 +19,3 @@ void report_redirect_missing_name(const char *line, size_t start, size_t end)
     eputstr(" error: missing name for redirect.\e[0m\n");
     eputstr(" |\n");
 }
-

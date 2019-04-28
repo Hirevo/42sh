@@ -6,9 +6,9 @@
 */
 
 #include "get_next_line.h"
-#include "shell.h"
 #include "my.h"
 #include "server.h"
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,9 +39,9 @@ static void send_login(t_socket sock)
             write_socket(sock, str);
             free(str);
         }
-    }
-    else
+    } else {
         write_socket(sock, "OK:");
+    }
 }
 
 static int new_client_dc(

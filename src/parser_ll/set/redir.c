@@ -5,8 +5,8 @@
 ** redir
 */
 
-#include "bs.h"
 #include "parser_ll.h"
+#include "shell.h"
 
 int check_redir(t_token **new, t_grammar *gram, char **tab, int *i)
 {

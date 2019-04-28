@@ -26,13 +26,11 @@ int builtins_b(Shell *shell, vec_t *args)
     if (shell->tty) {
         char *rendered_keys = lvec_reduce(keys, render_key, 0, 0);
 
-        char *rendered = 0;
         static const char *command = "echo \"%s\" | sort | column";
-        if (asprintf(&rendered, command, rendered_keys) == -1) {
-            free(rendered_keys);
-            return 1;
-        }
+        char *rendered = fmtstr(command, rendered_keys);
         free(rendered_keys);
+        if (rendered == 0)
+            return 1;
 
         quick_exec(shell, rendered);
     } else {

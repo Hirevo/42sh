@@ -14,8 +14,6 @@
 
 int launch_config(Shell *shell)
 {
-    int ret;
-    char *prompt;
     t_config config;
 
     if (!isatty(0)) {
@@ -24,9 +22,9 @@ int launch_config(Shell *shell)
     }
     config.env = environ;
     config.prompt = shell->prompt;
-    ret = config_http(shell, &config);
+    int ret = config_http(shell, &config);
     shell->prompt = config.prompt;
-    asprintf(&prompt, "%d", config.prompt);
+    char *prompt = fmtstr("%d", config.prompt);
     setenv("PROMPT", prompt, 1);
     free(prompt);
     return ret;

@@ -6,9 +6,9 @@
 */
 
 #include "get_next_line.h"
-#include "shell.h"
 #include "my.h"
 #include "server.h"
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,9 +53,9 @@ static int client_talk_dc(
         if (len == 0) {
             close(client);
             return 1;
-        }
-        else
+        } else {
             response_serv(client, buf, prompt, nb_char);
+        }
     }
     return 0;
 }

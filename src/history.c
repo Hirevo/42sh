@@ -35,7 +35,8 @@ void write_hist(Shell *shell, int fd)
     char *hist_size = getenv("HIST_SIZE");
     size_t i = 0;
 
-    for (i = 0; hist_size && hist_size[i] >= '0' && hist_size[i] <= '9'; i++);
+    for (i = 0; hist_size && hist_size[i] >= '0' && hist_size[i] <= '9'; i++)
+        ;
     size_t val = (hist_size && hist_size[i] != 0) ? atoi(hist_size) : 500;
     lvec_reverse(hist);
     lvec_filter(hist, hist_trim_list, &val);
@@ -47,7 +48,6 @@ void write_hist(Shell *shell, int fd)
         dprintf(fd, "\n");
     }
     close(fd);
-    free_hist(shell);
 }
 
 void save_history(Shell *shell)

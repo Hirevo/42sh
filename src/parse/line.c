@@ -6,26 +6,41 @@
 */
 
 #include "my.h"
-#include "shell.h"
 #include "reports.h"
+#include "shell.h"
 #include <stdlib.h>
 #include <string.h>
 
 char *my_epurstr(char *str)
 {
     char *ret = calloc(strlen(str) + 1, sizeof(char));
-    int i[2] = {-1, 0};
-    char b = 0;
+    size_t i = 0;
+    size_t j = 0;
+    bool quoted = false;
 
     if (ret == NULL)
         return NULL;
-    while (str[++(i[0])]) {
-        if (!(i[0] == 0 && (str[i[0]] == ' ' || str[i[0]] == '\t')))
-            ret[i[1]++] = ((str[i[0]] == '\t') ? ' ' : str[i[0]]);
-        if (!b && (str[i[0]] == ' ' || str[i[0]] == '\t')) {
-            while (str[i[0]] && (str[i[0]] == ' ' || str[i[0]] == '\t'))
-                i[0] += 1;
-            i[0] -= 1;
+    while (str[i]) {
+        if (str[i] == '\\') {
+            ret[j++] = str[i++];
+            ret[j++] = str[i];
+            if (str[i++] == 0)
+                break;
+        } else if (str[i] == '\'' && quoted == false) {
+            ret[j++] = str[i++];
+            while (str[i] && str[i] != '\'')
+                ret[j++] = str[i++];
+            if (str[i] == '\'')
+                ret[j++] = str[i++];
+        } else if (str[i] == '"') {
+            quoted = !quoted;
+            ret[j++] = str[i++];
+        } else if (is_space(str[i]) && quoted == false) {
+            ret[j++] = ' ';
+            while (is_space(str[i]))
+                i += 1;
+        } else {
+            ret[j++] = str[i++];
         }
     }
     free(str);
@@ -102,7 +117,8 @@ char *my_epurcommand(char *str)
             copy_escaped_char(str, &i, ret, &t);
         else if (is_space(str[i])) {
             ret[t++] = ' ';
-            while (is_space(str[++i]));
+            while (is_space(str[++i]))
+                ;
             i -= 1;
         } else if (str[i] == '"' || str[i] == '\'')
             skip_and_copy_string(str, &i, ret, &t);

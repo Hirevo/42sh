@@ -1,25 +1,20 @@
 /*
-** my_memset.c for my_memset in /home/arthur/delivery/PSU/PSU_2016_tetris
-** 
-** Made by Arthur Knoepflin
-** Login   <arthur@epitech.net>
-** 
-** Started on  Sat Feb 25 12:05:34 2017 Arthur Knoepflin
-** Last update Sat Feb 25 12:29:19 2017 Arthur Knoepflin
+** EPITECH PROJECT, 2019
+** 42sh
+** File description:
+** my_memset
 */
 
-void	*my_memset(void *str, int c, int size)
+void *my_memset(void *str, int c, int size)
 {
-  char	*tmp;
+    char *tmp;
 
-  if (size)
-    {
-      size += 1;
-      tmp = str;
-      while (--size)
-	{
-	  *tmp++ = c;
-	}
+    if (size) {
+        size += 1;
+        tmp = str;
+        while (--size) {
+            *tmp++ = c;
+        }
     }
-  return (str);
+    return (str);
 }

@@ -19,7 +19,7 @@ char *get_cmd_exc(char *cmd_path, char *cmd)
     if (cmd_path && !strcmp(cmd_path, "emacs"))
         return strdup(cmd);
     else {
-        tmp = my_strcatdup("timeout 1 ", cmd);
+        tmp = fmtstr("timeout 1 %s", cmd);
         return tmp;
     }
 }
@@ -59,9 +59,9 @@ static int change_dir_http(t_socket client, char **cmd_p)
             write_client(client, "Change to ");
             write_client(client, cmd_p[1]);
         }
-    }
-    else
+    } else {
         write_client(client, "Error: precise a folder");
+    }
     return 0;
 }
 
@@ -84,7 +84,7 @@ void exec_cmd_http(t_socket client, t_config *config, char **arg)
             change_dir_http(client, cmd_p);
         else
             execute_http(client, cmd);
-    }
-    else
+    } else {
         write_client(client, ERROR_RESP);
+    }
 }

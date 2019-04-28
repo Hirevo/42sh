@@ -17,4 +17,3 @@ void report_unmatched_parenthesis(const char *line, size_t idx)
     eputstr("^ error: unmatched parenthesis.\e[0m\n");
     eputstr(" |\n");
 }
-

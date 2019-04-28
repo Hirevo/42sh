@@ -36,16 +36,17 @@ static char **add_to_cdouble(char *str, char **list)
 static void update_prompt(char ***file, Shell *shell)
 {
     int stop = 0;
-    char *add;
+    char *add = fmtstr("PROMPT=%d", shell->prompt);
     int i = 0;
 
-    if (asprintf(&add, "PROMPT=%d", shell->prompt) == -1)
+    if (add == 0)
         handle_error("calloc");
     while ((*file)[i]) {
-        if (!strncmp("PROMPT=", (*file)[i], 7)) {
+        if (lstr_starts_with((*file)[i], "PROMPT=")) {
             free((*file)[i]);
             (*file)[i] = strdup(add);
             stop = 1;
+            break;
         }
         i += 1;
     }
@@ -56,39 +57,30 @@ static void update_prompt(char ***file, Shell *shell)
 
 static void write_file(char **env)
 {
-    int i = 0;
-    int fd;
-    char *path = my_strcatdup(get_env("HOME"), "/");
-    char *str;
+    char *home = getenv("HOME");
+    char *path = home ? path_join(home, RC_FILE) : 0;
 
     if (path == NULL)
         return;
-    str = my_strcatdup(path, RC_FILE);
-    fd = open(str, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+    int fd = open(path, O_WRONLY | O_TRUNC | O_CREAT, 0644);
     if (fd == -1)
         return;
     free(path);
-    free(str);
-    i = 0;
-    while (env[i]) {
-        dprintf(fd, "%s\n", env[i]);
-        i += 1;
-    }
+    for (size_t i = 0; env[i]; i++)
+        dputstr(fd, "%s\n", env[i]);
     free_tab(env);
     close(fd);
 }
 
 void sauv_prompt(Shell *shell)
 {
-    char *home = get_env("HOME");
-    char *path = home ?  my_strcatdup(home, "/") : 0;
-    char *str = path ? my_strcatdup(path, RC_FILE) : 0;
-    int fd = str ? open(str, O_RDONLY) : -1;
+    char *home = getenv("HOME");
+    char *path = home ? path_join(home, RC_FILE) : 0;
+    int fd = path ? open(path, O_RDONLY) : -1;
 
     if (fd == -1)
         return;
     free(path);
-    free(str);
     char **file = load_file(fd);
     if (file == NULL) {
         close(fd);

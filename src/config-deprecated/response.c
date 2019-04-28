@@ -81,9 +81,9 @@ int response(t_socket client, char *buf, t_config *config)
                 free(file);
                 return parse_arg(client, arg, config);
             }
-    }
-    else
+    } else {
         send_file_http(client, my_fstrcat(r_arg ? r_arg : PATH_DOC, file, 0));
+    }
     free(file);
     return 0;
 }

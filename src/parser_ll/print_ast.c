@@ -5,7 +5,7 @@
 ** print_ast
 */
 
-#include <bs.h>
+#include "shell.h"
 #include <parser_ll.h>
 
 static void rec_print(t_ast *ast)

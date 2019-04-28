@@ -16,9 +16,9 @@ void skip_string(char *str, int *i)
     char quote = str[(*i)++];
 
     while (str[*i]) {
-        if (str[*i] == '\\' && quote != '\'')
+        if (str[*i] == '\\')
             *i += (!!str[(*i) + 1]);
-        else if (str[*i] != quote)
+        else if (str[*i] == quote)
             break;
         *i += 1;
     }
@@ -30,16 +30,23 @@ unsigned int count_args(char *str)
     int i = -1;
     unsigned int args = 0;
 
-    while (str[++i])
+    while (str[++i]) {
         if (str[i] == '\\')
             i += !!(str[i + 1]);
-        else if (str[i] == '\'' || str[i] == '"') {
+        else if (str[i] == '\'') {
+            i += 1;
+            while (str[i] && str[i] != '\'')
+                i += 1;
+            i -= (str[i] == 0);
+            args += 1;
+        } else if (str[i] == '"') {
             skip_string(str, &i);
             args += 1;
         } else if (i == 0 && !is_space(str[i]) && !is_separator(str[i]))
             args += 1;
         else if (!is_space(str[i]) && is_space(str[i - 1]))
             args += 1;
+    }
     return args + 1;
 }
 

@@ -6,8 +6,8 @@
 */
 
 #include "get_next_line.h"
-#include "shell.h"
 #include "server.h"
+#include "shell.h"
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>

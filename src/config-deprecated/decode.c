@@ -23,9 +23,9 @@ int urldecode(char *sSource, char *sDest)
                 sSource[2] <= '9' ? '0' : (sSource[2] <= 'F' ? 'A' : 'a') - 10;
             sDest[nLength] = 16 * sSource[1] + sSource[2];
             sSource += 3;
-        }
-        else
+        } else {
             sDest[nLength] = *sSource++;
+        }
         nLength++;
     }
     sDest[nLength] = '\0';

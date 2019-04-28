@@ -45,10 +45,10 @@ int prompt_b(Shell *shell, int args)
     (void)(args);
     show_prompt(shell);
     while (1) {
-        my_putstr("\e[0mMake your choice: ");
+        writestr("\e[0mchoose a prompt: ");
         char *input = get_next_line(0);
         if (input == 0) {
-            my_putstr("\nPrompt unchanged !\n");
+            writestr("\nprompt unchanged !\n");
             return 1;
         }
         if (*input != 0 && is_num(input)) {
@@ -60,7 +60,7 @@ int prompt_b(Shell *shell, int args)
                 return 0;
             }
         }
-        my_putstr("Error: invalid choice.\n");
+        writestr("error: invalid choice.\n");
         free(input);
     }
     return 0;

@@ -27,13 +27,11 @@ void add_env_http(t_socket client, t_config *config, char **arg)
             urldecode(arg[5], decode);
             set_env(arg[3], decode);
             free(decode);
-        }
-        else if (nb_args(arg) == 5)
+        } else if (nb_args(arg) == 5)
             set_env(arg[3], "");
         write_client(client, BASE_RESP);
         write_client(client, "add_env_ok");
-    }
-    else
+    } else
         write_client(client, ERROR_RESP);
 }
 
@@ -60,7 +58,6 @@ void update_env_http(t_socket client, t_config *config, char **arg)
         }
         write_client(client, BASE_RESP);
         write_client(client, "update_env_ok");
-    }
-    else
+    } else
         write_client(client, ERROR_RESP);
 }

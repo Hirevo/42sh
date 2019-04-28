@@ -15,7 +15,7 @@ int check_error(Shell *shell)
     for (Command *head = shell->commands; head; head = head->next) {
         if ((lvec_front(head->av) == NULL && head->next) ||
             ((head->link == '|' || head->link == 'e' || head->link == 'o') &&
-            !head->next)) {
+                !head->next)) {
             return eputstr("invalid null command.\n"), -1;
         }
     }

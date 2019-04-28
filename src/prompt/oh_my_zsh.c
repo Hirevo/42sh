@@ -17,25 +17,25 @@ void oh_my_zsh(Shell *shell)
 
     fflush(stdout);
     if (shell->exit_code == 0)
-        printf("%s", "\e[32;1m");
+        writestr("\e[32;1m");
     else
-        printf("%s", "\e[31;1m");
-    printf("%s", "→  ");
-    printf("%s", "\e[0m");
+        writestr("\e[31;1m");
+    writestr("→  ");
+    writestr("\e[0m");
     char *cwd = getcwd(0, 0);
     if (cwd) {
-        printf("\e[36;1m%s\e[0m ", basename(cwd));
+        writestr("\e[36;1m");
+        writestr(basename(cwd));
+        writestr("\e[0m ");
         free(cwd);
     } else {
-        printf("\e[36;1m?\e[0m ");
+        writestr("\e[36;1m?\e[0m ");
     }
     git = show_cur_branch();
     if (git) {
-        printf(
-            "\e[34;1mgit:(\e[0m\e[31;1m%s\e[0m\e[34;1m)\e[0m ",
-            git
-        );
+        writestr("\e[34;1mgit:(\e[0m\e[31;1m");
+        writestr(git);
+        writestr("\e[0m\e[34;1m)\e[0m ");
         free(git);
     }
-    fflush(stdout);
 }

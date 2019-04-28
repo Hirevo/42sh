@@ -32,8 +32,7 @@ char *toc_alloc(int nb)
             handle_error("calloc");
         ret[0] = '-';
         nb *= (-1);
-    }
-    else {
+    } else {
         ret = calloc(size_int(nb) + 1, sizeof(char));
         if (ret == NULL)
             handle_error("calloc");
@@ -49,8 +48,7 @@ char *int_toc(int nb)
     if (nb < 0) {
         nb *= (-1);
         ret[size_int(nb) + 1] = '\0';
-    }
-    else {
+    } else {
         i[1] -= 1;
         ret[size_int(nb)] = '\0';
     }

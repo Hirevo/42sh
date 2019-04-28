@@ -37,7 +37,7 @@ static OPTION(SizeT) find_paren(const char *line, size_t idx)
             return SOME(SizeT, i - idx);
         }
     }
-    report_unmatched_parenthesis(line, idx);
+    report_unmatched_parenthesis(line, idx - 1);
     return NONE(SizeT);
 }
 
@@ -45,29 +45,10 @@ static OPTION(SizeT) find_quote(const char *line, size_t i)
 {
     ssize_t idx = lstr_index_of(line, i, "`");
     if (idx == -1) {
-        report_unmatched_quote(line, i);
+        report_unmatched_quote(line, i - 1);
         return NONE(SizeT);
     }
     return SOME(SizeT, idx - i);
-}
-
-static char *read_all(int fd)
-{
-    char buffer[1024] = {0};
-    char *ret = strdup("");
-    ssize_t nb_bytes = 0;
-
-    while ((nb_bytes = read(fd, buffer, 1023)) > 0) {
-        buffer[nb_bytes] = 0;
-        char *tmp = 0;
-        if (asprintf(&tmp, "%s%s", ret, buffer) == -1) {
-            free(ret);
-            return 0;
-        }
-        free(ret);
-        ret = tmp;
-    }
-    return ret;
 }
 
 static void exec_magic(Shell *shell, char *line, size_t i, size_t len,
@@ -87,21 +68,20 @@ static void exec_magic(Shell *shell, char *line, size_t i, size_t len,
     lseek(fd, SEEK_SET, 0);
     char *subst = read_all(fd);
     close(fd);
+    remove(name);
     if (subst == 0)
         return;
     char *ret = lstr_trim(subst);
     free(subst);
-    if (quoted) {
+    if (quoted)
         ret = sanitize_double_quotes(ret, true);
-        if (asprintf(&subst, "%.*s%s%s", (int)(i), shell->line, ret,
-                shell->line + i + len + 2 + type) == -1)
-            return;
-    } else {
+    else
         ret = sanitize(ret, true);
-        if (asprintf(&subst, "%.*s%s%s", (int)(i), shell->line, ret,
-                shell->line + i + len + 2 + type) == -1)
-            return;
-    }
+    subst = fmtstr("%.*s%s%s", (int)(i), shell->line, ret,
+        shell->line + i + len + 2 + type);
+    free(ret);
+    if (subst == 0)
+        return;
     free(shell->line);
     shell->line = subst;
 }
@@ -126,16 +106,18 @@ int magic(Shell *shell)
                 size_t len = OPT_UNWRAP(opt_len);
                 char *line = strndup(shell->line + i + 1, len);
                 exec_magic(shell, line, i, len, quoted, Backquotes);
+                free(line);
                 i = -1;
             } else {
                 return -1;
             }
-        } else if (lstr_starts_with(shell->line + i, "$(")) {
+        } else if (shell->line[i] == '$' && shell->line[i + 1] == '(') {
             OPTION(SizeT) opt_len = find_paren(shell->line, i + 2);
             if (IS_SOME(opt_len)) {
                 size_t len = OPT_UNWRAP(opt_len);
                 char *line = strndup(shell->line + i + 2, len);
                 exec_magic(shell, line, i, len, quoted, Parens);
+                free(line);
                 i = -1;
             } else {
                 return -1;

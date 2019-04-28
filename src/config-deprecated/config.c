@@ -61,7 +61,7 @@ static int core(t_socket sock, t_config *config, int actual)
     }
     if (stop == 2)
         free(get_next_line(0));
-    my_putstr("Server closed\n");
+    writestr("server closed\n");
     clear_clients(clients, actual);
     closesocket(sock);
     return 0;
@@ -76,7 +76,7 @@ int config_http(Shell *shell, t_config *config)
     srand(getpid() * time(NULL));
     if ((port = init_connection(&serv)) == -1)
         return 1;
-    printf("Server started on http://localhost:%d/\n", port);
+    putstr("server started on http://localhost:%d/\n", port);
     ip = lstr_concat(strdup("open 'http://localhost:"), 2, LSTR_INT,
         (int)(port), LSTR_CHAR, '\'');
     quick_exec(shell, ip);

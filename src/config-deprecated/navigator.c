@@ -31,14 +31,14 @@ static char **get_path(char **ae)
 
 static char *test_access(char *tmp)
 {
-    char *ret = my_strcatdup(tmp, CHROME);
+    char *ret = path_join(tmp, CHROME);
 
     if (access(ret, X_OK) == 0) {
         free(tmp);
         return ret;
     }
     free(ret);
-    ret = my_strcatdup(tmp, FIREFOX);
+    ret = path_join(tmp, FIREFOX);
     if (access(ret, X_OK) == 0) {
         free(tmp);
         return ret;
@@ -49,7 +49,6 @@ static char *test_access(char *tmp)
 
 char *find_navigator(char **ae)
 {
-    char *tmp;
     char *ret;
     char **path = get_path(ae);
     int i = 0;
@@ -57,16 +56,11 @@ char *find_navigator(char **ae)
     if (path == NULL)
         return NULL;
     while (path[i]) {
-        if (path[i][strlen(path[i]) - 1] != '/')
-            tmp = my_strcatdup(path[i], "/");
-        else
-            tmp = strdup(path[i]);
-        ret = test_access(tmp);
+        ret = test_access(path[i]);
         if (ret != NULL) {
             free_tab(path);
             return ret;
         }
-        free(tmp);
         i += 1;
     }
     free_tab(path);

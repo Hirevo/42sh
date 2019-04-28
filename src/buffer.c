@@ -28,7 +28,7 @@ int buffer_input(char *name, int i[2])
             write(i[1], &c, 1);
             free(str);
             if (isatty(0))
-                my_putstr("> ");
+                writestr("> ");
         }
     close(i[1]);
     return i[0];

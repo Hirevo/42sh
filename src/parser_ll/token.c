@@ -5,8 +5,8 @@
 ** token
 */
 
-#include "bs.h"
 #include "parser_ll.h"
+#include "shell.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -36,7 +36,8 @@ static t_token *set_token(t_token *token, t_grammar *gram, char **tab, int *i)
     return token;
 }
 
-void my_free_tab(char **tab) {
+void my_free_tab(char **tab)
+{
     for (size_t i = 0; tab[i]; i++)
         free(tab[i]);
     free(tab);
@@ -48,10 +49,10 @@ t_token *fill_token(t_token *token, char *str)
     t_grammar gram;
     int i = -1;
 
-    gram.op_high = bs_str_to_wordtab(OP_HIGH, " ");
-    gram.op_low = bs_str_to_wordtab(OP_LOW, " ");
-    gram.redir = bs_str_to_wordtab(REDIR, " ");
-    tab = bs_str_to_wordtab(str, " ");
+    gram.op_high = my_split(OP_HIGH, " ");
+    gram.op_low = my_split(OP_LOW, " ");
+    gram.redir = my_split(REDIR, " ");
+    tab = my_split(str, " ");
     while (tab[++i])
         token = set_token(token, &gram, tab, &i);
     my_free_tab(gram.op_high);

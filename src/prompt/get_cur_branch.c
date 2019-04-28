@@ -58,19 +58,23 @@ static int is_sha1(char *str)
 static char *find_branch(char *path)
 {
     int fd = open(path, O_RDONLY);
-    char *tmp;
 
     if (fd == -1)
         return NULL;
-    tmp = get_next_line(fd);
-    if (tmp == NULL) {
+    char *tmp = read_all(fd);
+    char *trimmed = (tmp ? lstr_trim(tmp) : 0);
+    free(tmp);
+    if (trimmed == NULL) {
         close(fd);
         return NULL;
     }
     close(fd);
-    if (is_sha1(tmp))
-        return strndup(tmp, 7);
-    return cut_path(tmp);
+    if (is_sha1(trimmed)) {
+        char *ret = strndup(trimmed, 7);
+        free(trimmed);
+        return ret;
+    }
+    return cut_path(trimmed);
 }
 
 static int is_root(char *path)
@@ -97,6 +101,7 @@ static char *handle_standard(char *git_dir)
 {
     char *path = my_fstrcat(git_dir, "/HEAD", FREE_NONE);
     char *branch = find_branch(path);
+    free(path);
     if (branch == NULL)
         return NULL;
     free(git_dir);
@@ -109,18 +114,20 @@ static char *handle_submodule(char *path)
 
     if (fd == -1)
         return NULL;
-    char *tmp = get_next_line(fd);
+    char *tmp = read_all(fd);
+    char *trimmed = (tmp ? lstr_trim(tmp) : 0);
+    free(tmp);
     close(fd);
-    if (tmp == NULL || lstr_starts_with(tmp, "gitdir:") == false) {
-        free(tmp);
+    if (trimmed == NULL || lstr_starts_with(trimmed, "gitdir:") == false) {
+        free(trimmed);
         return NULL;
     } else {
-        char *git_dir = tmp + 7;
+        char *git_dir = trimmed + 7;
         size_t count = 0;
         while (is_space(git_dir[count]))
             count += 1;
         git_dir = strdup(git_dir + count);
-        free(tmp);
+        free(trimmed);
         if (git_dir == NULL)
             return NULL;
         char *dir = dirname(path);
@@ -133,8 +140,10 @@ static char *handle_submodule(char *path)
         if (git_dir == NULL)
             return NULL;
         char *ret = handle_standard(git_dir);
-        if (ret == NULL)
+        if (ret == NULL) {
+            free(git_dir);
             return NULL;
+        }
         free(path);
         return ret;
     }

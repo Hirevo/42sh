@@ -17,4 +17,3 @@ void report_unmatched_quote(const char *line, size_t idx)
     eputstr("^ error: unmatched quote.\e[0m\n");
     eputstr(" |\n");
 }
-

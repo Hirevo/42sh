@@ -52,7 +52,7 @@ void execute(Shell *shell)
     else
         shell->line = get_next_line(0);
     if (shell->line && shell->tty && shell->ioctl)
-        my_putchar('\n');
+        writechar('\n');
     if (!shell->line)
         shell->line = strdup("exit");
     clear_comment(shell);
@@ -76,10 +76,10 @@ static int start_standard_shell(Shell *shell)
         execute(shell);
     }
     if (shell->tty) {
-        my_putstr("exit\n");
+        writestr("exit\n");
         if (shell->ioctl) {
             tcsetattr(0, TCSANOW, &shell->w.oterm);
-            my_putstr(shell->w.rmkx);
+            writestr(shell->w.rmkx);
         }
     }
     return shell->exit_code;
@@ -110,9 +110,7 @@ static int treat_arg(Shell *shell, int ac, char **av)
 void increase_shell_level(void)
 {
     char *lvl = getenv("SHLVL");
-    char *ret = 0;
-
-    asprintf(&ret, "%d", (lvl && my_str_isnum(lvl)) ? atoi(lvl) + 1 : 1);
+    char *ret = fmtstr("%d", (lvl && my_str_isnum(lvl)) ? atoi(lvl) + 1 : 1);
     setenv("SHLVL", ret, 1);
     free(ret);
 }

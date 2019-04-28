@@ -21,18 +21,19 @@ typedef struct {
 
 DEF_OPTION(Var, Var);
 
-static int get_arg(Shell *shell, char **str, int *cur)
-{
-    int nb = atoi(shell->line + *cur + 1);
-    int len = 0;
+// static char *get_arg(Shell *shell, int *cur)
+// {
+//     int nb = atoi(shell->line + *cur + 1);
+//     int len = 0;
 
-    while (shell->line[*cur + 1 + len] && shell->line[*cur + 1 + len] >= '0' &&
-        shell->line[*cur + 1 + len] <= '9')
-        len += 1;
-    return asprintf(str, "%.*s%s%s", *cur, shell->line,
-        (shell->av && nb < nb_args(shell->av)) ? shell->av[nb] : "",
-        shell->line + *cur + len + 1);
-}
+//     while (shell->line[*cur + 1 + len] && shell->line[*cur + 1 + len] >= '0'
+//     &&
+//         shell->line[*cur + 1 + len] <= '9')
+//         len += 1;
+//     return fmtstr("%.*s%s%s", *cur, shell->line,
+//         (shell->av && nb < nb_args(shell->av)) ? shell->av[nb] : "",
+//         shell->line + *cur + len + 1);
+// }
 
 static OPTION(Var) get_gvar(char *str)
 {
@@ -68,44 +69,46 @@ static OPTION(Var) get_gvar(char *str)
     return SOME(Var, ret);
 }
 
-static void final_checks(Shell *shell, char *str, int *cur, int i)
+static void final_checks(Shell *shell, char *str, int *cur)
 {
-    if (i == -1 || str == NULL)
+    if (str == NULL)
         handle_error("calloc");
     *cur += (strlen(str) - strlen(shell->line)) + 1;
     free(shell->line);
     shell->line = str;
 }
 
+// TODO: Re-implement shell args ($0 and ${0})
 static bool replace_var(Shell *shell, int *cur, Var var, bool is_free)
 {
-    char *str;
-    char *resolved;
-    int ret = 0;
+    char *str = 0;
+    char *resolved = 0;
 
-    if (!strncmp(shell->line + *cur, "$?", 2))
-        ret = asprintf(&str, "%.*s%d%s", *cur, shell->line, shell->exit_code,
+    if (!strncmp(shell->line + *cur, "$?", 2)) {
+        str = fmtstr("%.*s%d%s", *cur, shell->line, shell->exit_code,
             shell->line + *cur + 2);
-    else if (!strncmp(shell->line + *cur, "$$", 2))
-        ret = asprintf(&str, "%.*s%d%s", *cur, shell->line, getpid(),
-            shell->line + *cur + 2);
-    else if (strlen(var.name) == 0) {
+    } else if (!strncmp(shell->line + *cur, "$$", 2)) {
+        str = fmtstr(
+            "%.*s%d%s", *cur, shell->line, getpid(), shell->line + *cur + 2);
+    } else if (strlen(var.name) == 0) {
         return true;
-    } else if ((resolved = lhmap_get(shell->vars, var.name)) ||
-        (resolved = getenv(var.name))) {
+    } else if (
+        // clang-format off
+        (resolved = lhmap_get(shell->vars, var.name)) ||
+        (resolved = getenv(var.name))
+        // clang-format on
+    ) {
         char *(*sanitize_func)(char *, bool) =
             is_free ? sanitize_single_arg : sanitize_double_quotes;
         resolved = sanitize_func(resolved, false);
-        ret = asprintf(&str, "%.*s%s%s", *cur, shell->line, resolved,
+        str = fmtstr("%.*s%s%s", *cur, shell->line, resolved,
             shell->line + *cur + strlen(var.name) + (var.enclosed ? 3 : 1));
         free(resolved);
-    } else if (shell->line[*cur + 1] >= '0' && shell->line[*cur + 1] <= '9')
-        ret = get_arg(shell, &str, cur);
-    else {
+    } else {
         dprintf(2, "%s: Undefined variable.\n", var.name);
         return false;
     }
-    final_checks(shell, str, cur, ret);
+    final_checks(shell, str, cur);
     return true;
 }
 
@@ -120,11 +123,17 @@ int parse_vars(Shell *shell)
             cur += 1;
             while (shell->line[cur] && shell->line[cur] != '\'')
                 cur += 1;
+            cur -= (shell->line[cur] == 0);
         } else if (shell->line[cur] == '"')
             is_free = !is_free;
-        else if (shell->line[cur] == '$' && shell->line[cur + 1] &&
-            !is_separator(shell->line[cur + 1]) &&
-            shell->line[cur + 1] != '"') {
+        else if (
+            // clang-format off
+            shell->line[cur] == '$' &&
+            shell->line[cur + 1] &&
+            shell->line[cur + 1] != '"' &&
+            !is_separator(shell->line[cur + 1])
+            // clang-format on
+        ) {
             OPTION(Var) var = get_gvar(shell->line + cur + 1);
             if (IS_NONE(var))
                 continue;

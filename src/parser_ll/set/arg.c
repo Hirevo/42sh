@@ -5,8 +5,8 @@
 ** arg
 */
 
-#include "bs.h"
 #include "parser_ll.h"
+#include "shell.h"
 
 static int check_is_arg(t_grammar *gram, char **tab, int *i)
 {
@@ -39,11 +39,10 @@ int set_arg(t_token **new, t_grammar *gram, char **tab, int *i)
     while (tab[*i] && check_is_arg(gram, tab, i)) {
         (*new)->type = strdup("ARG");
         if ((*new)->value) {
-            (*new)->value = bs_strcat((*new)->value, " ");
-            (*new)->value = bs_strcat((*new)->value, tab[*i]);
-        }
-        else
+            (*new)->value = fmtstr("%s %s", (*new)->value, tab[*i]);
+        } else {
             (*new)->value = strdup(tab[*i]);
+        }
         (*i)++;
     }
     return 0;
