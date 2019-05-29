@@ -102,13 +102,11 @@ typedef struct {
 ** av: argument list of the shell (for $0, $1, etc...).
 ** prompt: current selected prompt ID.
 ** line: raw command input from user.
-** final: parsed command from line.
+** fragments: parsed command from line.
 ** is_done: flag to exit after the command execution ends (set by `exit`).
 ** exit_code: last exit code (used for prompts and `exit`).
-** fds: list of current running process IDs, for execution pipelines.
 ** tty: is the stdin interactive (to enable/disable prompt and autocompletion).
 ** ioctl: is ioctl supported on the terminal.
-** pgid: current process group leader.
 ** vars: internal variables of the shell (accessible via `set` and `unset`).
 ** aliases: command aliases (accessible via `alias` and `unalias`).
 ** builtins: list of builtins (listed via `builtins`).
@@ -127,10 +125,8 @@ typedef struct {
     char is_done;
     unsigned int exit_code;
     char *last;
-    int *fds;
     int tty;
     int ioctl;
-    pid_t pgid;
     hmap_t *vars;
     hmap_t *aliases;
     hmap_t *builtins;
@@ -195,7 +191,6 @@ int check_env_error(char *, char *);
 int check_exit(Shell *, vec_t *);
 int compare_stats(struct stat *);
 void check_exec(Shell *, int, int *);
-void exec_piped_command(char *, Command *, int[2], Shell *);
 char *format_arg(char *);
 
 void writechar(const char chr);
@@ -277,13 +272,7 @@ char *sanitize_double_quotes(char *, bool);
 /*
 ** exec/exec2.c
 */
-OPTION(Int) exec_redirected_builtins(Shell *, int[2]);
 void quick_exec(Shell *, char *);
-
-/*
-** exec/close.c
-*/
-int close_pipes(int *);
 
 /*
 ** dualcast.c
@@ -313,8 +302,8 @@ int launch_config(Shell *);
 /*
 ** redirects.c
 */
-int setup_right_redirect(Command *, int *, int);
-int setup_left_redirect(char *, int);
+OPTION(Int) setup_right_redirect(Command *, bool);
+OPTION(Int) setup_left_redirect(Command *, bool);
 int check_redirects(Command *, Command *);
 int prepare_redirect(Command *, char **, char **, size_t);
 int set_redirects(Shell *);
@@ -339,8 +328,6 @@ int check_error(Shell *);
 ** exec/pipe.c
 */
 OPTION(Int) exec_pipeline(Shell *);
-int father_action(Command **, int *, int *, Shell *, pid_t);
-void exec_piped_child(int, Command *, int[2], Shell *);
 
 /*
 ** exec/tmp.c
@@ -351,9 +338,7 @@ void tmp_file(Shell *);
 ** exec/setup.c
 */
 void init_redirect(Command *, int *, int *, int *);
-void setup_exec(Command *, int *, int);
 void skip_commands(Command **, unsigned char);
-void set_fground(Shell *);
 
 /*
 ** globbing/globbing.c
@@ -384,7 +369,6 @@ int is_right_redirect(char *);
 int is_left_redirect(char *);
 int is_dir(char *);
 int is_builtin(char *);
-int is_to_fork(char);
 
 /*
 ** is2.c

@@ -23,27 +23,6 @@ int compare_stats(struct stat *stats)
         return -2;
 }
 
-OPTION(Int) exec_redirected_builtins(Shell *shell, int fds[2])
-{
-    int last;
-    Command *head = shell->cur;
-
-    if (lhmap_get(shell->builtins, lvec_front(head->av)) == 0)
-        return NONE(Int);
-    int fd = 0;
-    if (head->r_type) {
-        last = dup(1);
-        fd = setup_right_redirect(head, fds, (head->r_type[1] == 0));
-    }
-    OPTION(Int) ret = exec_builtins(shell, head->av);
-    if (fd) {
-        close(fd);
-        dup2(last, 1);
-        close(last);
-    }
-    return ret;
-}
-
 void quick_exec(Shell *shell, char *str)
 {
     char *save = shell->line;

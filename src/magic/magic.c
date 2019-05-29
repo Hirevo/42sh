@@ -33,6 +33,11 @@ static OPTION(SizeT) find_paren(const char *line, size_t idx)
             i -= (line[i] == 0);
         } else if (line[i] == '"') {
             quoted = !quoted;
+        } else if (lstr_starts_with(line + i, "$(")) {
+            OPTION(SizeT) offs = find_paren(line, i += 2);
+            if (IS_NONE(offs))
+                return NONE(SizeT);
+            i += OPT_UNWRAP(offs);
         } else if (quoted == false && line[i] == ')') {
             return SOME(SizeT, i - idx);
         }
@@ -56,16 +61,21 @@ static void exec_magic(Shell *shell, char *line, size_t i, size_t len,
 {
     char name[] = "/tmp/42sh-magic-XXXXXX";
     int save = dup(1);
-    int fd = ((save != -1) ? mkostemp(name, O_CLOEXEC | O_RDONLY) : -1);
+    int fd = ((save != -1) ? mkstemp(name) : -1);
 
+    fflush(stdout);
     if (save == -1 || fd == -1 || dup2(fd, 1) == -1)
         handle_error("magic");
+    close(fd);
     char *str = strdup(line);
     quick_exec(shell, str);
+    fflush(stdout);
     if (dup2(save, 1) == -1)
         handle_error("magic");
     close(save);
-    lseek(fd, SEEK_SET, 0);
+    fd = open(name, O_RDONLY);
+    if (fd == -1)
+        handle_error("magic");
     char *subst = read_all(fd);
     close(fd);
     remove(name);
@@ -111,7 +121,7 @@ int magic(Shell *shell)
             } else {
                 return -1;
             }
-        } else if (shell->line[i] == '$' && shell->line[i + 1] == '(') {
+        } else if (lstr_starts_with(shell->line + i, "$(")) {
             OPTION(SizeT) opt_len = find_paren(shell->line, i + 2);
             if (IS_SOME(opt_len)) {
                 size_t len = OPT_UNWRAP(opt_len);

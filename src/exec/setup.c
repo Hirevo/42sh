@@ -20,39 +20,16 @@ void init_redirect(Command *head, int *r, int *l, int *i)
     head->l_type = NULL;
 }
 
-void setup_exec(Command *head, int *fds, int ret)
-{
-    dup2(ret, 0);
-    if (ret != 0)
-        close(ret);
-    if (head->next && head->link == '|')
-        dup2(fds[1], 1);
-    else if (head->r_type)
-        if (setup_right_redirect(head, fds, (head->r_type[1] == 0)) == -1)
-            exit(1);
-}
-
 void skip_commands(Command **head, unsigned char ret)
 {
-    char last;
-
-    if ((*head) &&
-        (((*head)->link == 'e' && ret) || ((*head)->link == 'o' && !ret))) {
-        last = (*head)->link;
+    if ((*head) == NULL || (*head)->prev == NULL)
+        return;
+    const Command *prev = (*head)->prev;
+    const bool should_skip = 
+        (prev->link == 'e' && ret != 0) ||
+        (prev->link == 'o' && ret == 0);
+    if (should_skip) {
         (*head) = (*head)->next;
-        while ((*head) && (*head)->link != ';' && (*head)->link != 'e' &&
-            (*head)->link != 'o')
-            (*head) = (*head)->next;
-        if ((*head) && (*head)->link == 'e' && last == 'o')
-            ret = 1;
-        if ((*head) && (*head)->link != ';')
-            skip_commands(head, ret);
+        skip_commands(head, ret);
     }
-}
-
-void set_fground(Shell *shell)
-{
-    setpgid(0, shell->pgid);
-    if (shell->tty && shell->pgid == 0)
-        tcsetpgrp(0, getpid());
 }

@@ -18,8 +18,3 @@ int is_left_redirect(char *str)
 {
     return strcmp(str, "<") == 0 || strcmp(str, "<<") == 0;
 }
-
-int is_to_fork(char c)
-{
-    return c == ';' || c == 'e' || c == 'o';
-}

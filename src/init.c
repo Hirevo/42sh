@@ -1,10 +1,3 @@
-/*
-** EPITECH PROJECT, 2018
-** 42sh
-** File description:
-** init
-*/
-
 #include "builtins.h"
 #include "my.h"
 #include "shell.h"
@@ -67,7 +60,6 @@ void init_shell(Shell *shell)
 {
     srand(getpid() * time(NULL));
     shell->exit_code = 0;
-    shell->fds = NULL;
     shell->is_done = 0;
     parse_rc(shell);
     init_history(shell);

@@ -88,7 +88,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/dualcast/wait_connection.c
     ${PROJECT_SOURCE_DIR}/src/env/env.c
     ${PROJECT_SOURCE_DIR}/src/env/env2.c
-    ${PROJECT_SOURCE_DIR}/src/exec/close.c
     ${PROJECT_SOURCE_DIR}/src/exec/exec.c
     ${PROJECT_SOURCE_DIR}/src/exec/exec2.c
     ${PROJECT_SOURCE_DIR}/src/exec/pipe.c

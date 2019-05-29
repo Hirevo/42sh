@@ -42,7 +42,7 @@ void putstr(const char *fmt, ...)
     va_list list;
 
     va_start(list, fmt);
-    vprintf(fmt, list);
+    vdprintf(1, fmt, list);
     va_end(list);
 }
 

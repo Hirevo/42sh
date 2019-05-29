@@ -11,25 +11,25 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int buffer_input(char *name, int i[2])
+int buffer_input(char *name, int fds[2])
 {
-    char *str;
-    char c;
+    char *str = NULL;
+    char c = 10;
 
-    str = NULL;
-    c = 10;
-    while ((str = get_next_line(0)))
+    while ((str = get_next_line(0))) {
         if (str && strcmp(str, name) == 0) {
             free(str);
-            close(i[1]);
-            return i[0];
+            close(fds[1]);
+            return fds[0];
         } else {
-            write(i[1], str, strlen(str));
-            write(i[1], &c, 1);
+            write(fds[1], str, strlen(str));
+            write(fds[1], &c, 1);
             free(str);
-            if (isatty(0))
+            if (isatty(0)) {
                 writestr("> ");
+            }
         }
-    close(i[1]);
-    return i[0];
+    }
+    close(fds[1]);
+    return fds[0];
 }
