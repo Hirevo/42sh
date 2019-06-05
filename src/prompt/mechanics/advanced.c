@@ -11,44 +11,45 @@
 #include <stdlib.h>
 #include <string.h>
 
-void move_end(Shell *shell)
+void move_end(Shell *shell, char **line)
 {
-    int len;
+    int len = strlen(*line);
 
-    len = strlen(shell->line);
     while (shell->w.cur < len) {
         writestr(shell->w.forw);
         shell->w.cur += 1;
     }
 }
 
-void move_home(Shell *shell)
+void move_home(Shell *shell, char **line)
 {
+    (void)(line);
     while (shell->w.cur > 0) {
         writestr(shell->w.backw);
         shell->w.cur -= 1;
     }
 }
 
-void set_hist_line(Shell *shell)
+void set_hist_line(Shell *shell, char **line)
 {
-    free(shell->line);
-    if (shell->hist.cur_line)
-        shell->line = strdup(shell->hist.cur_line);
-    else
-        shell->line = NULL;
-    if (shell->line) {
-        writestr(shell->line);
-        shell->w.cur = strlen(shell->line);
+    free(*line);
+    if (shell->hist.cur_line) {
+        *line = strdup(shell->hist.cur_line);
+    } else {
+        *line = NULL;
+    }
+    if (*line) {
+        writestr(*line);
+        shell->w.cur = strlen(*line);
     }
     shell->hist.cur = -1;
 }
 
-void suppress_line(Shell *shell)
+void suppress_line(Shell *shell, char *line)
 {
     int len;
 
-    len = ((shell->line != NULL) ? strlen(shell->line) : 0);
+    len = ((line != NULL) ? strlen(line) : 0);
     while (shell->w.cur < len) {
         shell->w.cur += 1;
         writestr(shell->w.forw);

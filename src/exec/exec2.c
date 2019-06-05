@@ -14,28 +14,22 @@
 
 int compare_stats(struct stat *stats)
 {
-    if (stats->st_mode & S_IXUSR)
-        if (!S_ISDIR(stats->st_mode))
+    if (stats->st_mode & S_IXUSR) {
+        if (!S_ISDIR(stats->st_mode)) {
             return 0;
-        else
+        } else {
             return -3;
-    else
+        }
+    } else {
         return -2;
+    }
 }
 
 void quick_exec(Shell *shell, char *str)
 {
-    char *save = shell->line;
-    vec_t *fragments = shell->fragments;
-    Command *cmds = shell->commands;
-
-    if (is_line_empty(str))
+    if (is_line_empty(str)) {
+        free(str);
         return;
-    shell->commands = NULL;
-    shell->fragments = NULL;
-    shell->line = str;
-    exec_line(shell, 0);
-    shell->line = save;
-    shell->fragments = fragments;
-    shell->commands = cmds;
+    }
+    exec_line(shell, str, false);
 }

@@ -11,130 +11,121 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int insert_one_hist(Shell *shell, int i, int n)
+static OPTION(CharPtr)
+    insert_one_hist(Shell *shell, char *line, size_t idx, size_t n)
 {
-    int len = -1;
     char **last = lvec_back(shell->hist.arr);
-    char *str;
-
     if (last == 0)
-        return -1;
-    while (last && last[++len])
-        ;
-    if (n >= len)
-        return eputstr("bad ! arg selector.\n"), -1;
-    len = strlen(last[n]) + strlen(shell->line);
-    len += strlen(shell->line) - 3;
-    str = calloc(len + 1, sizeof(char));
+        return NONE(CharPtr);
+
+    size_t len = 0;
+    while (last && last[len])
+        len += 1;
+    if (n >= len) {
+        eputstr("bad ! arg selector.\n");
+        return NONE(CharPtr);
+    }
+
+    char *str = fmtstr("%.*s%s%s", (int)(idx), line, last[n], line + idx + 3);
     if (str == NULL)
-        return -1;
-    strncpy(str, shell->line, i);
-    strcat(str, last[n]);
-    strcat(str, shell->line + i + 3);
-    free(shell->line);
-    shell->line = str;
-    return 0;
+        return NONE(CharPtr);
+    free(line);
+
+    return SOME(CharPtr, str);
 }
 
-static int insert_full_hist(Shell *shell, int i)
+static OPTION(CharPtr) insert_full_hist(Shell *shell, char *line, size_t i)
 {
-    int len = 0;
-    int l = -1;
-    char *str;
     char **last = lvec_back(shell->hist.arr);
-
     if (last == 0)
-        return -1;
-    while (last[++l])
-        len += strlen(last[l]);
-    len += strlen(shell->line) - 2 + l;
-    str = calloc(len + 1, sizeof(char));
+        return NONE(CharPtr);
+
+    size_t len = 0;
+    size_t idx = 0;
+    for (idx = 0; last[idx]; idx++)
+        len += strlen(last[idx]);
+    len += strlen(line) - 2 + idx;
+
+    char *str = calloc(len + 1, sizeof(char));
     if (str == NULL)
-        return -1;
-    strncpy(str, shell->line, i);
-    l = -1;
-    while (last[++l])
-        strcat(l ? strcat(str, " ") : str, last[l]);
-    strcat(str, shell->line + i + 2);
-    free(shell->line);
-    shell->line = str;
-    return 0;
+        return NONE(CharPtr);
+
+    strncpy(str, line, i);
+    for (idx = 0; last[idx]; idx++)
+        strcat(idx ? strcat(str, " ") : str, last[idx]);
+    strcat(str, line + i + 2);
+    free(line);
+
+    return SOME(CharPtr, str);
 }
 
-static int insert_last_hist(Shell *shell, int i)
+static OPTION(CharPtr) insert_last_hist(Shell *shell, char *line, size_t i)
 {
-    int len = 0;
-    int l = -1;
-    char *str;
     char **last = lvec_back(shell->hist.arr);
-
     if (last == 0)
-        return -1;
-    while (last[++l])
-        ;
-    l -= 1;
-    len = strlen(last[l]);
-    len += strlen(shell->line) - 2;
-    str = calloc(len + 1, sizeof(char));
-    if (str == NULL)
-        return -1;
-    strncpy(str, shell->line, i);
-    strcat(str, last[l]);
-    strcat(str, shell->line + i + 2);
-    free(shell->line);
-    shell->line = str;
-    return 0;
+        return NONE(CharPtr);
+
+    size_t idx = 0;
+    while (last[idx])
+        idx += 1;
+    idx -= 1;
+
+    char *str = fmtstr("%.*s%s%s", (int)(i), line, last[idx], line + i + 2);
+    free(line);
+
+    return SOME(CharPtr, str);
 }
 
-static void final_things(Shell *shell, char *last, int save)
-{
-    char *str;
-    char **l = lvec_back(shell->hist.arr);
-
-    str = NULL;
-    if (l != NULL)
-        str = construct_alias(l);
-    if (last != shell->line)
-        printf("%s\n", shell->line);
-    if (save && strcmp(shell->line, "exit") &&
-        (l == NULL || (strcmp(str, shell->line))))
-        add_hist_elem(shell, shell->line);
-    free(str);
-}
-
-static int is_hist_sym(Shell *shell, int i)
-{
-    if (strncmp(shell->line + i, "!!", 2) == 0) {
-        if (insert_full_hist(shell, i) == -1)
-            return -1;
-    } else if (strncmp(shell->line + i, "!$", 2) == 0) {
-        if (insert_last_hist(shell, i) == -1)
-            return -1;
-    } else if (strncmp(shell->line + i, "!:", 2) == 0 &&
-        (shell->line[i + 2] >= '0' && shell->line[i + 2] <= '9'))
-        if (insert_one_hist(shell, i, shell->line[i + 2] - '0') == -1)
-            return -1;
-    return 0;
-}
-
-int subst_history(Shell *shell, int save)
+OPTION(CharPtr) substitute_history(Shell *shell, char *line, bool to_save)
 {
     int i = -1;
-    char *last = shell->line;
+    char *last = line;
 
-    while (lvec_back(shell->hist.arr) && shell->line[++i]) {
-        if (shell->line[i] == '\\') {
-            i += !!(shell->line[i + 1]);
-        } else if (shell->line[i] == '\'') {
+    while (lvec_back(shell->hist.arr) && line[++i]) {
+        if (line[i] == '\\') {
+            i += !!(line[i + 1]);
+        } else if (line[i] == '\'') {
             i += 1;
-            while (shell->line[i] && shell->line[i] != '\'')
+            while (line[i] && line[i] != '\'')
                 i += 1;
-            i -= (shell->line[i] == 0);
-        } else {
-            if (is_hist_sym(shell, i) == -1)
-                return -1;
+            i -= (line[i] == 0);
+        } else if (lstr_starts_with(line + i, "!!")) {
+            OPTION(CharPtr) opt = insert_full_hist(shell, line, i);
+            if (IS_NONE(opt)) {
+                return opt;
+            } else {
+                line = OPT_UNWRAP(opt);
+            }
+        } else if (lstr_starts_with(line + i, "!$")) {
+            OPTION(CharPtr) opt = insert_last_hist(shell, line, i);
+            if (IS_NONE(opt)) {
+                return opt;
+            } else {
+                line = OPT_UNWRAP(opt);
+            }
+        } else if (lstr_starts_with(line + i, "!:") &&
+            (line[i + 2] >= '0' && line[i + 2] <= '9')) {
+            OPTION(CharPtr)
+            opt = insert_one_hist(shell, line, i, (size_t)(line[i + 2] - '0'));
+            if (IS_NONE(opt)) {
+                return opt;
+            } else {
+                line = OPT_UNWRAP(opt);
+            }
         }
     }
-    final_things(shell, last, save);
-    return 0;
+
+    char **back = lvec_back(shell->hist.arr);
+    char *str = NULL;
+    if (back != NULL) {
+        str = construct_alias(back);
+    }
+    if (last != line)
+        putstr("%s\n", line);
+    if (to_save && lstr_equals(line, "exit") == false &&
+        (back == NULL || lstr_equals(str, line) == false))
+        add_hist_elem(shell, line);
+    free(str);
+
+    return SOME(CharPtr, line);
 }

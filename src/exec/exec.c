@@ -48,62 +48,103 @@ void exec_process(vec_t *args)
     exit(1);
 }
 
-unsigned int exec_action(Shell *shell, unsigned int args)
+int exec_commands(Shell *shell, Command *commands)
 {
-    OPTION(Int) status = exec_pipeline(shell);
+    OPTION(Int) status = exec_pipeline(shell, commands);
 
-    (void)(args);
     if (shell->is_done) {
         free_shell(shell);
         exit(OPT_UNWRAP_OR(status, 1));
     }
-    lvec_clear(shell->fragments, true);
-    lvec_drop(shell->fragments);
-    free_commands(shell);
-    free(shell->line);
+    free_commands(commands);
     return OPT_UNWRAP_OR(status, 1);
 }
 
-int format_commands(Shell *shell)
+bool format_commands(Command *commands)
 {
-    for (Command *head = shell->commands; head; head = head->next) {
+    for (Command *head = commands; head; head = head->next) {
         for (size_t i = 0; i < lvec_size(head->av); i++) {
             lvec_set(head->av, i, format_arg(lvec_at(head->av, i)));
-            if (lvec_at(head->av, i) == NULL)
-                return -1;
+            if (lvec_at(head->av, i) == NULL) {
+                return false;
+            }
         }
     }
-    return 0;
+    return true;
 }
 
-static int set_error(Shell *shell, int ret)
+int exec_line(Shell *shell, char *line, bool to_save)
 {
-    shell->exit_code = ret;
-    return ret;
-}
+    char *current = line;
+    OPTION(CharPtr) stage_result = NONE(CharPtr);
 
-unsigned int exec_line(Shell *shell, unsigned int args)
-{
+    stage_result = substitute_history(shell, current, to_save);
+    if (IS_NONE(stage_result)) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    current = OPT_UNWRAP(stage_result);
+    stage_result = substitute_commands(shell, current);
+    if (IS_NONE(stage_result)) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    current = OPT_UNWRAP(stage_result);
+    stage_result = substitute_aliases(shell, current);
+    if (IS_NONE(stage_result)) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    current = OPT_UNWRAP(stage_result);
+    stage_result = substitute_vars(shell, current);
+    if (IS_NONE(stage_result)) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    current = OPT_UNWRAP(stage_result);
+    stage_result = substitute_globs(shell, current);
+    if (IS_NONE(stage_result)) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    current = OPT_UNWRAP(stage_result);
+    current = my_epurcommand(current);
+    if (current == NULL) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    current = my_epurstr(current);
+    if (current == NULL) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    if (is_line_empty(current))
+        return 0;
+    size_t args = estimate_fragment_count(current);
+    vec_t *fragments = split_fragments(current, args);
+    free(current);
+    if (fragments == 0) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    OPTION(CommandPtr) opt_commands = parse_commands(fragments);
+    lvec_clear(fragments, true);
+    lvec_drop(fragments);
+    if (IS_NONE(opt_commands)) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    Command *commands = OPT_UNWRAP(opt_commands);
     if (
         // clang-format off
-        subst_history(shell, args) == -1 ||
-        magic(shell) == -1 ||
-        parse_alias(shell) == -1 ||
-        parse_vars(shell) == -1 ||
-        parse_stars(shell) == 1 ||
-        (shell->line = my_epurcommand(shell->line)) == NULL ||
-        (shell->line = my_epurstr(shell->line)) == NULL
-        // clang-format on
-    )
-        return set_error(shell, 1);
-    if (is_line_empty(shell->line))
-        return 0;
-    args = count_args(shell->line);
-    shell->fragments = bufferize(shell->line, args);
-    if (shell->fragments == NULL || set_commands(shell) == -1 ||
-        set_redirects(shell) == -1 || check_error(shell) == -1 ||
-        format_commands(shell) == -1)
-        return set_error(shell, 1);
-    shell->cur = shell->commands;
-    return exec_action(shell, args);
+        assign_redirects(commands) == false ||
+        check_errors(commands) == false ||
+        format_commands(commands) == false
+        // clang-format off
+    ) {
+        shell->exit_code = 1;
+        return 1;
+    }
+    shell->exit_code = exec_commands(shell, commands);
+    return shell->exit_code;
 }

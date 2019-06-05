@@ -17,69 +17,57 @@ static void sanitize_glob(glob_t *list)
         list->gl_pathv[i] = sanitize_single_arg(list->gl_pathv[i], 1);
 }
 
-static void update_glob(Shell *shell, char *arg, int *i, glob_t *list)
+OPTION(CharPtr) substitute_globs(Shell *shell, char *line)
 {
-    sanitize_glob(list);
-    char *file = construct_alias(list->gl_pathv);
-    char *tmp = fmtstr(
-        "%.*s%s%s", *i, shell->line, file, shell->line + *i + strlen(arg));
-    free(shell->line);
-    shell->line = tmp;
-    *i += strlen(file);
-    free(file);
-    free(arg);
-}
-
-static void glob_stars(Shell *shell, char *arg, int *i)
-{
-    glob_t list;
-
-    if (!arg)
-        return;
-    list.gl_offs = 1;
-    if (glob(arg, GLOB_TILDE | GLOB_BRACE, NULL, &list) != 0) {
-        *i += strlen(arg) - 1;
-        free(arg);
-        globfree(&list);
-        return;
-    }
-    if (list.gl_pathc == 0) {
-        *i += strlen(arg) - 1;
-        free(arg);
-        globfree(&list);
-        return;
-    }
-    update_glob(shell, arg, i, &list);
-    *i -= 1;
-    globfree(&list);
-}
-
-int parse_stars(Shell *shell)
-{
-    int i = -1;
-    int len;
-
-    while (shell->line[++i]) {
-        if (shell->line[i] == '\\')
-            i += !!(shell->line[i + 1]);
-        else if (shell->line[i] == '\'') {
-            i += 1;
-            while (shell->line[i] && shell->line[i] != '\'')
-                i += 1;
-            i -= (shell->line[i] == 0);
-        } else if (shell->line[i] == '"')
-            skip_string(shell->line, &i);
-        else if (!is_space(shell->line[i])) {
-            len = i;
-            while (shell->line[len]) {
-                if (shell->line[len] == '\\')
-                    len += !!(shell->line[len + 1]);
-                else if (is_space(shell->line[len]))
+    for (size_t idx = 0; line[idx]; idx++) {
+        if (line[idx] == '\\') {
+            idx += !!(line[idx + 1]);
+        } else if (line[idx] == '\'') {
+            idx += 1;
+            while (line[idx] && line[idx] != '\'')
+                idx += 1;
+            idx -= (line[idx] == 0);
+        } else if (line[idx] == '"') {
+            skip_string(line, &idx);
+        } else if (!is_space(line[idx])) {
+            size_t len = idx;
+            while (line[len]) {
+                if (line[len] == '\\') {
+                    len += !!(line[len + 1]);
+                } else if (is_space(line[len])) {
                     break;
+                }
                 len += 1;
             }
-            glob_stars(shell, strndup(shell->line + i, len - i), &i);
+            char *fragment = strndup(line + idx, len - idx);
+            if (!fragment)
+                return NONE(CharPtr);
+            glob_t list;
+            list.gl_offs = 1;
+            if (glob(fragment, GLOB_TILDE | GLOB_BRACE, NULL, &list) != 0) {
+                idx += strlen(fragment) - 1;
+                free(fragment);
+                globfree(&list);
+                continue;
+            }
+            if (list.gl_pathc == 0) {
+                idx += strlen(fragment) - 1;
+                free(fragment);
+                globfree(&list);
+                continue;
+            }
+            sanitize_glob(&list);
+            char *file = construct_alias(list.gl_pathv);
+            char *tmp = fmtstr(
+                "%.*s%s%s", idx, line, file, line + idx + strlen(fragment));
+            free(line);
+            line = tmp;
+            idx += strlen(file);
+            free(file);
+            free(fragment);
+            idx -= 1;
+            globfree(&list);
         }
     }
-    return 0;
+    return SOME(CharPtr, line);
 }

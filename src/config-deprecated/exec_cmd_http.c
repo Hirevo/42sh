@@ -31,7 +31,6 @@ static int execute_http(t_socket client, char *cmd)
     int sauv2;
 
     init_shell(&shell);
-    shell.line = cmd;
     sauv = dup(1);
     if (sauv == -1)
         return 1;
@@ -42,7 +41,7 @@ static int execute_http(t_socket client, char *cmd)
         return 1;
     if (dup2(client, 2) == -1)
         return 1;
-    exec_line(&shell, 0);
+    exec_line(&shell, cmd, false);
     dup2(sauv, 1);
     dup2(sauv2, 2);
     close(sauv);

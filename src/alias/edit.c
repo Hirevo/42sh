@@ -10,77 +10,87 @@
 #include <stdlib.h>
 #include <string.h>
 
-int insert_alias(Shell *shell, Alias *e, int *len, int i)
+static bool equals_alias(void *ctx, void *elem, size_t idx)
 {
-    char *replace;
-
-    len[1] = strlen(shell->line) - len[0] + strlen(e->command);
-    replace = calloc(len[1] + 1, sizeof(char));
-    if (replace == NULL)
-        handle_error("calloc");
-    strncpy(replace, shell->line, i);
-    strcat(replace, e->command);
-    strcat(replace, shell->line + i + len[0]);
-    free(shell->line);
-    shell->line = replace;
-    return 0;
+    (void)(idx);
+    return lstr_equals(ctx, elem);
 }
 
-static int replace(char *last, int len[2], char *line, int *i)
+OPTION(CharPtr) substitute_alias(Shell *shell, char *line, size_t idx)
 {
-    free(last);
-    *i += (len[0] - 1);
-    free(line);
-    return 0;
+    vec_t *substituted = lvec_new();
+    size_t len = strcspn(line + idx, " \t><;|");
+    char *considered = strndup(line + idx, len);
+    char *matched = 0;
+
+    while (1) {
+        matched = lhmap_get(shell->aliases, considered);
+        if (matched == 0)
+            break;
+        ssize_t found = lvec_find_index(substituted, equals_alias, considered);
+        if (found > 0) {
+            eputstr("error: command denied due to alias loop.\n");
+            free(line);
+            free(considered);
+            lvec_clear(substituted, true);
+            lvec_drop(substituted);
+            return NONE(CharPtr);
+        } else if (found == 0) {
+            free(considered);
+            lvec_clear(substituted, true);
+            lvec_drop(substituted);
+            return SOME(CharPtr, line);
+        }
+        lvec_push_front(substituted, 1, considered);
+        char *replaced =
+            fmtstr("%.*s%s%s", idx, line, matched, line + idx + len);
+        free(line);
+        line = replaced;
+        len = strcspn(line + idx, " \t><;|");
+        considered = strndup(line + idx, len);
+    }
+    free(considered);
+    lvec_clear(substituted, true);
+    lvec_drop(substituted);
+    return SOME(CharPtr, line);
 }
 
-int check_alias(Shell *shell, int *i, char *last)
+// TODO: Add awareness of backslashes
+OPTION(CharPtr) substitute_aliases(Shell *shell, char *line)
 {
-    int len[2];
-    char *line;
-    Alias found;
-
-    len[0] = strcspn(shell->line + *i, " \t><;|");
-    line = strndup(shell->line + *i, len[0]);
-    for (ssize_t j = 0; j < (ssize_t)(shell->aliases->size); j++) {
-        char *name = shell->aliases->key_table->arr[j];
-        if (lstr_equals(line, name)) {
-            found.alias = name;
-            found.command = shell->aliases->value_table->arr[j];
-            if (detect_loop(shell, line, *i) == -1 ||
-                insert_alias(shell, &found, len, *i) == -1)
-                return -1;
-            free(last);
-            last = line;
-            len[0] = strcspn(shell->line + *i, " \t><;|");
-            line = strndup(shell->line + *i, len[0]);
-            if (lstr_equals(line, last))
-                break;
-            j = -1;
+    bool is_command = true;
+    for (size_t idx = 0; line[idx]; idx++) {
+        if (line[idx] == '\\') {
+            idx += !!(line[idx + 1]);
+        } else if (
+            // clang-format off
+            is_space(line[idx]) ||
+            is_separator(line[idx])
+            // clang-format on
+        ) {
+            while (
+                // clang-format off
+                is_space(line[idx]) ||
+                is_separator(line[idx])
+                // clang-format on
+            ) {
+                if (is_delimiter(line[idx++])) {
+                    is_command = true;
+                }
+            }
+            idx -= 1;
+        } else if (is_command) {
+            is_command = false;
+            OPTION(CharPtr) opt = substitute_alias(shell, line, idx);
+            if (IS_NONE(opt)) {
+                return opt;
+            } else {
+                line = OPT_UNWRAP(opt);
+                idx += strcspn(line + idx, " \t><;|");
+            }
+        } else {
+            idx += (strcspn(line + idx, " \t><;|") - 1);
         }
     }
-    return replace(last, len, line, i);
-}
-
-int parse_alias(Shell *shell)
-{
-    int i = -1;
-    char *last = 0;
-    int c = 1;
-
-    memset(&shell->subst, 0, sizeof(Subst));
-    while (shell->line[++i])
-        if (shell->line[i] == '\\')
-            i += !!(shell->line[i + 1]);
-        else if (is_space(shell->line[i]) || is_separator(shell->line[i])) {
-            while (shell->line[i] &&
-                (is_space(shell->line[i]) || is_separator(shell->line[i])))
-                if (is_delimiter(shell->line[i++]))
-                    c = 1;
-            i -= 1;
-        } else if (c && !(c = 0))
-            if (check_alias(shell, &i, last) == -1)
-                return -1;
-    free_subst(shell);
-    return 0;
+    return SOME(CharPtr, line);
 }

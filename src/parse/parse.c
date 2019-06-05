@@ -25,10 +25,10 @@ void skip_string(char *str, int *i)
     *i -= (str[*i] == 0);
 }
 
-unsigned int count_args(char *str)
+size_t estimate_fragment_count(char *str)
 {
     int i = -1;
-    unsigned int args = 0;
+    size_t args = 0;
 
     while (str[++i]) {
         if (str[i] == '\\')
@@ -47,7 +47,7 @@ unsigned int count_args(char *str)
         else if (!is_space(str[i]) && is_space(str[i - 1]))
             args += 1;
     }
-    return args + 1;
+    return args;
 }
 
 int get_quoted_text(char *arg, char **final, int l, char c)

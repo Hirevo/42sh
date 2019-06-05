@@ -45,23 +45,39 @@ void diagnose_status(unsigned int status)
 
 void execute(Shell *shell)
 {
-    char *str;
+    char *line = 0;
 
-    if (shell->ioctl)
-        prompt_line(shell);
-    else
-        shell->line = get_next_line(0);
-    if (shell->line && shell->tty && shell->ioctl)
+    if (shell->ioctl) {
+        OPTION(CharPtr) opt = prompt_line(shell);
+        if (IS_NONE(opt)) {
+            return;
+        } else {
+            line = OPT_UNWRAP(opt);
+        }
+    } else {
+        line = get_next_line(0);
+    }
+    if (line && shell->tty && shell->ioctl)
         writechar('\n');
-    if (!shell->line)
-        shell->line = strdup("exit");
-    clear_comment(shell);
-    if (!is_line_empty(shell->line)) {
-        if ((str = get_alias_cmd(shell, "postcmd")))
-            quick_exec(shell, str);
-        shell->exit_code = exec_line(shell, shell->tty);
-        if ((str = get_alias_cmd(shell, "precmd")))
-            quick_exec(shell, str);
+    if (!line) {
+        line = strdup("exit");
+    }
+    OPTION(CharPtr) opt = clear_comment(line);
+    if (IS_NONE(opt)) {
+        return;
+    } else {
+        line = OPT_UNWRAP(opt);
+    }
+    if (!is_line_empty(line)) {
+        char *postcmd = get_alias_cmd(shell, "postcmd");
+        if (postcmd) {
+            quick_exec(shell, postcmd);
+        }
+        shell->exit_code = exec_line(shell, line, shell->tty);
+        char *precmd = get_alias_cmd(shell, "precmd");
+        if (precmd) {
+            quick_exec(shell, precmd);
+        }
     }
 }
 
@@ -70,7 +86,6 @@ static int start_standard_shell(Shell *shell)
     signal(SIGINT, SIG_IGN);
     signal(SIGTTOU, SIG_IGN);
     while (1) {
-        shell->line = 0;
         shell->w.cur = 0;
         init_prompt(shell);
         execute(shell);

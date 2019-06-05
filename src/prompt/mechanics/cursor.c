@@ -41,53 +41,56 @@ void buffer_seq(Shell *shell, char **str, int *dir, char c)
     }
 }
 
-void move_forw(Shell *shell)
+void move_forw(Shell *shell, char **line)
 {
-    if (shell->line && shell->w.cur < ((int)strlen(shell->line))) {
+    if (line && shell->w.cur < ((int)(strlen(*line)))) {
         shell->w.cur += 1;
         writestr(shell->w.forw);
     }
 }
 
-void move_backw(Shell *shell)
+void move_backw(Shell *shell, char **line)
 {
+    (void)(line);
     if (shell->w.cur) {
         shell->w.cur -= 1;
         writestr(shell->w.backw);
     }
 }
 
-void move_upw(Shell *shell)
+void move_upw(Shell *shell, char **line)
 {
-    suppress_line(shell);
+    suppress_line(shell, *line);
     if (shell->hist.cur == -1) {
         free(shell->hist.cur_line);
-        if (shell->line)
-            shell->hist.cur_line = strdup(shell->line);
-        else
+        if (*line) {
+            shell->hist.cur_line = strdup(*line);
+        } else {
             shell->hist.cur_line = NULL;
+        }
         shell->hist.cur = shell->hist.arr->size - 1;
     } else if (shell->hist.cur > 0)
         shell->hist.cur -= 1;
-    free(shell->line);
-    shell->line = construct_alias(shell->hist.arr->arr[shell->hist.cur]);
-    if (shell->line) {
-        writestr(shell->line);
-        shell->w.cur = strlen(shell->line);
+    free(*line);
+    *line = construct_alias(shell->hist.arr->arr[shell->hist.cur]);
+    if (*line) {
+        writestr(*line);
+        shell->w.cur = strlen(*line);
     }
 }
 
-void move_downw(Shell *shell)
+void move_downw(Shell *shell, char **line)
 {
     if (shell->hist.cur == -1)
         return;
-    suppress_line(shell);
-    if ((size_t)(shell->hist.cur) == (shell->hist.arr->size - 1))
-        return set_hist_line(shell);
-    else
+    suppress_line(shell, *line);
+    if ((size_t)(shell->hist.cur) == (shell->hist.arr->size - 1)) {
+        return set_hist_line(shell, line);
+    } else {
         shell->hist.cur += 1;
-    free(shell->line);
-    shell->line = construct_alias(shell->hist.arr->arr[shell->hist.cur]);
-    writestr(shell->line);
-    shell->w.cur = strlen(shell->line);
+    }
+    free(*line);
+    *line = construct_alias(shell->hist.arr->arr[shell->hist.cur]);
+    writestr(*line);
+    shell->w.cur = strlen(*line);
 }

@@ -13,31 +13,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-char *cat_path(char **path, char *final, int i)
-{
-    char *str;
-    char *dir;
-
-    if (i == -1 || i == -2)
-        dir = strdup((i == -2) ? "/bin" : "/usr/bin");
-    else if (i >= 0)
-        dir = path[i];
-    else
-        return NULL;
-    str = calloc(strlen(dir) + strlen(final) + 2, sizeof(char));
-    if (str == NULL)
-        handle_error("calloc");
-    *str = 0;
-    str = strcat(str, dir);
-    if (dir[strlen(dir)] != '/')
-        str[strlen(dir)] = '/';
-    str[strlen(dir) + 1] = 0;
-    str = strcat(str, final);
-    if (i < 0)
-        free(dir);
-    return str;
-}
-
 int is_path(char *str)
 {
     int i;

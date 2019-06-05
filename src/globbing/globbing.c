@@ -23,19 +23,19 @@ DEF_OPTION(Var, Var);
 
 // static char *get_arg(Shell *shell, int *cur)
 // {
-//     int nb = atoi(shell->line + *cur + 1);
+//     int nb = atoi(line + *cur + 1);
 //     int len = 0;
 
-//     while (shell->line[*cur + 1 + len] && shell->line[*cur + 1 + len] >= '0'
+//     while (line[*cur + 1 + len] && line[*cur + 1 + len] >= '0'
 //     &&
-//         shell->line[*cur + 1 + len] <= '9')
+//         line[*cur + 1 + len] <= '9')
 //         len += 1;
-//     return fmtstr("%.*s%s%s", *cur, shell->line,
+//     return fmtstr("%.*s%s%s", *cur, line,
 //         (shell->av && nb < nb_args(shell->av)) ? shell->av[nb] : "",
-//         shell->line + *cur + len + 1);
+//         line + *cur + len + 1);
 // }
 
-static OPTION(Var) get_gvar(char *str)
+static OPTION(Var) get_varname(char *str)
 {
     size_t i = 0;
     char quotes[][2] = {
@@ -69,29 +69,20 @@ static OPTION(Var) get_gvar(char *str)
     return SOME(Var, ret);
 }
 
-static void final_checks(Shell *shell, char *str, int *cur)
-{
-    if (str == NULL)
-        handle_error("calloc");
-    *cur += (strlen(str) - strlen(shell->line)) + 1;
-    free(shell->line);
-    shell->line = str;
-}
-
 // TODO: Re-implement shell args ($0 and ${0})
-static bool replace_var(Shell *shell, int *cur, Var var, bool is_free)
+static OPTION(CharPtr)
+    substitute_var(Shell *shell, char *line, long *cur, Var var, bool quoted)
 {
     char *str = 0;
     char *resolved = 0;
 
-    if (!strncmp(shell->line + *cur, "$?", 2)) {
-        str = fmtstr("%.*s%d%s", *cur, shell->line, shell->exit_code,
-            shell->line + *cur + 2);
-    } else if (!strncmp(shell->line + *cur, "$$", 2)) {
-        str = fmtstr(
-            "%.*s%d%s", *cur, shell->line, getpid(), shell->line + *cur + 2);
+    if (!strncmp(line + *cur, "$?", 2)) {
+        str =
+            fmtstr("%.*s%d%s", *cur, line, shell->exit_code, line + *cur + 2);
+    } else if (!strncmp(line + *cur, "$$", 2)) {
+        str = fmtstr("%.*s%d%s", *cur, line, getpid(), line + *cur + 2);
     } else if (strlen(var.name) == 0) {
-        return true;
+        return SOME(CharPtr, line);
     } else if (
         // clang-format off
         (resolved = getenv(var.name)) ||
@@ -99,47 +90,55 @@ static bool replace_var(Shell *shell, int *cur, Var var, bool is_free)
         // clang-format on
     ) {
         char *(*sanitize_func)(char *, bool) =
-            is_free ? sanitize : sanitize_double_quotes;
+            quoted ? sanitize_double_quotes : sanitize;
         resolved = sanitize_func(resolved, false);
-        str = fmtstr("%.*s%s%s", *cur, shell->line, resolved,
-            shell->line + *cur + strlen(var.name) + (var.enclosed ? 3 : 1));
+        str = fmtstr("%.*s%s%s", *cur, line, resolved,
+            line + *cur + strlen(var.name) + (var.enclosed ? 3 : 1));
         free(resolved);
     } else {
-        dprintf(2, "%s: Undefined variable.\n", var.name);
-        return false;
+        eputstr("%s: Undefined variable.\n", var.name);
+        return NONE(CharPtr);
     }
-    final_checks(shell, str, cur);
-    return true;
+    if (str == NULL)
+        return NONE(CharPtr);
+    *cur += (strlen(str) - strlen(line)) + 1;
+    free(line);
+    return SOME(CharPtr, str);
 }
 
-int parse_vars(Shell *shell)
+OPTION(CharPtr) substitute_vars(Shell *shell, char *line)
 {
-    bool is_free = true;
+    bool quoted = false;
 
-    for (int cur = 0; shell->line[cur]; cur += 1) {
-        if (shell->line[cur] == '\\')
-            cur += !!(shell->line[cur + 1]);
-        else if (shell->line[cur] == '\'' && is_free) {
+    for (long cur = 0; line[cur]; cur += 1) {
+        if (line[cur] == '\\')
+            cur += !!(line[cur + 1]);
+        else if (line[cur] == '\'' && quoted == false) {
             cur += 1;
-            while (shell->line[cur] && shell->line[cur] != '\'')
+            while (line[cur] && line[cur] != '\'')
                 cur += 1;
-            cur -= (shell->line[cur] == 0);
-        } else if (shell->line[cur] == '"')
-            is_free = !is_free;
+            cur -= (line[cur] == 0);
+        } else if (line[cur] == '"')
+            quoted = !quoted;
         else if (
             // clang-format off
-            shell->line[cur] == '$' &&
-            shell->line[cur + 1] &&
-            shell->line[cur + 1] != '"' &&
-            !is_separator(shell->line[cur + 1])
+            line[cur] == '$' &&
+            line[cur + 1] &&
+            line[cur + 1] != '"' &&
+            !is_separator(line[cur + 1])
             // clang-format on
         ) {
-            OPTION(Var) var = get_gvar(shell->line + cur + 1);
+            OPTION(Var) var = get_varname(line + cur + 1);
             if (IS_NONE(var))
                 continue;
-            if (replace_var(shell, &cur, OPT_UNWRAP(var), is_free) == false)
-                return -1;
+            OPTION(CharPtr)
+            opt = substitute_var(shell, line, &cur, OPT_UNWRAP(var), quoted);
+            if (IS_NONE(opt)) {
+                return NONE(CharPtr);
+            } else {
+                line = OPT_UNWRAP(opt);
+            }
         }
     }
-    return 0;
+    return SOME(CharPtr, line);
 }

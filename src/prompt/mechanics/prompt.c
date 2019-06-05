@@ -24,69 +24,76 @@ static void wait_input(void)
     poll(&events, 1, -1);
 }
 
-static void make_action(Shell *shell, char c)
+static void make_action(Shell *shell, char **line, char ch)
 {
-    if (c == 12)
-        clear_term(shell);
-    else if (c == 24) {
+    if (ch == 12) {
+        clear_term(shell, *line);
+    } else if (ch == 24) {
         wait_input();
-        c = get_input();
-        if (c == 5)
-            tmp_file(shell);
-        else if (c != -1)
-            insert_char(&shell->line, c);
-    } else if (c == 127)
-        remove_char(shell);
-    else if (shell->tty && c == '\t')
-        autocomplete(shell);
-    else if (shell->tty && c == '\e')
-        move_cursor(shell, c);
-    else
-        add_char(shell, c);
+        ch = get_input();
+        if (ch == 5) {
+            tmp_file(shell, line);
+        } else if (ch != -1) {
+            insert_char(line, ch);
+        }
+    } else if (ch == 127) {
+        remove_char(shell, line);
+    } else if (shell->tty && ch == '\t') {
+        autocomplete(shell, line);
+    } else if (shell->tty && ch == '\e') {
+        move_cursor(shell, line, ch);
+    } else {
+        add_char(shell, line, ch);
+    }
 }
 
-void color_text(Shell *shell)
+void color_text(Shell *shell, char *line)
 {
     for (int i = 0; i < shell->w.cur; i++)
         writestr(shell->w.backw);
-    if (shell->line) {
+    if (line) {
         writestr("\e[1m\e[38;2;255;98;0m");
-        writestr(shell->line);
+        writestr(line);
         writestr("\e[0m");
     }
 }
 
-void prompt_line(Shell *shell)
+OPTION(CharPtr) prompt_line(Shell *shell)
 {
-    char c = -1;
-
     if (shell->tty)
         set_raw(&shell->w.oterm);
     if (shell->ioctl)
         writestr(shell->w.smkx);
     shell->hist.cur = -1;
-    while (c != '\n') {
+    char *line = 0;
+    char ch = -1;
+    while (ch != '\n') {
         wait_input();
-        c = get_input();
-        if (c == -1) {
-            if (shell->tty)
+        ch = get_input();
+        if (ch == -1) {
+            if (shell->tty) {
                 continue;
-            else {
-                if (shell->ioctl)
+            } else {
+                if (shell->ioctl) {
                     writestr(shell->w.rmkx);
-                return;
+                }
+                return SOME(CharPtr, line);
             }
         }
-        if (c == '\n' && !shell->line)
-            shell->line = strdup("");
-        if (c == '\n' || c == 0 || c == 4 || (c == -2 && !shell->tty)) {
-            color_text(shell);
+        if (ch == '\n' && !line) {
+            line = strdup("");
+        }
+        if (ch == '\n' || ch == 0 || ch == 4 || (ch == -2 && !shell->tty)) {
+            color_text(shell, line);
             break;
         }
-        make_action(shell, c);
+        make_action(shell, &line, ch);
     }
-    if (shell->tty && tcsetattr(0, TCSANOW, &shell->w.oterm) == -1)
+    if (shell->tty && tcsetattr(0, TCSANOW, &shell->w.oterm) == -1) {
         handle_error("tcsetattr");
-    if (shell->ioctl)
+    }
+    if (shell->ioctl) {
         writestr(shell->w.rmkx);
+    }
+    return SOME(CharPtr, line);
 }

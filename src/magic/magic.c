@@ -56,8 +56,8 @@ static OPTION(SizeT) find_quote(const char *line, size_t i)
     return SOME(SizeT, idx - i);
 }
 
-static void exec_magic(Shell *shell, char *line, size_t i, size_t len,
-    bool quoted, CommandSubstType type)
+static OPTION(CharPtr) substitute_command(Shell *shell, char *line, char *cmd,
+    size_t i, size_t len, bool quoted, CommandSubstType type)
 {
     char name[] = "/tmp/42sh-magic-XXXXXX";
     int save = dup(1);
@@ -65,74 +65,87 @@ static void exec_magic(Shell *shell, char *line, size_t i, size_t len,
 
     fflush(stdout);
     if (save == -1 || fd == -1 || dup2(fd, 1) == -1)
-        handle_error("magic");
+        return NONE(CharPtr);
     close(fd);
-    char *str = strdup(line);
-    quick_exec(shell, str);
+
+    quick_exec(shell, cmd);
     fflush(stdout);
+
     if (dup2(save, 1) == -1)
-        handle_error("magic");
+        return NONE(CharPtr);
     close(save);
+
     fd = open(name, O_RDONLY);
     if (fd == -1)
-        handle_error("magic");
+        return NONE(CharPtr);
     char *subst = read_all(fd);
     close(fd);
     remove(name);
     if (subst == 0)
-        return;
+        return NONE(CharPtr);
     char *ret = lstr_trim(subst);
     free(subst);
     if (quoted)
         ret = sanitize_double_quotes(ret, true);
     else
         ret = sanitize(ret, true);
-    subst = fmtstr("%.*s%s%s", (int)(i), shell->line, ret,
-        shell->line + i + len + 2 + type);
+    subst = fmtstr("%.*s%s%s", (int)(i), line, ret, line + i + len + 2 + type);
     free(ret);
     if (subst == 0)
-        return;
-    free(shell->line);
-    shell->line = subst;
+        return NONE(CharPtr);
+    free(line);
+
+    return SOME(CharPtr, subst);
 }
 
-int magic(Shell *shell)
+OPTION(CharPtr) substitute_commands(Shell *shell, char *line)
 {
     bool quoted = false;
 
-    for (ssize_t i = 0; shell->line[i]; i++) {
-        if (shell->line[i] == '\\')
-            i += !!(shell->line[i + 1]);
-        else if (shell->line[i] == '\'') {
+    for (ssize_t i = 0; line[i]; i++) {
+        if (line[i] == '\\')
+            i += !!(line[i + 1]);
+        else if (line[i] == '\'') {
             i += 1;
-            while (shell->line[i] && shell->line[i] != '\'')
+            while (line[i] && line[i] != '\'')
                 i += 1;
-            i -= (shell->line[i] == 0);
-        } else if (shell->line[i] == '"') {
+            i -= (line[i] == 0);
+        } else if (line[i] == '"') {
             quoted = !quoted;
-        } else if (shell->line[i] == '`') {
-            OPTION(SizeT) opt_len = find_quote(shell->line, i + 1);
+        } else if (line[i] == '`') {
+            OPTION(SizeT) opt_len = find_quote(line, i + 1);
             if (IS_SOME(opt_len)) {
                 size_t len = OPT_UNWRAP(opt_len);
-                char *line = strndup(shell->line + i + 1, len);
-                exec_magic(shell, line, i, len, quoted, Backquotes);
-                free(line);
+                char *cmd = strndup(line + i + 1, len);
+                OPTION(CharPtr)
+                opt = substitute_command(
+                    shell, line, cmd, i, len, quoted, Backquotes);
+                if (IS_NONE(opt)) {
+                    return opt;
+                } else {
+                    line = OPT_UNWRAP(opt);
+                }
                 i = -1;
             } else {
-                return -1;
+                return NONE(CharPtr);
             }
-        } else if (lstr_starts_with(shell->line + i, "$(")) {
-            OPTION(SizeT) opt_len = find_paren(shell->line, i + 2);
+        } else if (lstr_starts_with(line + i, "$(")) {
+            OPTION(SizeT) opt_len = find_paren(line, i + 2);
             if (IS_SOME(opt_len)) {
                 size_t len = OPT_UNWRAP(opt_len);
-                char *line = strndup(shell->line + i + 2, len);
-                exec_magic(shell, line, i, len, quoted, Parens);
-                free(line);
+                char *cmd = strndup(line + i + 2, len);
+                OPTION(CharPtr)
+                opt = substitute_command(shell, line, cmd, i, len, quoted, Parens);
+                if (IS_NONE(opt)) {
+                    return opt;
+                } else {
+                    line = OPT_UNWRAP(opt);
+                }
                 i = -1;
             } else {
-                return -1;
+                return NONE(CharPtr);
             }
         }
     }
-    return 0;
+    return SOME(CharPtr, line);
 }

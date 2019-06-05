@@ -94,7 +94,6 @@ void init(Shell *shell)
         shell->w.downw = tigetstr("kcud1");
         shell->w.left = tigetstr("kcub1");
         shell->w.right = tigetstr("kcuf1");
-        shell->line = NULL;
     }
 }
 

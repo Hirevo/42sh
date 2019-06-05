@@ -70,63 +70,58 @@ int count_links(char *str)
     return count;
 }
 
-void skip_and_copy_string(char *str, int *i, char *ret, int *t)
-{
-    char quote = str[(*i)++];
-
-    ret[(*t)++] = quote;
-    while (str[*i] && str[*i] != quote) {
-        if (str[*i] == '\\' && quote != '\'') {
-            ret[(*t)++] = '\\';
-            ret[(*t)++] = str[(*i) + 1];
-            *i += !!(str[(*i) + 1]);
-        } else
-            ret[(*t)++] = str[*i];
-        *i += 1;
-    }
-    ret[(*t)++] = str[(*i)];
-}
-
-void copy_escaped_char(char *str, int *i, char *ret, int *t)
-{
-    ret[(*t)++] = '\\';
-    ret[(*t)++] = str[(*i) + 1];
-    *i += !!(str[(*i) + 1]);
-}
-
-void my_epur_sep(char *ret, char *str, int *i, int *t)
-{
-    ret[(*t)++] = ' ';
-    ret[(*t)++] = str[*i];
-    if (str[*i] != ';' && str[*i + 1] == str[*i])
-        ret[(*t)++] = str[++(*i)];
-    ret[(*t)++] = ' ';
-}
-
 char *my_epurcommand(char *str)
 {
     int i = count_links(str);
     char *ret = (i != -1) ? calloc(strlen(str) + 1 + i * 4, sizeof(char)) : 0;
-    int t = 0;
+    size_t out = 0;
 
     if (ret == NULL)
         return NULL;
-    i = -1;
-    while (str[++i])
-        if (str[i] == '\\')
-            copy_escaped_char(str, &i, ret, &t);
-        else if (is_space(str[i])) {
-            ret[t++] = ' ';
-            while (is_space(str[++i]))
-                ;
-            i -= 1;
-        } else if (str[i] == '"' || str[i] == '\'')
-            skip_and_copy_string(str, &i, ret, &t);
-        else if (is_separator(str[i]))
-            my_epur_sep(ret, str, &i, &t);
-        else
-            ret[t++] = str[i];
-    ret[t] = 0;
+    for (size_t idx = 0; str[idx]; idx++) {
+        if (str[idx] == '\\') {
+            ret[out++] = '\\';
+            ret[out++] = str[idx + 1];
+            idx += !!(str[idx + 1]);
+        } else if (is_space(str[idx])) {
+            ret[out++] = ' ';
+            idx += 1;
+            while (is_space(str[idx]))
+                idx += 1;
+            idx -= 1;
+        } else if (str[idx] == '"' || str[idx] == '\'') {
+            char quote = str[idx++];
+            ret[out++] = quote;
+            while (str[idx] && str[idx] != quote) {
+                if (str[idx] == '\\' && quote != '\'') {
+                    ret[out++] = '\\';
+                    ret[out++] = str[idx + 1];
+                    idx += !!(str[idx + 1]);
+                } else
+                    ret[out++] = str[idx];
+                idx += 1;
+            }
+            ret[out++] = str[idx];
+        } else if (is_delimiter(str[i])) {
+            ret[out++] = ' ';
+            ret[out++] = str[idx];
+            if (str[idx] != ';' && str[idx + 1] == str[idx])
+                ret[out++] = str[++idx];
+            ret[out++] = ' ';
+        } else {
+            OPTION(SizeT) opt_span = span_redirect(str + idx);
+            if (IS_SOME(opt_span)) {
+                size_t span = OPT_UNWRAP(opt_span);
+                strncat(ret + out, str + idx, span);
+                out += span;
+                idx += span - 1;
+                ret[out++] = ' ';
+            } else {
+                ret[out++] = str[idx];
+            }
+        }
+    }
+    ret[out] = 0;
     free(str);
     return ret;
 }

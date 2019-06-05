@@ -30,41 +30,46 @@ void free_hist(Shell *shell)
     lvec_drop(shell->hist.arr);
 }
 
+void free_redirect(void *ctx, void *elem, size_t idx)
+{
+    Redirect *redirect = (Redirect *)(elem);
+    (void)(ctx);
+    (void)(idx);
+
+    if (redirect->kind == REDIR_KIND_FILE)
+        free(redirect->to_name);
+}
+
 void free_shell(Shell *shell)
 {
     save_history(shell);
     free_hist(shell);
     save_alias(shell);
-    lvec_clear(shell->fragments, true);
-    lvec_drop(shell->fragments);
     lhmap_clear(shell->aliases, true);
     lhmap_drop(shell->aliases);
     lhmap_clear(shell->vars, true);
     lhmap_drop(shell->vars);
     lhmap_clear(shell->builtins, false);
     lhmap_drop(shell->builtins);
-    free(shell->line);
-    free_commands(shell);
     if (shell->tty) {
         writestr("exit\n");
         del_curterm(cur_term);
     }
 }
 
-void free_commands(Shell *shell)
+void free_commands(Command *commands)
 {
-    Command *head;
-    Command *last;
+    Command *head = commands;
+    Command *last = 0;
 
-    head = shell->commands;
     while (head) {
         lvec_clear(head->av, true);
         lvec_drop(head->av);
         head->av = NULL;
-        free(head->r_type);
-        free(head->r_name);
-        free(head->l_type);
-        free(head->l_name);
+        lvec_for_each(head->redirects, free_redirect, 0);
+        lvec_clear(head->redirects, true);
+        lvec_drop(head->redirects);
+        head->redirects = NULL;
         last = head;
         head = head->next;
         free(last);

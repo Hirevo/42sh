@@ -10,14 +10,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int check_error(Shell *shell)
+bool check_errors(Command *commands)
 {
-    for (Command *head = shell->commands; head; head = head->next) {
+    for (Command *head = commands; head; head = head->next) {
         if ((lvec_front(head->av) == NULL && head->next) ||
             ((head->link == '|' || head->link == 'e' || head->link == 'o') &&
                 !head->next)) {
-            return eputstr("invalid null command.\n"), -1;
+            eputstr("invalid null command.\n");
+            return false;
         }
     }
-    return 0;
+    return true;
 }

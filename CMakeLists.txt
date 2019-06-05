@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(42sh C)
 
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -W -Wall -Wextra -Wunused-function")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/my)
@@ -23,7 +23,6 @@ link_directories(
 add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/alias/alias.c
     ${PROJECT_SOURCE_DIR}/src/alias/edit.c
-    ${PROJECT_SOURCE_DIR}/src/alias/loop.c
     ${PROJECT_SOURCE_DIR}/src/alias/parse.c
     ${PROJECT_SOURCE_DIR}/src/alias/unalias.c
     ${PROJECT_SOURCE_DIR}/src/autocompletion.c
@@ -91,7 +90,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/exec/exec.c
     ${PROJECT_SOURCE_DIR}/src/exec/exec2.c
     ${PROJECT_SOURCE_DIR}/src/exec/pipe.c
-    ${PROJECT_SOURCE_DIR}/src/exec/setup.c
+    ${PROJECT_SOURCE_DIR}/src/exec/redirects.c
     ${PROJECT_SOURCE_DIR}/src/format.c
     ${PROJECT_SOURCE_DIR}/src/free.c
     ${PROJECT_SOURCE_DIR}/src/get_next_line.c
@@ -102,7 +101,6 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/home.c
     ${PROJECT_SOURCE_DIR}/src/init.c
     ${PROJECT_SOURCE_DIR}/src/is/is.c
-    ${PROJECT_SOURCE_DIR}/src/is/is2.c
     ${PROJECT_SOURCE_DIR}/src/launch_config.c
     ${PROJECT_SOURCE_DIR}/src/magic/construct.c
     ${PROJECT_SOURCE_DIR}/src/magic/magic.c
@@ -112,6 +110,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/parse/error.c
     ${PROJECT_SOURCE_DIR}/src/parse/line.c
     ${PROJECT_SOURCE_DIR}/src/parse/parse.c
+    ${PROJECT_SOURCE_DIR}/src/parse/redirects.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_arg.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_lvl_build_branch.c
     ${PROJECT_SOURCE_DIR}/src/parser_ll/ast_lvl.c

@@ -67,7 +67,7 @@ char *format_arg(char *str)
     return ret;
 }
 
-OPTION(SizeT) arg_length(char *str)
+OPTION(SizeT) span_fragment(char *str)
 {
     static const char *delim[] = {
         ">>",
@@ -91,21 +91,26 @@ OPTION(SizeT) arg_length(char *str)
         }
         return (str[i] == 0) ? NONE(SizeT) : SOME(SizeT, i + 1);
     } else {
-        for (size_t i2 = 0; delim[i2]; i2++) {
-            if (lstr_starts_with(str, delim[i2])) {
-                return SOME(SizeT, strlen(delim[i2]));
+        OPTION(SizeT) redirect_span = span_redirect(str);
+        if (IS_SOME(redirect_span)) {
+            return redirect_span;
+        } else {
+            for (size_t i2 = 0; delim[i2]; i2++) {
+                if (lstr_starts_with(str, delim[i2])) {
+                    return SOME(SizeT, strlen(delim[i2]));
+                }
             }
+            size_t i = 0;
+            for (; str[i] && !is_space(str[i]) && !is_separator(str[i]); i++) {
+                if (str[i] == '\\')
+                    i += !!(str[i + 1]);
+            }
+            return SOME(SizeT, i);
         }
-        size_t i = 0;
-        for (; str[i] && !is_space(str[i]) && !is_separator(str[i]); i++) {
-            if (str[i] == '\\')
-                i += !!(str[i + 1]);
-        }
-        return SOME(SizeT, i);
     }
 }
 
-vec_t *bufferize(char *str, int estimate)
+vec_t *split_fragments(char *str, int estimate)
 {
     vec_t *fragments = lvec_with_capacity(estimate);
     if (fragments == NULL)
@@ -115,7 +120,7 @@ vec_t *bufferize(char *str, int estimate)
         if (is_space(str[i])) {
             i += 1;
         } else {
-            OPTION(SizeT) len = arg_length(str + i);
+            OPTION(SizeT) len = span_fragment(str + i);
             if (IS_NONE(len))
                 return NULL;
             char *arg = strndup(str + i, OPT_UNWRAP(len));
@@ -144,46 +149,48 @@ int count_link(vec_t *fragments, size_t idx)
     return size - idx;
 }
 
-void prepare_link(Shell *shell, Command *elem, size_t i, size_t last)
+void prepare_link(vec_t *fragments, Command *elem, size_t idx, size_t last)
 {
-    if (i >= lvec_size(shell->fragments))
+    if (idx >= lvec_size(fragments))
         elem->link = '0';
-    else if (lstr_equals(lvec_at(shell->fragments, i), "&&"))
+    else if (lstr_equals(lvec_at(fragments, idx), "&&"))
         elem->link = 'e';
-    else if (lstr_equals(lvec_at(shell->fragments, i), "||"))
+    else if (lstr_equals(lvec_at(fragments, idx), "||"))
         elem->link = 'o';
     else
-        elem->link = ((char *)(lvec_at(shell->fragments, i)))[0];
-    size_t size = i - last;
+        elem->link = ((char *)(lvec_at(fragments, idx)))[0];
+    size_t size = idx - last;
     lvec_reserve(elem->av, size);
     for (size = 0; size < lvec_capacity(elem->av); size++)
         lvec_push_back(
-            elem->av, 1, strdup(lvec_at(shell->fragments, last + size)));
-    elem->count = -1;
+            elem->av, 1, strdup(lvec_at(fragments, last + size)));
 }
 
-int set_commands(Shell *shell)
+OPTION(CommandPtr) parse_commands(vec_t *fragments)
 {
     Command *elem = NULL;
     Command *head = NULL;
+    Command *commands = NULL;
     size_t last = 0;
 
-    shell->commands = NULL;
-    for (size_t i = 0; i < lvec_size(shell->fragments); i++) {
+    for (size_t idx = 0; idx < lvec_size(fragments); idx++) {
         elem = calloc(1, sizeof(*elem));
         if (elem == NULL)
-            return -1;
+            return NONE(CommandPtr);
         elem->av = lvec_new();
+        elem->redirects = lvec_new();
         elem->next = NULL;
-        (head) ? (head->next = elem) : (shell->commands = elem);
+        (head) ? (head->next = elem) : (commands = elem);
         elem->prev = head;
-        last = i;
-        i += count_link(shell->fragments, i);
-        if (i == last)
-            return eputstr("invalid null command.\n"), -1;
-        prepare_link(shell, elem, i, last);
-        i -= (elem->link == '0');
+        last = idx;
+        idx += count_link(fragments, idx);
+        if (idx == last) {
+            eputstr("invalid null command.\n");
+            return NONE(CommandPtr);
+        }
+        prepare_link(fragments, elem, idx, last);
+        idx -= (elem->link == '0');
         head = elem;
     }
-    return 0;
+    return SOME(CommandPtr, commands);
 }

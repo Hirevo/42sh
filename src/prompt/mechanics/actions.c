@@ -11,68 +11,69 @@
 #include <string.h>
 #include <unistd.h>
 
-void remove_char(Shell *shell)
+void remove_char(Shell *shell, char **line)
 {
-    if (!shell->line || !strlen(shell->line) || !shell->w.cur)
+    if (!(*line) || !strlen(*line) || !shell->w.cur)
         return;
-    delete_char(&shell->line, shell->w.cur);
-    if (shell->w.cur)
+    delete_char(line, shell->w.cur);
+    if (shell->w.cur) {
         shell->w.cur -= 1;
+    }
     if (shell->tty) {
         writestr(shell->w.backw);
-        writestr(shell->line + shell->w.cur);
+        writestr((*line) + shell->w.cur);
         writestr(" ");
         shell->w.cur -= 1;
-        pos_cursor(shell);
+        pos_cursor(shell, *line);
         shell->w.cur += 1;
     }
 }
 
-void add_char(Shell *shell, char c)
+void add_char(Shell *shell, char **line, char ch)
 {
-    insert_char_cur(&shell->line, c, shell->w.cur);
+    insert_char_cur(line, ch, shell->w.cur);
     if (shell->tty) {
-        writestr(shell->line + shell->w.cur);
+        writestr((*line) + shell->w.cur);
         shell->w.cur += 1;
-        pos_cursor(shell);
-    } else
+        pos_cursor(shell, *line);
+    } else {
         shell->w.cur += 1;
+    }
 }
 
-void pos_cursor(Shell *shell)
+void pos_cursor(Shell *shell, char *line)
 {
-    int c;
-
-    if (!shell->line)
+    if (!line)
         return;
-    c = strlen(shell->line) - shell->w.cur - 1;
-    while (c-- >= 0)
+    int c = strlen(line) - shell->w.cur - 1;
+    while (c-- >= 0) {
         writestr(shell->w.backw);
+    }
 }
 
-void move_cursor(Shell *shell, char c)
+void move_cursor(Shell *shell, char **line, char c)
 {
+    void (*cur_fct[6])(Shell *, char **);
+
     char *str;
     int dir;
-    void (*cur_fct[6])(Shell *);
-
     buffer_seq(shell, &str, &dir, c);
     if (dir == -1) {
         free(str);
         return;
     }
     get_cur_fcts(cur_fct);
-    cur_fct[dir - 1](shell);
+    cur_fct[dir - 1](shell, line);
     free(str);
 }
 
-void clear_term(Shell *shell)
+void clear_term(Shell *shell, char *line)
 {
     if (shell->tty) {
         writestr(shell->w.clear);
         init_prompt(shell);
-        if (shell->line)
-            writestr(shell->line);
-        pos_cursor(shell);
+        if (line)
+            writestr(line);
+        pos_cursor(shell, line);
     }
 }

@@ -9,27 +9,27 @@
 #include "shell.h"
 #include <stdlib.h>
 
-int clear_comment(Shell *shell)
+OPTION(CharPtr) clear_comment(char *line)
 {
     bool quoted = false;
     char *tmp;
 
-    for (size_t cur = 0; shell->line[cur]; cur++) {
-        if (shell->line[cur] == '\\') {
-            cur += !!(shell->line[cur + 1]);
-        } else if (shell->line[cur] == '\'') {
+    for (size_t cur = 0; line[cur]; cur++) {
+        if (line[cur] == '\\') {
+            cur += !!(line[cur + 1]);
+        } else if (line[cur] == '\'') {
             cur += 1;
-            while (shell->line[cur] && shell->line[cur] != '\'')
+            while (line[cur] && line[cur] != '\'') {
                 cur += 1;
-            cur -= (shell->line[cur] == 0);
-        } else if (shell->line[cur] == '"') {
+            }
+            cur -= (line[cur] == 0);
+        } else if (line[cur] == '"') {
             quoted = !quoted;
-        } else if (shell->line[cur] == '#' && quoted == false) {
-            tmp = strndup(shell->line, cur);
-            free(shell->line);
-            shell->line = tmp;
-            return 0;
+        } else if (line[cur] == '#' && quoted == false) {
+            tmp = strndup(line, cur);
+            free(line);
+            return SOME(CharPtr, tmp);
         }
     }
-    return 0;
+    return SOME(CharPtr, line);
 }

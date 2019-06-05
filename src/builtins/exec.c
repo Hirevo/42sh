@@ -12,6 +12,7 @@ int exec_b(Shell *shell, vec_t *args)
 {
     (void)(shell);
     free(lvec_pop_front(args));
-    exec_process(args);
+    if (lvec_size(args))
+        exec_process(args);
     return 0;
 }

@@ -40,17 +40,43 @@ DEF_RESULT(Int, int, char *);
 
 extern char **environ;
 
+typedef enum {
+    REDIR_KIND_FILE = 0,
+    REDIR_KIND_FD,
+} RedirectKind;
+
+typedef enum {
+    REDIR_TYPE_SIMPLE_LEFT = 0,
+    REDIR_TYPE_SIMPLE_RIGHT,
+    REDIR_TYPE_DOUBLE_LEFT,
+    REDIR_TYPE_DOUBLE_RIGHT,
+} RedirectType;
+
+typedef struct {
+    RedirectKind kind;
+    RedirectType type;
+    size_t from_fd;
+    union {
+        char *to_name;
+        size_t to_fd;
+    };
+} Redirect;
+
+DEF_OPTION(Redirect, Redirect);
+DEF_RESULT(Redirect, Redirect, char *);
+DEF_OPTION(RedirectPtr, Redirect *);
+DEF_RESULT(RedirectPtr, Redirect *, char *);
+
 typedef struct Command {
     vec_t *av;
+    vec_t *redirects;
     char link;
-    char *r_name;
-    char *r_type;
-    char *l_name;
-    char *l_type;
-    int count;
     struct Command *prev;
     struct Command *next;
 } Command;
+
+DEF_OPTION(CommandPtr, Command *);
+DEF_RESULT(CommandPtr, Command *, char *);
 
 typedef struct {
     char *alias;
@@ -59,7 +85,7 @@ typedef struct {
 
 typedef struct {
     int idx;
-    char **list;
+    vec_t *list;
 } Subst;
 
 typedef struct {
@@ -101,8 +127,6 @@ typedef struct {
 **
 ** av: argument list of the shell (for $0, $1, etc...).
 ** prompt: current selected prompt ID.
-** line: raw command input from user.
-** fragments: parsed command from line.
 ** is_done: flag to exit after the command execution ends (set by `exit`).
 ** exit_code: last exit code (used for prompts and `exit`).
 ** tty: is the stdin interactive (to enable/disable prompt and autocompletion).
@@ -110,41 +134,31 @@ typedef struct {
 ** vars: internal variables of the shell (accessible via `set` and `unset`).
 ** aliases: command aliases (accessible via `alias` and `unalias`).
 ** builtins: list of builtins (listed via `builtins`).
-** subst: used for alias processing, avoids alias loops (used by `alias`).
 ** hist: history management (for prompt arrow keys, globbing and `history`).
-** commands: current command list to execute.
-** cur: currently processed command (points into `Shell::commands`).
 ** w: interactive terminal data structure (for the interactive prompt)
 ** config: a future potential configuration struct.
 */
 typedef struct {
     char **av;
     int prompt;
-    char *line;
-    vec_t *fragments;
     char is_done;
     unsigned int exit_code;
-    char *last;
     int tty;
     int ioctl;
     hmap_t *vars;
     hmap_t *aliases;
     hmap_t *builtins;
-    Subst subst;
     History hist;
-    Command *commands;
-    Command *cur;
     Window w;
     Config config;
 } Shell;
 
-unsigned int count_args(char *);
+size_t estimate_fragment_count(char *);
 int get_next_arg(char *, char **, int);
-vec_t *bufferize(char *, int);
-char *cat_path(char **, char *, int);
+vec_t *split_fragments(char *, int);
 void exec_process(vec_t *);
-unsigned int exec_command(char **, Shell *);
-unsigned int exec_line(Shell *, unsigned int);
+OPTION(Int) exec_command(char **, Shell *);
+int exec_line(Shell *, char *, bool);
 void parse_rc(Shell *);
 int count_entries(char *);
 int get_next_entry(char *, char **, int);
@@ -158,8 +172,7 @@ int is_char_alpha(char *);
 int set_env(char *, char *);
 int unset_env(vec_t *);
 void free_shell(Shell *);
-void free_shell2(Shell *);
-void free_commands(Shell *);
+void free_commands(Command *);
 int my_print_err(char *);
 int my_print_ret(char *, int);
 int is_path(char *);
@@ -185,7 +198,7 @@ int disp_all_alias(Shell *);
 int add_alias(Shell *, char *, char *);
 void save_alias(Shell *);
 void my_print_fd(char *, int);
-int set_commands(Shell *);
+OPTION(CommandPtr) parse_commands(vec_t *);
 int check_access(char **, Shell *);
 int check_env_error(char *, char *);
 int check_exit(Shell *, vec_t *);
@@ -213,11 +226,6 @@ char *construct_alias(char **);
 char *get_alias_cmd(Shell *, char *);
 
 /*
-** alias/edit.c
-*/
-int parse_alias(Shell *);
-
-/*
 ** alias/unalias.c
 */
 int unalias(Shell *, vec_t *);
@@ -231,7 +239,7 @@ int detect_loop(Shell *, char *, int);
 /*
 ** comment.c
 */
-int clear_comment(Shell *);
+OPTION(CharPtr) clear_comment(char *line);
 
 /*
 ** config.c
@@ -247,15 +255,11 @@ void add_hist_elem(Shell *, char *);
 void init_history(Shell *);
 void skip_string(char *, int *);
 
-/*
-** history2.c
-*/
-int subst_history(Shell *, int);
-
-/*
-** magic/magic.c
-*/
-int magic(Shell *);
+OPTION(CharPtr) substitute_aliases(Shell *, char *);
+OPTION(CharPtr) substitute_commands(Shell *, char *);
+OPTION(CharPtr) substitute_globs(Shell *, char *);
+OPTION(CharPtr) substitute_history(Shell *, char *, bool);
+OPTION(CharPtr) substitute_vars(Shell *, char *);
 
 /*
 ** magic/construct.c
@@ -302,11 +306,7 @@ int launch_config(Shell *);
 /*
 ** redirects.c
 */
-OPTION(Int) setup_right_redirect(Command *, bool);
-OPTION(Int) setup_left_redirect(Command *, bool);
-int check_redirects(Command *, Command *);
-int prepare_redirect(Command *, char **, char **, size_t);
-int set_redirects(Shell *);
+bool assign_redirects(Command *commands);
 
 /*
 ** buffer.c
@@ -322,17 +322,23 @@ char *my_epurcommand(char *);
 /*
 ** parse/error.c
 */
-int check_error(Shell *);
+bool check_errors(Command *commands);
+
+/*
+** parse/redirects.c
+*/
+OPTION(Redirect) parse_redirect(const char *line);
+OPTION(SizeT) span_redirect(const char *line);
 
 /*
 ** exec/pipe.c
 */
-OPTION(Int) exec_pipeline(Shell *);
+OPTION(Int) exec_pipeline(Shell *, Command *);
 
 /*
 ** exec/tmp.c
 */
-void tmp_file(Shell *);
+void tmp_file(Shell *, char **line);
 
 /*
 ** exec/setup.c
@@ -341,19 +347,17 @@ void init_redirect(Command *, int *, int *, int *);
 void skip_commands(Command **, unsigned char);
 
 /*
-** globbing/globbing.c
+** exec/redirects.c
 */
-int parse_vars(Shell *);
+bool redirect_simple_left(Redirect *redirect);
+bool redirect_simple_right(Redirect *redirect);
+bool redirect_double_left(Redirect *redirect);
+bool redirect_double_right(Redirect *redirect);
 
 /*
 ** globbing/.c
 */
 void replace_home(Shell *);
-
-/*
-** globbing/stars.c
-*/
-int parse_stars(Shell *);
 
 /*
 ** echo.c
@@ -441,35 +445,35 @@ char **load_file(int);
 /*
 ** prompt/mechanics/actions.c
 */
-void remove_char(Shell *);
-void add_char(Shell *, char);
-void move_cursor(Shell *, char);
-void clear_term(Shell *);
-void pos_cursor(Shell *);
+void remove_char(Shell *, char **);
+void add_char(Shell *, char **, char);
+void move_cursor(Shell *, char **, char);
+void clear_term(Shell *, char *);
+void pos_cursor(Shell *, char *);
 
 /*
 ** prompt/mechanics/cursor.c
 */
 void buffer_seq(Shell *, char **, int *, char);
-void move_forw(Shell *);
-void move_backw(Shell *);
-void move_upw(Shell *);
-void move_downw(Shell *);
+void move_forw(Shell *, char **);
+void move_backw(Shell *, char **);
+void move_upw(Shell *, char **);
+void move_downw(Shell *, char **);
 
 /*
 ** prompt/mechanics/advanced.c
 */
-void move_home(Shell *);
-void move_end(Shell *);
-void set_hist_line(Shell *);
-void suppress_line(Shell *);
+void move_home(Shell *, char **);
+void move_end(Shell *, char **);
+void set_hist_line(Shell *, char **);
+void suppress_line(Shell *, char *);
 
 /*
 ** prompt/mechanics/fct.c
 */
-void get_cur_fcts(void (*[6])(Shell *));
+void get_cur_fcts(void (*[6])(Shell *, char **));
 
 /*
 ** prompt/mechanics/prompt.c
 */
-void prompt_line(Shell *);
+OPTION(CharPtr) prompt_line(Shell *);

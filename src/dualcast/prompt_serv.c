@@ -19,7 +19,6 @@ static void exc_cmd(t_socket sock, char **str, int *nb_char)
 
     (void)nb_char;
     init_shell(&shell);
-    shell.line = strdup(*str + 25);
     if ((sauv = dup(1)) == -1)
         return;
     if ((sauv2 = dup(2)) == -1)
@@ -28,7 +27,7 @@ static void exc_cmd(t_socket sock, char **str, int *nb_char)
         return;
     if (dup2(sock, 2) == -1)
         return;
-    exec_line(&shell, 0);
+    exec_line(&shell, strdup(*str + 25), false);
     dup2(sauv, 1);
     dup2(sauv2, 2);
 }

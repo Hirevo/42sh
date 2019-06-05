@@ -18,8 +18,8 @@
 
 void *inspect_exit_code(void *ctx, void *acc, void *elem, size_t idx)
 {
-    size_t final = ((size_t)(acc));
-    pid_t pid = ((pid_t)(elem));
+    size_t final = (size_t)(acc);
+    pid_t pid = (pid_t)(elem);
     int ret = 0;
 
     (void)(ctx);
@@ -32,10 +32,32 @@ void *inspect_exit_code(void *ctx, void *acc, void *elem, size_t idx)
     return ((void *)(final));
 }
 
-OPTION(Int) exec_pipeline(Shell *shell)
+void skip_commands(Command **head, unsigned char ret)
+{
+    if ((*head) == NULL || (*head)->prev == NULL)
+        return;
+    const Command *prev = (*head)->prev;
+    const bool should_skip =
+        (prev->link == 'e' && ret != 0) || (prev->link == 'o' && ret == 0);
+    if (should_skip) {
+        (*head) = (*head)->next;
+        skip_commands(head, ret);
+    }
+}
+
+bool redirects_fd(void *ctx, void *elem, size_t idx)
+{
+    Redirect *redirect = (Redirect *)(elem);
+    size_t fd = (size_t)(ctx);
+
+    (void)(idx);
+    return (redirect->from_fd == fd);
+}
+
+OPTION(Int) exec_pipeline(Shell *shell, Command *commands)
 {
     int fds[2];
-    Command *head = shell->commands;
+    Command *head = commands;
     OPTION(Int) status = NONE(Int);
     OPTION(Int) fd_carry = NONE(Int);
     size_t pgid = 0;
@@ -53,49 +75,67 @@ OPTION(Int) exec_pipeline(Shell *shell)
         if (builtin_exec == true &&
             lhmap_get(shell->builtins, lvec_front(head->av))) {
 
-            OPTION(Int) save_in = NONE(Int);
+            bool stdin_redirected =
+                lvec_any(head->redirects, redirects_fd, (void *)(0));
+            bool stdout_redirected =
+                lvec_any(head->redirects, redirects_fd, (void *)(1));
+            bool stderr_redirected =
+                lvec_any(head->redirects, redirects_fd, (void *)(2));
+
+            OPTION(Int) saved_stdin = NONE(Int);
+            if (stdin_redirected) {
+                saved_stdin = SOME(Int, dup(0));
+            }
+            OPTION(Int) saved_stdout = NONE(Int);
+            if (stdout_redirected) {
+                saved_stdout = SOME(Int, dup(1));
+            }
+            OPTION(Int) saved_stderr = NONE(Int);
+            if (stderr_redirected) {
+                saved_stderr = SOME(Int, dup(2));
+            }
+
             if (IS_SOME(fd_carry)) {
                 int fd = OPT_UNWRAP(fd_carry);
-                save_in = SOME(Int, dup(0));
                 dup2(fd, 0);
                 close(fd);
                 fd_carry = NONE(Int);
-            } else if (head->l_type) {
-                save_in = SOME(Int, dup(0));
-                OPTION(Int)
-                in = setup_left_redirect(head, head->l_type[1] == 0);
-                if (IS_SOME(in)) {
-                    close(OPT_UNWRAP(in));
-                }
             }
 
-            OPTION(Int) save_out = NONE(Int);
-            if (head->r_type) {
-                save_out = SOME(Int, dup(1));
-                OPTION(Int)
-                out = setup_right_redirect(head, head->r_type[1] == 0);
-                if (IS_SOME(out)) {
-                    close(OPT_UNWRAP(out));
+            for (size_t i = 0; i < lvec_size(head->redirects); i++) {
+                Redirect *redirect = lvec_at(head->redirects, i);
+                switch (redirect->type) {
+                case REDIR_TYPE_SIMPLE_LEFT:
+                    redirect_simple_left(redirect);
+                    break;
+                case REDIR_TYPE_SIMPLE_RIGHT:
+                    redirect_simple_right(redirect);
+                    break;
+                case REDIR_TYPE_DOUBLE_LEFT:
+                    redirect_double_left(redirect);
+                    break;
+                case REDIR_TYPE_DOUBLE_RIGHT:
+                    redirect_double_right(redirect);
+                    break;
                 }
             }
 
             status = exec_builtins(shell, head->av);
 
-            if (IS_SOME(save_in)) {
-                int fd = OPT_UNWRAP(save_in);
+            if (IS_SOME(saved_stdin)) {
+                int fd = OPT_UNWRAP(saved_stdin);
                 dup2(fd, 0);
                 close(fd);
             }
-            if (IS_SOME(save_out)) {
-                int fd = OPT_UNWRAP(save_out);
-                fflush(stdout);
+            if (IS_SOME(saved_stdout)) {
+                int fd = OPT_UNWRAP(saved_stdout);
                 dup2(fd, 1);
                 close(fd);
             }
-
-            if (IS_SOME(fd_carry)) {
-                close(OPT_UNWRAP(fd_carry));
-                fd_carry = NONE(Int);
+            if (IS_SOME(saved_stderr)) {
+                int fd = OPT_UNWRAP(saved_stderr);
+                dup2(fd, 2);
+                close(fd);
             }
 
             if (IS_NONE(status)) {
@@ -142,8 +182,9 @@ OPTION(Int) exec_pipeline(Shell *shell)
             } else {
                 signal(SIGINT, SIG_DFL);
                 setpgid(0, pgid);
-                if (shell->tty && pgid == 0)
+                if (shell->tty && pgid == 0) {
                     tcsetpgrp(0, getpid());
+                }
 
                 if (head->link == '|') {
                     close(fds[0]);
@@ -154,26 +195,32 @@ OPTION(Int) exec_pipeline(Shell *shell)
                     dup2(fd, 0);
                     close(fd);
                     fd_carry = NONE(Int);
-                } else if (head->l_type) {
-                    OPTION(Int)
-                    in = setup_left_redirect(head, head->l_type[1] == 0);
-                    if (IS_SOME(in)) {
-                        close(OPT_UNWRAP(in));
-                    }
                 }
 
                 if (head->next && head->link == '|') {
                     dup2(fds[1], 1);
-                } else if (head->r_type) {
-                    OPTION(Int)
-                    out = setup_right_redirect(head, head->r_type[1] == 0);
-                    if (IS_SOME(out)) {
-                        close(OPT_UNWRAP(out));
-                    }
                 }
 
                 if (head->link == '|') {
                     close(fds[1]);
+                }
+
+                for (size_t i = 0; i < lvec_size(head->redirects); i++) {
+                    Redirect *redirect = lvec_at(head->redirects, i);
+                    switch (redirect->type) {
+                    case REDIR_TYPE_SIMPLE_LEFT:
+                        redirect_simple_left(redirect);
+                        break;
+                    case REDIR_TYPE_SIMPLE_RIGHT:
+                        redirect_simple_right(redirect);
+                        break;
+                    case REDIR_TYPE_DOUBLE_LEFT:
+                        redirect_double_left(redirect);
+                        break;
+                    case REDIR_TYPE_DOUBLE_RIGHT:
+                        redirect_double_right(redirect);
+                        break;
+                    }
                 }
 
                 if (is_path(lvec_front(head->av))) {

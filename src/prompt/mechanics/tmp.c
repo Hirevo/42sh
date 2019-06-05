@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void tmp_file(Shell *shell)
+void tmp_file(Shell *shell, char **line)
 {
     char name[] = "/tmp/42sh-edit-XXXXXX";
     char *editor = getenv("EDITOR");
@@ -21,17 +21,21 @@ void tmp_file(Shell *shell)
 
     if (editor == NULL || fd == -1 || exec == 0)
         return;
-    if (shell->line)
-        dprintf(fd, "%s", shell->line);
-    free(shell->line);
+    if (*line) {
+        dputstr(fd, "%s", *line);
+    }
+    free(*line);
+    *line = 0;
     writechar('\n');
     quick_exec(shell, exec);
-    if (shell->exit_code == 1)
+    if (shell->exit_code == 1) {
         return;
+    }
     lseek(fd, SEEK_SET, 0);
-    while ((shell->line = get_next_line(fd))) {
-        printf("%s\n", shell->line);
-        exec_line(shell, 1);
+    char *cmd = 0;
+    while ((cmd = get_next_line(fd))) {
+        putstr("%s\n", cmd);
+        exec_line(shell, cmd, true);
     }
     close(fd);
     remove(name);

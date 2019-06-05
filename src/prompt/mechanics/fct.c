@@ -7,7 +7,7 @@
 
 #include "shell.h"
 
-void get_cur_fcts(void (*cur_fct[6])(Shell *))
+void get_cur_fcts(void (*cur_fct[6])(Shell *, char **))
 {
     cur_fct[0] = move_backw;
     cur_fct[1] = move_forw;

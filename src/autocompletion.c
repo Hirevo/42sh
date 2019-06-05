@@ -188,40 +188,42 @@ static vec_t *find_matches(Shell *shell, Token token)
     }
 }
 
-static void complete_forward(Shell *shell, Token token, char *match)
+static OPTION(CharPtr)
+    complete_forward(Shell *shell, char *line, Token token, char *match)
 {
     char *sanitized_token = sanitize_single_arg(token.token, false);
     if (sanitized_token == 0)
-        return;
+        return NONE(CharPtr);
     char *sanitized_match = sanitize_single_arg(match, false);
     if (sanitized_match == 0) {
         free(sanitized_token);
-        return;
+        return NONE(CharPtr);
     }
 
     size_t len = strlen(sanitized_token);
     char *to_add = sanitized_match + len;
 
-    char *ret = fmtstr("%.*s%s%s", shell->w.cur, shell->line, to_add,
-        shell->line + shell->w.cur);
+    char *ret =
+        fmtstr("%.*s%s%s", shell->w.cur, line, to_add, line + shell->w.cur);
     if (ret == 0) {
         free(sanitized_match);
         free(sanitized_token);
-        return;
+        return NONE(CharPtr);
     }
 
-    putstr("%s%s", to_add, shell->line + shell->w.cur);
+    putstr("%s%s", to_add, line + shell->w.cur);
 
-    size_t backw_len = strlen(shell->line + shell->w.cur);
+    size_t backw_len = strlen(line + shell->w.cur);
     for (size_t i = 0; i < backw_len; i++)
         putstr(shell->w.backw);
     fflush(stdout);
 
     free(sanitized_token);
-    free(shell->line);
-    shell->line = ret;
+    free(line);
     shell->w.cur += strlen(to_add);
     free(sanitized_match);
+
+    return SOME(CharPtr, ret);
 }
 
 static void *render_match(void *ctx, void *acc, void *elem, size_t idx)
@@ -266,11 +268,18 @@ static void *prefix_match(void *ctx, void *acc, void *elem, size_t idx)
     }
 }
 
-static void complete_choices(Shell *shell, Token token, vec_t *matches)
+static OPTION(CharPtr)
+    complete_choices(Shell *shell, char *line, Token token, vec_t *matches)
 {
     char *prefix = lvec_reduce(matches, prefix_match, 0, 0);
-    if (strlen(prefix) > strlen(token.token))
-        complete_forward(shell, token, prefix);
+    if (strlen(prefix) > strlen(token.token)) {
+        OPTION(CharPtr) opt = complete_forward(shell, line, token, prefix);
+        if (IS_NONE(opt)) {
+            return NONE(CharPtr);
+        } else {
+            line = OPT_UNWRAP(opt);
+        }
+    }
     free(prefix);
 
     char *rendered_matches = lvec_reduce(matches, render_match, &token, 0);
@@ -279,11 +288,11 @@ static void complete_choices(Shell *shell, Token token, vec_t *matches)
     char *rendered = fmtstr(command, rendered_matches);
     free(rendered_matches);
     if (rendered == 0)
-        return;
+        return NONE(CharPtr);
 
     size_t len = 0;
-    if (shell->line) {
-        len = strlen(shell->line + shell->w.cur);
+    if (line) {
+        len = strlen(line + shell->w.cur);
         for (size_t i = 0; i < len; i++)
             putstr(shell->w.forw);
         putstr("\n");
@@ -292,13 +301,15 @@ static void complete_choices(Shell *shell, Token token, vec_t *matches)
 
     quick_exec(shell, rendered);
     print_prompt(shell);
-    if (shell->line) {
-        putstr(shell->line);
+    if (line) {
+        putstr(line);
 
         for (size_t i = 0; i < len; i++)
             putstr(shell->w.backw);
         fflush(stdout);
     }
+
+    return SOME(CharPtr, line);
 }
 
 OPTION(Token) extract_token(char *line, size_t cur)
@@ -336,9 +347,9 @@ OPTION(Token) extract_token(char *line, size_t cur)
     return SOME(Token, ret);
 }
 
-void autocomplete(Shell *shell)
+void autocomplete(Shell *shell, char **line)
 {
-    OPTION(Token) opt_token = extract_token(shell->line, shell->w.cur);
+    OPTION(Token) opt_token = extract_token(*line, shell->w.cur);
     if (IS_NONE(opt_token))
         return;
     Token token = OPT_UNWRAP(opt_token);
@@ -346,9 +357,16 @@ void autocomplete(Shell *shell)
     vec_t *matches = find_matches(shell, token);
 
     if (lvec_size(matches) == 1) {
-        complete_forward(shell, token, lvec_front(matches));
+        OPTION(CharPtr)
+        opt = complete_forward(shell, *line, token, lvec_front(matches));
+        if (IS_SOME(opt)) {
+            *line = OPT_UNWRAP(opt);
+        }
     } else if (lvec_size(matches) > 1) {
-        complete_choices(shell, token, matches);
+        OPTION(CharPtr) opt = complete_choices(shell, *line, token, matches);
+        if (IS_SOME(opt)) {
+            *line = OPT_UNWRAP(opt);
+        }
     }
 
     lvec_clear(matches, true);
