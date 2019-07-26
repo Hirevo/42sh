@@ -317,6 +317,11 @@ OPTION(CharPtr) substitute_vars(Shell *, char *);
 char *construct_magic(char **);
 
 /*
+** magic/magic.c
+*/
+OPTION(SizeT) find_paren(const char *line, size_t idx);
+
+/*
 ** sanitizers/sanitizers.c
 */
 char *sanitize(char *, bool);
@@ -327,6 +332,7 @@ char *sanitize_double_quotes(char *, bool);
 ** exec/exec2.c
 */
 void quick_exec(Shell *, char *);
+OPTION(CharPtr) quick_exec_captured(Shell *, char *);
 
 /*
 ** dualcast.c

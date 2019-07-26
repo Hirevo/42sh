@@ -84,6 +84,7 @@ It also accepts to evaluate a single line with **`-c`** followed by the command.
   - **`prompt`** built-in command
   - 11 prompts to choose from
   - Prompt customization through the PS1 environment variable
+  - Command substitution in prompts with **`\(...)`** syntax in the PS1 environment variable
   - Can be saved by setting the **`PROMPT`** environment variable with the prompt ID number
 - Other built-in commands:
   - **`where`** and **`which`**

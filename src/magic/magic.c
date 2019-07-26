@@ -19,7 +19,7 @@ typedef enum {
     Parens = 1,
 } CommandSubstType;
 
-static OPTION(SizeT) find_paren(const char *line, size_t idx)
+OPTION(SizeT) find_paren(const char *line, size_t idx)
 {
     bool quoted = false;
 

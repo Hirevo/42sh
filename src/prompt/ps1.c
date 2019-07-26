@@ -16,11 +16,11 @@ void ps1_prompt(Shell *shell)
     char *ps1 = OPT_UNWRAP_OR(OPT_FROM_NULLABLE(CharPtr, getenv("PS1")), "");
 
     fflush(stdout);
-    for (size_t i = 0; ps1[i]; i++) {
-        if (ps1[i] == '\\') {
-            switch (ps1[++i]) {
+    for (size_t idx = 0; ps1[idx]; idx++) {
+        if (ps1[idx] == '\\') {
+            switch (ps1[++idx]) {
             case 0:
-                i -= 1;
+                idx -= 1;
             case '\\':
                 writechar('\\');
                 break;
@@ -110,13 +110,29 @@ void ps1_prompt(Shell *shell)
                 OPT_AND_THEN(branch, writestr);
                 OPT_AND_THEN(branch, free);
             } break;
+            case '(': {
+                OPTION(SizeT) len = find_paren(ps1, idx + 1);
+                if (IS_NONE(len)) {
+                    continue;
+                }
+                char *str = lstr_substr(ps1, idx + 1, OPT_UNWRAP(len));
+                if (str == 0) {
+                    continue;
+                }
+                OPTION(CharPtr) output = quick_exec_captured(shell, str);
+                if (IS_NONE(output)) {
+                    continue;
+                }
+                writestr(lstr_trim(OPT_UNWRAP(output)));
+                idx += OPT_UNWRAP(len) + 1;
+            }
             case '[':
             case ']':
             default:
                 break;
             }
         } else {
-            writechar(ps1[i]);
+            writechar(ps1[idx]);
         }
     }
     fflush(stdout);
