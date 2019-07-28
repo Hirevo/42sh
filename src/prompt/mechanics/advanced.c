@@ -11,25 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void move_end(Shell *shell, char **line)
-{
-    int len = strlen(*line);
-
-    while (shell->w.cur < len) {
-        writestr(shell->w.forw);
-        shell->w.cur += 1;
-    }
-}
-
-void move_home(Shell *shell, char **line)
-{
-    (void)(line);
-    while (shell->w.cur > 0) {
-        writestr(shell->w.backw);
-        shell->w.cur -= 1;
-    }
-}
-
 void set_hist_line(Shell *shell, char **line)
 {
     free(*line);
@@ -47,9 +28,8 @@ void set_hist_line(Shell *shell, char **line)
 
 void suppress_line(Shell *shell, char *line)
 {
-    int len;
+    size_t len = ((line != NULL) ? strlen(line) : 0);
 
-    len = ((line != NULL) ? strlen(line) : 0);
     while (shell->w.cur < len) {
         shell->w.cur += 1;
         writestr(shell->w.forw);

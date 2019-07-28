@@ -38,27 +38,28 @@ char **init_path(char *str)
 
 void set_path(Shell *shell, char *path)
 {
-    int i = -1;
-    int obj = my_strlen_spe(path, '=');
+    size_t idx = 0;
+    size_t obj = strcspn(path, "=");
     char *name = calloc(obj + 1, sizeof(char));
     char *entry;
 
     (void)(shell);
     if (name == NULL)
         handle_error("calloc");
-    while (++i < obj)
-        name[i] = path[i];
-    name[i] = 0;
-    i = obj + 1;
-    obj = my_strlen_spe(path + i, '\0');
+    for (idx = 0; idx < obj; idx++) {
+        name[idx] = path[idx];
+    }
+    name[idx] = 0;
+    idx = obj + 1;
+    obj = strlen(path + idx);
     entry = calloc(obj + 1, sizeof(char));
     if (entry == NULL)
         handle_error("calloc");
-    obj = i;
-    i = -1;
-    while ((path + obj)[++i] != 0)
-        entry[i] = (path + obj)[i];
-    entry[i] = 0;
+    obj = idx;
+    for (idx = 0; (path + obj)[idx] != 0; idx++) {
+        entry[idx] = (path + obj)[idx];
+    }
+    entry[idx] = 0;
     setenv(name, entry, 1);
     free(name);
     free(entry);

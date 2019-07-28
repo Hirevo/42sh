@@ -41,39 +41,39 @@ void print_char(char *c, size_t *i)
         case 0:
             (*i)--;
         case '\\':
-            putchar('\\');
+            writechar('\\');
             break;
         case 'a':
-            putchar('\a');
+            writechar('\a');
             break;
         case 'b':
-            putchar('\b');
+            writechar('\b');
             break;
         case 'f':
-            putchar('\f');
+            writechar('\f');
             break;
         case 'n':
-            putchar('\n');
+            writechar('\n');
             break;
         case 'r':
-            putchar('\r');
+            writechar('\r');
             break;
         case 't':
-            putchar('\t');
+            writechar('\t');
             break;
         case 'v':
-            putchar('\v');
+            writechar('\v');
             break;
         case 'e':
-            putchar('\e');
+            writechar('\e');
             break;
         default:
-            putchar('\\');
-            putchar(c[*i]);
+            writechar('\\');
+            writechar(c[*i]);
             break;
         }
     else
-        putchar(c[*i]);
+        writechar(c[*i]);
 }
 
 int echo_b(Shell *shell, vec_t *args)
@@ -84,12 +84,12 @@ int echo_b(Shell *shell, vec_t *args)
 
     for (size_t i = first; i < lvec_size(args); i++) {
         if (i != first)
-            putchar(' ');
+            writechar(' ');
         char *arg = lvec_at(args, i);
         for (size_t j = 0; arg[j]; j++)
             print_char(arg, &j);
     }
     if (!flag_n)
-        putchar('\n');
+        writechar('\n');
     return 0;
 }

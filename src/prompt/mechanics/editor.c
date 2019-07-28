@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-void tmp_file(Shell *shell, char **line)
+void prompt_open_editor(Shell *shell, char **line)
 {
     char name[] = "/tmp/42sh-edit-XXXXXX";
     char *editor = getenv("EDITOR");
@@ -27,6 +27,7 @@ void tmp_file(Shell *shell, char **line)
     free(*line);
     *line = 0;
     writechar('\n');
+    writestr(shell->w.rmkx);
     quick_exec(shell, exec);
     if (shell->exit_code == 1) {
         return;
@@ -40,4 +41,5 @@ void tmp_file(Shell *shell, char **line)
     close(fd);
     remove(name);
     init_prompt(shell);
+    writestr(shell->w.smkx);
 }

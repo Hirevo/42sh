@@ -58,29 +58,29 @@ void save_alias(Shell *shell)
 
 void set_alias(Shell *shell, char *path)
 {
-    Alias alias;
-    int i = -1;
-    int obj = my_strlen_spe(path + 6, '=');
+    size_t obj = strcspn(path + 6, "=");
+    size_t idx = 0;
 
-    alias.alias = calloc(obj + 1, sizeof(char));
-    if (alias.alias == NULL)
+    char *alias_name = calloc(obj + 1, sizeof(char));
+    if (alias_name == NULL)
         return;
-    while (++i < obj)
-        alias.alias[i] = (path + 6)[i];
-    alias.alias[i] = 0;
-    i = obj + 7;
-    obj = my_strlen_spe(path + i + 1, '\'');
-    alias.command = calloc(obj + 1, sizeof(char));
-    if (alias.command == NULL)
+    for (idx = 0; idx < obj; idx++) {
+        alias_name[idx] = (path + 6)[idx];
+    }
+    alias_name[idx] = 0;
+    idx = obj + 7;
+    obj = strcspn(path + idx + 1, "'");
+    char *alias_command = calloc(obj + 1, sizeof(char));
+    if (alias_command == NULL)
         return;
-    obj = i;
-    i = -1;
-    while ((path + obj + 1)[++i] != '\'')
-        alias.command[i] = (path + obj + 1)[i];
-    alias.command[i] = 0;
-    add_alias(shell, alias.alias, alias.command);
-    free(alias.alias);
-    free(alias.command);
+    obj = idx;
+    for (idx = 0; (path + obj + 1)[idx] != '\''; idx++) {
+        alias_command[idx] = (path + obj + 1)[idx];
+    }
+    alias_command[idx] = 0;
+    add_alias(shell, alias_name, alias_command);
+    free(alias_name);
+    free(alias_command);
 }
 
 void init_aliases(Shell *shell)

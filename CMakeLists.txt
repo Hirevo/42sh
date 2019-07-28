@@ -49,6 +49,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins/which.c
     ${PROJECT_SOURCE_DIR}/src/char.c
     ${PROJECT_SOURCE_DIR}/src/comment.c
+    ${PROJECT_SOURCE_DIR}/src/config/config.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/add_env_http.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/client.c
     ${PROJECT_SOURCE_DIR}/src/config-deprecated/com_serv.c
@@ -133,12 +134,11 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/advanced.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/char.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/cursor.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/fct.c
+    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/editor.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/load_file.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/misc.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/prompt.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/sauv.c
-    ${PROJECT_SOURCE_DIR}/src/prompt/mechanics/tmp.c
     ${PROJECT_SOURCE_DIR}/src/prompt/minimalist.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_256.c
     ${PROJECT_SOURCE_DIR}/src/prompt/mysh_arrow.c

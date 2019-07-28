@@ -11,41 +11,42 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void skip_string(char *str, int *i)
+void skip_string(char *str, size_t *idx)
 {
-    char quote = str[(*i)++];
+    char quote = str[(*idx)++];
 
-    while (str[*i]) {
-        if (str[*i] == '\\')
-            *i += (!!str[(*i) + 1]);
-        else if (str[*i] == quote)
+    while (str[*idx]) {
+        if (str[*idx] == '\\')
+            *idx += (!!str[(*idx) + 1]);
+        else if (str[*idx] == quote)
             break;
-        *i += 1;
+        *idx += 1;
     }
-    *i -= (str[*i] == 0);
+    *idx -= (str[*idx] == 0);
 }
 
 size_t estimate_fragment_count(char *str)
 {
-    int i = -1;
     size_t args = 0;
 
-    while (str[++i]) {
-        if (str[i] == '\\')
-            i += !!(str[i + 1]);
-        else if (str[i] == '\'') {
-            i += 1;
-            while (str[i] && str[i] != '\'')
-                i += 1;
-            i -= (str[i] == 0);
+    for (size_t idx = 0; str[idx]; idx++) {
+        if (str[idx] == '\\') {
+            idx += !!(str[idx + 1]);
+        } else if (str[idx] == '\'') {
+            idx += 1;
+            while (str[idx] && str[idx] != '\'')
+                idx += 1;
+            idx -= (str[idx] == 0);
             args += 1;
-        } else if (str[i] == '"') {
-            skip_string(str, &i);
+        } else if (str[idx] == '"') {
+            skip_string(str, &idx);
             args += 1;
-        } else if (i == 0 && !is_space(str[i]) && !is_separator(str[i]))
+        } else if (idx == 0 && !is_space(str[idx]) &&
+            !is_separator(str[idx])) {
             args += 1;
-        else if (!is_space(str[i]) && is_space(str[i - 1]))
+        } else if (!is_space(str[idx]) && is_space(str[idx - 1])) {
             args += 1;
+        }
     }
     return args;
 }

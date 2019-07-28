@@ -20,6 +20,12 @@
 #include <sys/stat.h>
 #include <termios.h>
 
+#define RC_FILE ".42shrc"
+#define HIST_FILE ".42sh_history"
+#define ALIAS_FILE ".42sh_alias"
+
+extern char **environ;
+
 DEF_OPTION(CharPtr, char *);
 OPT_NULLABLE(CharPtr, char *);
 DEF_RESULT(CharPtr, char *, char *);
@@ -34,11 +40,54 @@ DEF_RESULT(SizeT, size_t, char *);
 DEF_OPTION(Int, int);
 DEF_RESULT(Int, int, char *);
 
-#define RC_FILE ".42shrc"
-#define HIST_FILE ".42sh_history"
-#define ALIAS_FILE ".42sh_alias"
+typedef enum {
+    ERROR_UNMATCHED_QUOTE,
+    ERROR_REDIRECT_MISSING_NAME,
+    ERROR_AMBIGUOUS_INPUT,
+    ERROR_AMBIGUOUS_OUTPUT,
+    ERROR_NULL_COMMAND
+} ErrorKind;
 
-extern char **environ;
+typedef enum {
+    REPORT_SINGLE_INDEX,
+    REPORT_SINGLE_SPAN,
+    REPORT_DOUBLE_INDEX,
+    REPORT_DOUBLE_SPAN
+} ReportKind;
+
+typedef struct {
+    size_t idx1;
+} ReportSingleIndex;
+
+typedef struct {
+    size_t start;
+    size_t end;
+} ReportSingleSpan;
+
+typedef struct {
+    ReportSingleIndex fst;
+    ReportSingleIndex snd;
+} ReportDoubleIndex;
+
+typedef struct {
+    ReportSingleSpan fst;
+    ReportSingleSpan snd;
+} ReportDoubleSpan;
+
+typedef struct {
+    ReportKind kind;
+    union {
+        ReportSingleIndex single_index;
+        ReportSingleSpan single_span;
+        ReportDoubleIndex double_index;
+        ReportDoubleSpan double_span;
+    };
+} Report;
+
+typedef struct {
+    ErrorKind kind;
+    Report report;
+} Error;
 
 typedef enum {
     REDIR_KIND_FILE = 0,
@@ -79,16 +128,6 @@ DEF_OPTION(CommandPtr, Command *);
 DEF_RESULT(CommandPtr, Command *, char *);
 
 typedef struct {
-    char *alias;
-    char *command;
-} Alias;
-
-typedef struct {
-    int idx;
-    vec_t *list;
-} Subst;
-
-typedef struct {
     vec_t *arr;
     long cur;
     char *cur_line;
@@ -107,7 +146,10 @@ typedef struct {
     char *downw;
     char *left;
     char *right;
-    int cur;
+    char *delete;
+    char *backsp;
+    hmap_t *actions;
+    size_t cur;
 } Window;
 
 typedef struct {
@@ -116,6 +158,9 @@ typedef struct {
     char *history_file;
     char *prompt;
 } Config;
+
+DEF_OPTION(Config, Config);
+DEF_RESULT(Config, Config, char *);
 
 /*
 ** This is the main structure that binds the shell together.
@@ -153,6 +198,12 @@ typedef struct {
     Config config;
 } Shell;
 
+typedef void (*PromptAction)(Shell *, char **line);
+
+DEF_OPTION(PromptAction, PromptAction);
+OPT_NULLABLE(PromptAction, PromptAction);
+DEF_RESULT(PromptAction, PromptAction, char *);
+
 size_t estimate_fragment_count(char *);
 int get_next_arg(char *, char **, int);
 vec_t *split_fragments(char *, int);
@@ -188,7 +239,6 @@ OPTION(Int) exec_builtins(Shell *, vec_t *);
 unsigned int get_unsigned_int(char *);
 int is_line_empty(char *);
 void init_shell(Shell *);
-int my_strlen_spe(char *, char);
 void init_aliases(Shell *);
 void set_alias(Shell *, char *);
 void free_alias(Shell *);
@@ -253,7 +303,7 @@ void save_history(Shell *);
 int disp_hist(Shell *, vec_t *);
 void add_hist_elem(Shell *, char *);
 void init_history(Shell *);
-void skip_string(char *, int *);
+void skip_string(char *, size_t *);
 
 OPTION(CharPtr) substitute_aliases(Shell *, char *);
 OPTION(CharPtr) substitute_commands(Shell *, char *);
@@ -334,11 +384,6 @@ OPTION(SizeT) span_redirect(const char *line);
 ** exec/pipe.c
 */
 OPTION(Int) exec_pipeline(Shell *, Command *);
-
-/*
-** exec/tmp.c
-*/
-void tmp_file(Shell *, char **line);
 
 /*
 ** exec/setup.c
@@ -431,6 +476,23 @@ char *show_cur_branch(void);
 void insert_char_cur(char **, char, int);
 void delete_char(char **, int);
 
+void action_autocomplete(Shell *, char **);
+void action_clear_term(Shell *, char **);
+void action_cursor_backspace(Shell *, char **);
+void action_cursor_delete(Shell *, char **);
+void action_cursor_down(Shell *, char **);
+void action_cursor_end(Shell *, char **);
+void action_cursor_home(Shell *, char **);
+void action_cursor_left(Shell *, char **);
+void action_cursor_right(Shell *, char **);
+void action_cursor_up(Shell *, char **);
+void action_open_editor(Shell *, char **);
+
+/*
+** prompt/mechanics/editor.c
+*/
+void prompt_open_editor(Shell *, char **line);
+
 /*
 ** prompt/mechanics/sauv.c
 */
@@ -445,35 +507,26 @@ char **load_file(int);
 /*
 ** prompt/mechanics/actions.c
 */
-void remove_char(Shell *, char **);
 void add_char(Shell *, char **, char);
-void move_cursor(Shell *, char **, char);
+void parse_escape_sequence(Shell *, char **, char);
 void clear_term(Shell *, char *);
 void pos_cursor(Shell *, char *);
 
 /*
 ** prompt/mechanics/cursor.c
 */
-void buffer_seq(Shell *, char **, int *, char);
-void move_forw(Shell *, char **);
-void move_backw(Shell *, char **);
-void move_upw(Shell *, char **);
-void move_downw(Shell *, char **);
+RESULT(PromptAction) buffer_seq(Shell *, char);
 
 /*
 ** prompt/mechanics/advanced.c
 */
-void move_home(Shell *, char **);
-void move_end(Shell *, char **);
 void set_hist_line(Shell *, char **);
 void suppress_line(Shell *, char *);
-
-/*
-** prompt/mechanics/fct.c
-*/
-void get_cur_fcts(void (*[6])(Shell *, char **));
 
 /*
 ** prompt/mechanics/prompt.c
 */
 OPTION(CharPtr) prompt_line(Shell *);
+void wait_input(void);
+
+OPTION(Config) parse_config(char *filename);

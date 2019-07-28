@@ -19,6 +19,7 @@ static void sanitize_glob(glob_t *list)
 
 OPTION(CharPtr) substitute_globs(Shell *shell, char *line)
 {
+    (void)(shell);
     for (size_t idx = 0; line[idx]; idx++) {
         if (line[idx] == '\\') {
             idx += !!(line[idx + 1]);

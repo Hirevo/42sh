@@ -64,15 +64,6 @@ int is_char_alpha(char *c)
     return 1;
 }
 
-int my_strlen_spe(char *path, char stop)
-{
-    int i = 0;
-
-    while (path[i] != stop && path[i] != 0)
-        i += 1;
-    return i;
-}
-
 char *read_all(int fd)
 {
     char buffer[1024] = {0};

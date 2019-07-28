@@ -68,6 +68,7 @@ void init_shell(Shell *shell)
     init_builtins(shell);
     get_prompt(shell);
     init(shell);
+    // parse_config(".42sh_config.json");
 }
 
 void init(Shell *shell)
@@ -94,6 +95,21 @@ void init(Shell *shell)
         shell->w.downw = tigetstr("kcud1");
         shell->w.left = tigetstr("kcub1");
         shell->w.right = tigetstr("kcuf1");
+        shell->w.backsp = tigetstr("kbs");
+        shell->w.delete = tigetstr("kdch1");
+        shell->w.actions = lhmap_with_capacity(8);
+        lhmap_set(shell->w.actions, shell->w.left, action_cursor_left);
+        lhmap_set(shell->w.actions, shell->w.right, action_cursor_right);
+        lhmap_set(shell->w.actions, shell->w.upw, action_cursor_up);
+        lhmap_set(shell->w.actions, shell->w.downw, action_cursor_down);
+        lhmap_set(shell->w.actions, shell->w.home, action_cursor_home);
+        lhmap_set(shell->w.actions, shell->w.end, action_cursor_end);
+        lhmap_set(shell->w.actions, shell->w.delete, action_cursor_delete);
+        lhmap_set(shell->w.actions, shell->w.backsp, action_cursor_backspace);
+        lhmap_set(shell->w.actions, "\x7F", action_cursor_backspace);
+        lhmap_set(shell->w.actions, "\t", action_autocomplete);
+        lhmap_set(shell->w.actions, "\x0C", action_clear_term);
+        lhmap_set(shell->w.actions, "\x18\x05", action_open_editor);
     }
 }
 
