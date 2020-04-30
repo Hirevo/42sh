@@ -15,7 +15,7 @@ void set_raw(struct termios *oterm)
     struct termios nterm;
 
     nterm = *oterm;
-    nterm.c_lflag &= ~(ICANON | ECHO);
+    nterm.c_lflag &= ~(ICANON | ECHO | ISIG);
     nterm.c_cc[VTIME] = 0;
     nterm.c_cc[VMIN] = 0;
     if (tcsetattr(0, TCSANOW, &nterm) == -1)
@@ -51,17 +51,37 @@ void init_vars(Shell *shell)
     shell->vars = lhmap_with_capacity(5);
     lhmap_set(shell->vars, "pid", fmtstr("%d", getpid()));
     lhmap_set(shell->vars, "ppid", fmtstr("%d", getppid()));
+    lhmap_set(shell->vars, "uid", fmtstr("%d", getuid()));
+    lhmap_set(shell->vars, "euid", fmtstr("%d", geteuid()));
     lhmap_set(shell->vars, "gid", fmtstr("%d", getgid()));
     lhmap_set(shell->vars, "pgid", fmtstr("%d", getpgrp()));
     lhmap_set(shell->vars, "sid", fmtstr("%d", getsid(0)));
 }
 
-void init_shell(Shell *shell)
+void init_args(Shell *shell, int ac, char **av)
+{
+    shell->args = lvec_new();
+    for (int i = 0; i < ac; i++) {
+        if (av[i][0] == '-') {
+            continue;
+        }
+        char *arg = strdup(av[i]);
+        if (arg) {
+            lvec_push_back(shell->args, 1, arg);
+        }
+    }
+    if (lvec_size(shell->args) > 1) {
+        free(lvec_pop_front(shell->args));
+    }
+}
+
+void init_shell(Shell *shell, int ac, char **av)
 {
     srand(getpid() * time(NULL));
     shell->exit_code = 0;
     shell->is_done = 0;
     parse_rc(shell);
+    init_args(shell, ac, av);
     init_history(shell);
     init_aliases(shell);
     init_vars(shell);
@@ -109,6 +129,7 @@ void init(Shell *shell)
         lhmap_set(shell->w.actions, "\x7F", action_cursor_backspace);
         lhmap_set(shell->w.actions, "\t", action_autocomplete);
         lhmap_set(shell->w.actions, "\x0C", action_clear_term);
+        lhmap_set(shell->w.actions, "\x03", action_interrupt);
         lhmap_set(shell->w.actions, "\x18\x05", action_open_editor);
     }
 }

@@ -136,8 +136,7 @@ int main(int ac, char **av)
 
     setenv("SHELL", av[0], 1);
     increase_shell_level();
-    init_shell(&shell);
-    shell.av = av + ((ac == 1) ? 0 : 1);
+    init_shell(&shell, ac, av);
     if (ac == 1)
         return start_standard_shell(&shell);
     else

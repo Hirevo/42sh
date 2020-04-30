@@ -87,8 +87,7 @@ static vec_t *find_path_matches(Shell *shell, char *token)
     }
 
     for (struct dirent *entry = readdir(dir); entry; entry = readdir(dir)) {
-        if (lstr_equals(entry->d_name, "..") ||
-            lstr_equals(entry->d_name, ".") ||
+        if (lstr_equals(entry->d_name, "..") || lstr_equals(entry->d_name, ".") ||
             lstr_equals(entry->d_name, ".DS_Store"))
             continue;
         else if (lstr_starts_with(entry->d_name, token_name)) {
@@ -153,10 +152,8 @@ static vec_t *find_commands_matches(Shell *shell, char *token)
         if (dir == 0)
             continue;
 
-        for (struct dirent *entry = readdir(dir); entry;
-             entry = readdir(dir)) {
-            if (lstr_equals(entry->d_name, "..") ||
-                lstr_equals(entry->d_name, ".") ||
+        for (struct dirent *entry = readdir(dir); entry; entry = readdir(dir)) {
+            if (lstr_equals(entry->d_name, "..") || lstr_equals(entry->d_name, ".") ||
                 lstr_equals(entry->d_name, ".DS_Store"))
                 continue;
             else if (lstr_starts_with(entry->d_name, token)) {
@@ -188,8 +185,7 @@ static vec_t *find_matches(Shell *shell, Token token)
     }
 }
 
-static OPTION(CharPtr)
-    complete_forward(Shell *shell, char *line, Token token, char *match)
+static OPTION(CharPtr) complete_forward(Shell *shell, char *line, Token token, char *match)
 {
     char *sanitized_token = sanitize_single_arg(token.token, false);
     if (sanitized_token == 0)
@@ -203,8 +199,7 @@ static OPTION(CharPtr)
     size_t len = strlen(sanitized_token);
     char *to_add = sanitized_match + len;
 
-    char *ret =
-        fmtstr("%.*s%s%s", shell->w.cur, line, to_add, line + shell->w.cur);
+    char *ret = fmtstr("%.*s%s%s", shell->w.cur, line, to_add, line + shell->w.cur);
     if (ret == 0) {
         free(sanitized_match);
         free(sanitized_token);
@@ -241,8 +236,7 @@ static void *render_match(void *ctx, void *acc, void *elem, size_t idx)
         if (token->is_command) {
             return lstr_append(acc, sanitize_double_quotes(elem, false));
         } else {
-            return lstr_append(
-                acc, sanitize_double_quotes(basename(elem), false));
+            return lstr_append(acc, sanitize_double_quotes(basename(elem), false));
         }
     }
 }
@@ -268,8 +262,7 @@ static void *prefix_match(void *ctx, void *acc, void *elem, size_t idx)
     }
 }
 
-static OPTION(CharPtr)
-    complete_choices(Shell *shell, char *line, Token token, vec_t *matches)
+static OPTION(CharPtr) complete_choices(Shell *shell, char *line, Token token, vec_t *matches)
 {
     char *prefix = lvec_reduce(matches, prefix_match, 0, 0);
     if (strlen(prefix) > strlen(token.token)) {

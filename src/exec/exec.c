@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -48,9 +49,24 @@ void exec_process(vec_t *args)
     exit(1);
 }
 
-int exec_commands(Shell *shell, Command *commands)
+int exec_commands(Shell *shell, Command *commands, bool to_save)
 {
+    struct timeval before;
+    bool tm_error = (gettimeofday(&before, NULL) == -1);
     OPTION(Int) status = exec_pipeline(shell, commands);
+    if (to_save && !tm_error) {
+        struct timeval after;
+        if (gettimeofday(&after, NULL) != -1) {
+            struct timeval diff;
+            timersub(&after, &before, &diff);
+            char *secs = fmtstr("%lu", diff.tv_sec);
+            char *formatted = fmt_seconds(diff.tv_sec);
+            free(lhmap_remove(shell->vars, "exec_duration"));
+            free(lhmap_remove(shell->vars, "exec_duration_fmt"));
+            lhmap_set(shell->vars, "exec_duration", secs);
+            lhmap_set(shell->vars, "exec_duration_fmt", formatted);
+        }
+    }
 
     if (shell->is_done) {
         free_shell(shell);
@@ -145,6 +161,9 @@ int exec_line(Shell *shell, char *line, bool to_save)
         shell->exit_code = 1;
         return 1;
     }
-    shell->exit_code = exec_commands(shell, commands);
-    return shell->exit_code;
+    int status = exec_commands(shell, commands, to_save);
+    if (to_save) {
+        shell->exit_code = status;
+    }
+    return status;
 }

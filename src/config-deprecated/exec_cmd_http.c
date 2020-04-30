@@ -29,8 +29,9 @@ static int execute_http(t_socket client, char *cmd)
     Shell shell;
     int sauv;
     int sauv2;
+    char *args[] = {"42sh"};
 
-    init_shell(&shell);
+    init_shell(&shell, 1, args);
     sauv = dup(1);
     if (sauv == -1)
         return 1;

@@ -17,6 +17,8 @@ OPTION(CharPtr) clear_comment(char *line)
     for (size_t cur = 0; line[cur]; cur++) {
         if (line[cur] == '\\') {
             cur += !!(line[cur + 1]);
+        } else if (line[cur] == '$' && line[cur + 1] == '#') {
+            cur += 1;
         } else if (line[cur] == '\'') {
             cur += 1;
             while (line[cur] && line[cur] != '\'') {

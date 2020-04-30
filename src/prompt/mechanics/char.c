@@ -11,15 +11,8 @@
 
 void insert_char_cur(char **str, char c, int cur)
 {
-    int i = -1;
-    char *new;
-
-    if (*str == NULL)
-        i = 0;
-    else
-        while ((*str)[++i])
-            ;
-    new = calloc(i + 2, sizeof(char));
+    int i = (*str) ? strlen(*str) : 0;
+    char *new = calloc(i + 2, sizeof(char));
     if (new == NULL)
         return;
     i = 0;

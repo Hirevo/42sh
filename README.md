@@ -24,7 +24,7 @@ This implementation is entirely a continuation of my minishell2 (same original c
 I ensured shell and parser stability, code compatibility and could iterate on feature implementations quicker (since the shell comports code from all the way to my minishell1).  
 
 I use the shell everyday as my default shell.  
-It comports everything I need (except maybe job control, sometimes).  
+It comports everything I need (except maybe asynchronous job control, sometimes).  
 So, I am still maintaining it and will probably rewrite it eventually (in Rust, most likely).  
 
 Features
@@ -50,9 +50,12 @@ It also accepts to evaluate a single line with **`-c`** followed by the command.
 - Line Editing:
   - Auto-completion for commands and filenames
   - Advanced line edition with cursor, arrow-keys if terminal supported, will fallback to standard stdin read otherwise
-  - Variable expansions, from environment and built-in variables (from the **`set`** command)
+  - Variable expansions, from environment, positional arguments and built-in variables (from the **`set`** command)
   - Last exit code (**`$?`**)
   - Shell PID (**`$$`**)
+  - Last argument from last command (**`$!`**)
+  - Count of current positional arguments (**`$#`**)
+  - Whole positional argument list, except the first one which is the script's name (**`$@`**)
   - Last argument from last command (**`$!`**)
   - Whole last command (**`!!`**)
   - N-th argument from last command (**`!:n`**)
@@ -62,7 +65,7 @@ It also accepts to evaluate a single line with **`-c`** followed by the command.
   - **`alias`** and **`unalias`** built-in commands
   - Aliases all the commands in the evaluated line
   - Self-aliasing supported
-  - Alias loops are detected and prevented
+  - Alias loops are detected and prevented early
   - Aliases are saved upon exit and loaded on launch
   - Special aliases:
     - **`precmd`**: before typing a command
@@ -79,7 +82,9 @@ It also accepts to evaluate a single line with **`-c`** followed by the command.
 - Variables:
   - **`set`** and **`unset`** built-in commands
   - Can be used for expansions
-  - **`${pid}`**, **`${sid}`**, **`${gid}`** and **`${pgid}`** are set by default on launch
+  - **`${pid}`**, **`${ppid}`**, **`${uid}`**, **`${euid}`**, **`${gid}`**, **`${pgid}`** and **`${sid}`** are set by default on launch
+  - Last command's execution time in seconds (with **`${exec_duration}`**)
+  - Last command's execution time human-formatted in sensible units (with **`${exec_duration_fmt}`**)
 - Prompts:
   - **`prompt`** built-in command
   - 11 prompts to choose from

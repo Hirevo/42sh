@@ -39,7 +39,7 @@ OPTION(CharPtr) prompt_line(Shell *shell)
 {
     if (shell->tty)
         set_raw(&shell->w.oterm);
-    if (shell->ioctl)
+    if (shell->ioctl && shell->w.smkx)
         writestr(shell->w.smkx);
     shell->hist.cur = -1;
     char *line = 0;
@@ -69,7 +69,7 @@ OPTION(CharPtr) prompt_line(Shell *shell)
     if (shell->tty && tcsetattr(0, TCSANOW, &shell->w.oterm) == -1) {
         handle_error("tcsetattr");
     }
-    if (shell->ioctl) {
+    if (shell->ioctl && shell->w.rmkx) {
         writestr(shell->w.rmkx);
     }
     return SOME(CharPtr, line);

@@ -77,9 +77,7 @@ char *fmtstr(const char *fmt, ...)
 
 char *path_join(const char *p1, const char *p2)
 {
-    char *add_slash =
-        ((lstr_ends_with(p1, "/") || lstr_equals(p1, "")) ? "" : "/");
-
+    char *add_slash = ((lstr_ends_with(p1, "/") || lstr_equals(p1, "")) ? "" : "/");
     return fmtstr("%s%s%s", p1, add_slash, p2);
 }
 
@@ -97,4 +95,140 @@ char *pretty_path(const char *path)
     } else {
         return strdup(path);
     }
+}
+
+char *fmt_seconds(time_t seconds)
+{
+#define YEAR 31536000
+#define MONTH 2592000
+#define WEEK 604800
+#define DAY 86400
+#define HOUR 3600
+#define MINUTE 60
+
+    char *str = NULL;
+
+    if (seconds > YEAR) {
+        long years = seconds / YEAR;
+        seconds -= years * YEAR;
+        if (str) {
+            char *tmp = fmtstr("%s %ld %s", str, years, (years - 1) ? "years" : "year");
+            if (!tmp) {
+                return NULL;
+            }
+            free(str);
+            str = tmp;
+        } else {
+            str = fmtstr("%ld %s", years, (years - 1) ? "years" : "year");
+            if (!str) {
+                return NULL;
+            }
+        }
+    }
+
+    if (seconds > MONTH) {
+        long months = seconds / MONTH;
+        seconds -= months * MONTH;
+        if (str) {
+            char *tmp = fmtstr("%s %ld %s", str, months, (months - 1) ? "months" : "month");
+            if (!tmp) {
+                return NULL;
+            }
+            free(str);
+            str = tmp;
+        } else {
+            str = fmtstr("%ld %s", months, (months - 1) ? "months" : "month");
+            if (!str) {
+                return NULL;
+            }
+        }
+    }
+
+    if (seconds > WEEK) {
+        long weeks = seconds / WEEK;
+        seconds -= weeks * WEEK;
+        if (str) {
+            char *tmp = fmtstr("%s %ld %s", str, weeks, (weeks - 1) ? "weeks" : "week");
+            if (!tmp) {
+                return NULL;
+            }
+            free(str);
+            str = tmp;
+        } else {
+            str = fmtstr("%ld %s", weeks, (weeks - 1) ? "weeks" : "week");
+            if (!str) {
+                return NULL;
+            }
+        }
+    }
+
+    if (seconds > DAY) {
+        long days = seconds / DAY;
+        seconds -= days * DAY;
+        if (str) {
+            char *tmp = fmtstr("%s %ld %s", str, days, (days - 1) ? "days" : "day");
+            if (!tmp) {
+                return NULL;
+            }
+            free(str);
+            str = tmp;
+        } else {
+            str = fmtstr("%ld %s", days, (days - 1) ? "days" : "day");
+            if (!str) {
+                return NULL;
+            }
+        }
+    }
+
+    if (seconds > HOUR) {
+        long hours = seconds / HOUR;
+        seconds -= hours * HOUR;
+        if (str) {
+            char *tmp = fmtstr("%s %ld %s", str, hours, (hours - 1) ? "hrs" : "hr");
+            if (!tmp) {
+                return NULL;
+            }
+            free(str);
+            str = tmp;
+        } else {
+            str = fmtstr("%ld %s", hours, (hours - 1) ? "hrs" : "hr");
+            if (!str) {
+                return NULL;
+            }
+        }
+    }
+
+    if (seconds > MINUTE) {
+        long minutes = seconds / MINUTE;
+        seconds -= minutes * MINUTE;
+        if (str) {
+            char *tmp = fmtstr("%s %ld %s", str, minutes, (minutes - 1) ? "mins" : "min");
+            if (!tmp) {
+                return NULL;
+            }
+            free(str);
+            str = tmp;
+        } else {
+            str = fmtstr("%ld %s", minutes, (minutes - 1) ? "mins" : "min");
+            if (!str) {
+                return NULL;
+            }
+        }
+    }
+
+    if (seconds && str) {
+        char *tmp = fmtstr("%s %ld %s", str, seconds, (seconds - 1) ? "secs" : "sec");
+        if (!tmp) {
+            return NULL;
+        }
+        free(str);
+        str = tmp;
+    } else if (!str) {
+        str = fmtstr("%ld %s", seconds, (seconds - 1) ? "secs" : "sec");
+        if (!str) {
+            return NULL;
+        }
+    }
+
+    return str;
 }

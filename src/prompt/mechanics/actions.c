@@ -126,6 +126,15 @@ void action_clear_term(Shell *shell, char **line)
     clear_term(shell, *line);
 }
 
+void action_interrupt(Shell *shell, char **line)
+{
+    writestr("^C\n");
+    free(*line);
+    *line = NULL;
+    shell->w.cur = 0;
+    print_prompt(shell);
+}
+
 void action_open_editor(Shell *shell, char **line)
 {
     prompt_open_editor(shell, line);

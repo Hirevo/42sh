@@ -11,10 +11,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-void display_var(void *ctx, char *key, void *value)
+void display_var(void *width, char *key, void *value)
+{
+    putstr("%*s = %s\n", (size_t)(width), key, (char *)(value));
+}
+
+size_t max(size_t a, size_t b)
+{
+    return (a > b) ? a : b;
+}
+
+void *max_length(void *ctx, void *acc, void *elem, size_t idx)
 {
     (void)(ctx);
-    putstr("%s\t%s\n", key, (char *)(value));
+    (void)(idx);
+    return (elem) ? (void *)(max((size_t)(acc), strlen(elem))) : acc;
 }
 
 int set_b(Shell *shell, vec_t *args)
@@ -22,7 +33,8 @@ int set_b(Shell *shell, vec_t *args)
     int ret = 0;
 
     if (lvec_size(args) == 1) {
-        lhmap_for_each(shell->vars, display_var, NULL);
+        size_t width = (size_t)(lvec_reduce(lhmap_keys(shell->vars), max_length, 0, 0));
+        lhmap_for_each(shell->vars, display_var, (void *)(width));
         return 0;
     } else {
         for (size_t i = 1; i < lvec_size(args); i++) {

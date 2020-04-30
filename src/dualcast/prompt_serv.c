@@ -16,9 +16,10 @@ static void exc_cmd(t_socket sock, char **str, int *nb_char)
     int sauv;
     int sauv2;
     Shell shell;
+    char *args[] = {"42sh"};
 
-    (void)nb_char;
-    init_shell(&shell);
+    (void)(nb_char);
+    init_shell(&shell, 1, args);
     if ((sauv = dup(1)) == -1)
         return;
     if ((sauv2 = dup(2)) == -1)

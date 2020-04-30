@@ -170,12 +170,12 @@ DEF_RESULT(Config, Config, char *);
 **       The removal of those fields will be done with time, as parts of
 **       shell gets revisited.
 **
-** av: argument list of the shell (for $0, $1, etc...).
 ** prompt: current selected prompt ID.
 ** is_done: flag to exit after the command execution ends (set by `exit`).
 ** exit_code: last exit code (used for prompts and `exit`).
 ** tty: is the stdin interactive (to enable/disable prompt and autocompletion).
 ** ioctl: is ioctl supported on the terminal.
+** args: positional shell arguments (accessible via `${0}`, `${1}`, etc...).
 ** vars: internal variables of the shell (accessible via `set` and `unset`).
 ** aliases: command aliases (accessible via `alias` and `unalias`).
 ** builtins: list of builtins (listed via `builtins`).
@@ -184,12 +184,12 @@ DEF_RESULT(Config, Config, char *);
 ** config: a future potential configuration struct.
 */
 typedef struct {
-    char **av;
     int prompt;
     char is_done;
     unsigned int exit_code;
     int tty;
     int ioctl;
+    vec_t *args;
     hmap_t *vars;
     hmap_t *aliases;
     hmap_t *builtins;
@@ -238,7 +238,7 @@ int indexof_builtin(char *);
 OPTION(Int) exec_builtins(Shell *, vec_t *);
 unsigned int get_unsigned_int(char *);
 int is_line_empty(char *);
-void init_shell(Shell *);
+void init_shell(Shell *, int, char **);
 void init_aliases(Shell *);
 void set_alias(Shell *, char *);
 void free_alias(Shell *);
@@ -268,6 +268,7 @@ void eputstr(const char *fmt, ...);
 void dputstr(const int fd, const char *fmt, ...);
 char *path_join(const char *p1, const char *p2);
 char *pretty_path(const char *path);
+char *fmt_seconds(time_t seconds);
 
 /*
 ** alias/alias.c
@@ -493,6 +494,7 @@ void action_cursor_left(Shell *, char **);
 void action_cursor_right(Shell *, char **);
 void action_cursor_up(Shell *, char **);
 void action_open_editor(Shell *, char **);
+void action_interrupt(Shell *, char **);
 
 /*
 ** prompt/mechanics/editor.c

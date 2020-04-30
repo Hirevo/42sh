@@ -89,6 +89,12 @@ void ps1_prompt(Shell *shell)
             case '?':
                 my_put_nbr(shell->exit_code);
                 break;
+            case 'T': {
+                char *fmt = lhmap_get(shell->vars, "exec_duration_fmt");
+                if (fmt) {
+                    writestr(fmt);
+                }
+            } break;
             case 'n':
                 writechar('\n');
                 break;
