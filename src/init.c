@@ -56,6 +56,8 @@ void init_vars(Shell *shell)
     lhmap_set(shell->vars, "gid", fmtstr("%d", getgid()));
     lhmap_set(shell->vars, "pgid", fmtstr("%d", getpgrp()));
     lhmap_set(shell->vars, "sid", fmtstr("%d", getsid(0)));
+    lhmap_set(shell->vars, "exec_duration", strdup("0"));
+    lhmap_set(shell->vars, "exec_duration_fmt", strdup("0 secs"));
 }
 
 void init_args(Shell *shell, int ac, char **av)
