@@ -24,7 +24,7 @@ void set_raw(struct termios *oterm)
 
 void init_builtins(Shell *shell)
 {
-    shell->builtins = lhmap_with_capacity(19);
+    shell->builtins = lhmap_with_capacity(20);
     lhmap_set(shell->builtins, "alias", alias_b);
     lhmap_set(shell->builtins, "unalias", unalias_b);
     lhmap_set(shell->builtins, "builtins", builtins_b);
@@ -35,6 +35,7 @@ void init_builtins(Shell *shell)
     lhmap_set(shell->builtins, "env", env_b);
     lhmap_set(shell->builtins, "exec", exec_b);
     lhmap_set(shell->builtins, "exit", exit_b);
+    lhmap_set(shell->builtins, "expand", expand_b);
     lhmap_set(shell->builtins, "history", history_b);
     lhmap_set(shell->builtins, "parserll", parserll_b);
     lhmap_set(shell->builtins, "prompt", prompt_b);
@@ -48,7 +49,7 @@ void init_builtins(Shell *shell)
 
 void init_vars(Shell *shell)
 {
-    shell->vars = lhmap_with_capacity(5);
+    shell->vars = lhmap_with_capacity(9);
     lhmap_set(shell->vars, "pid", fmtstr("%d", getpid()));
     lhmap_set(shell->vars, "ppid", fmtstr("%d", getppid()));
     lhmap_set(shell->vars, "uid", fmtstr("%d", getuid()));

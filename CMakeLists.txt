@@ -36,6 +36,7 @@ add_executable(42sh
     ${PROJECT_SOURCE_DIR}/src/builtins/env.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exec.c
     ${PROJECT_SOURCE_DIR}/src/builtins/exit.c
+    ${PROJECT_SOURCE_DIR}/src/builtins/expand.c
     ${PROJECT_SOURCE_DIR}/src/builtins/parserll.c
     ${PROJECT_SOURCE_DIR}/src/builtins/prompt.c
     ${PROJECT_SOURCE_DIR}/src/builtins/set.c

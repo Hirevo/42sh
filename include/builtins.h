@@ -21,6 +21,7 @@ int echo_b(Shell *, vec_t *);
 int env_b(Shell *, vec_t *);
 int exec_b(Shell *, vec_t *);
 int exit_b(Shell *, vec_t *);
+int expand_b(Shell *, vec_t *);
 int history_b(Shell *, vec_t *);
 int parserll_b(Shell *, vec_t *);
 int prompt_b(Shell *, vec_t *);
